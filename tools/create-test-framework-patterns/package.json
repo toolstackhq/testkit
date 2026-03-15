@@ -2,17 +2,28 @@
   "name": "@toolstackhq/create-test-framework-patterns",
   "version": "0.1.0",
   "description": "Placeholder CLI for future test framework scaffolding.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/toolstackhq/test-framework-patterns.git"
+  },
+  "homepage": "https://github.com/toolstackhq/test-framework-patterns",
+  "bugs": {
+    "url": "https://github.com/toolstackhq/test-framework-patterns/issues"
+  },
   "publishConfig": {
     "access": "public"
   },
   "files": [
     "index.js",
-    "README.md"
+    "README.md",
+    "LICENSE"
   ],
   "bin": {
     "create-test-framework-patterns": "./index.js"
   },
   "scripts": {
-    "start": "node ./index.js"
+    "start": "node ./index.js",
+    "test": "node ./index.js"
   }
 }

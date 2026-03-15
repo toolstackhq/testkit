@@ -76,6 +76,19 @@ create-test-framework-patterns
 
 Today the CLI is a placeholder. The repository itself is the primary usable artifact.
 
+## Release pattern
+
+The repository now follows the same release approach used in `mockit` for the publishable CLI package:
+
+1. Update [`tools/create-test-framework-patterns/package.json`](./tools/create-test-framework-patterns/package.json) with the next version.
+2. Commit the change to `main`.
+3. Create and push a matching git tag such as `v0.1.0`.
+4. GitHub Actions runs [`release-publish.yml`](./.github/workflows/release-publish.yml), validates the tag against the CLI package version, packs the artifact, publishes to npm with provenance, and creates a GitHub release.
+
+Required secret:
+
+- `NPM_TOKEN` with publish access for `@toolstackhq/create-test-framework-patterns`
+
 ## What the Playwright template demonstrates
 
 - Tests modeled as business workflows rather than selector scripts.
