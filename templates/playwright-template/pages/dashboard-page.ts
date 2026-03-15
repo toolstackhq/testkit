@@ -10,7 +10,7 @@ export class DashboardPage extends BasePage {
 
   async waitForReady(): Promise<void> {
     this.logger.info("page.ready", { page: "dashboard" });
-    await this.page.getByRole("heading", { name: "Dashboard" }).waitFor();
+    await this.page.getByRole("heading", { level: 1, name: "Dashboard", exact: true }).waitFor();
   }
 
   async getWelcomeMessage(): Promise<string> {

@@ -10,7 +10,7 @@ export class CustomersPage extends BasePage {
   }
 
   async waitForReady(): Promise<void> {
-    await this.page.getByRole("heading", { name: "Customers" }).waitFor();
+    await this.page.getByRole("heading", { level: 1, name: "Customers", exact: true }).waitFor();
   }
 
   async createCustomer(customer: Customer): Promise<void> {

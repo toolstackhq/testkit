@@ -10,7 +10,7 @@ export class TransactionsPage extends BasePage {
   }
 
   async waitForReady(): Promise<void> {
-    await this.page.getByRole("heading", { name: "Transactions" }).waitFor();
+    await this.page.getByRole("heading", { level: 1, name: "Transactions", exact: true }).waitFor();
   }
 
   async postDeposit(transaction: Transaction): Promise<void> {

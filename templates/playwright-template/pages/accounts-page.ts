@@ -14,7 +14,7 @@ export class AccountsPage extends BasePage {
   }
 
   async waitForReady(): Promise<void> {
-    await this.page.getByRole("heading", { name: "Accounts" }).waitFor();
+    await this.page.getByRole("heading", { level: 1, name: "Accounts", exact: true }).waitFor();
   }
 
   async openAccount(account: Account): Promise<void> {
