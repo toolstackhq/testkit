@@ -97,6 +97,7 @@ Required secret:
 - Deterministic test data via generic factories and generators.
 - Environment-aware config and extensible secret resolution.
 - CI-friendly observability through traces, screenshots, videos, structured logs, and artifact uploads.
+- Default Playwright HTML reporting with optional Allure reporting already wired in.
 - ESLint rules that protect the automation architecture.
 
 ## Documentation

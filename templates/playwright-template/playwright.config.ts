@@ -18,6 +18,9 @@ export default defineConfig({
   reporter: [
     ["list"],
     ["html", { open: "never", outputFolder: "reports/html" }],
+    // Keep the HTML reporter as the default path most users expect.
+    // Remove the Allure line below if you prefer to stay with Playwright's built-in reporters only.
+    ["allure-playwright", { resultsDir: "allure-results" }],
     ["./reporters/structured-reporter.ts", { outputFile: "reports/logs/playwright-events.jsonl" }]
   ],
   use: {

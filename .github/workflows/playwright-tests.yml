@@ -47,6 +47,11 @@ jobs:
           TEST_RUN_ID: ci
         run: bash ./scripts/run-tests.sh
 
+      - name: Generate Allure report
+        if: always()
+        working-directory: templates/playwright-template
+        run: npm run report:allure
+
       - name: Upload Playwright artifacts
         if: always()
         uses: actions/upload-artifact@v4
@@ -54,6 +59,7 @@ jobs:
           name: playwright-template-artifacts
           path: |
             templates/playwright-template/reports
+            templates/playwright-template/allure-results
             templates/playwright-template/test-results
 
   playwright-template-docker:
@@ -85,8 +91,8 @@ jobs:
 
       - name: Prepare Docker artifacts directories
         run: |
-          rm -rf templates/playwright-template/reports templates/playwright-template/test-results
-          mkdir -p templates/playwright-template/reports templates/playwright-template/test-results
+          rm -rf templates/playwright-template/reports templates/playwright-template/test-results templates/playwright-template/allure-results
+          mkdir -p templates/playwright-template/reports templates/playwright-template/test-results templates/playwright-template/allure-results
 
       - name: Build Playwright template Docker image
         run: docker build -t qa-patterns-playwright-template:ci -f templates/playwright-template/docker/Dockerfile templates/playwright-template
@@ -100,8 +106,14 @@ jobs:
             -e DEV_UI_BASE_URL=http://host.docker.internal:3000 \
             -e DEV_API_BASE_URL=http://host.docker.internal:3001 \
             -v "${GITHUB_WORKSPACE}/templates/playwright-template/reports:/workspace/reports" \
+            -v "${GITHUB_WORKSPACE}/templates/playwright-template/allure-results:/workspace/allure-results" \
             -v "${GITHUB_WORKSPACE}/templates/playwright-template/test-results:/workspace/test-results" \
             qa-patterns-playwright-template:ci
+
+      - name: Generate Allure report
+        if: always()
+        working-directory: templates/playwright-template
+        run: npm run report:allure
 
       - name: Upload Docker Playwright artifacts
         if: always()
@@ -110,4 +122,5 @@ jobs:
           name: playwright-template-docker-artifacts
           path: |
             templates/playwright-template/reports
+            templates/playwright-template/allure-results
             templates/playwright-template/test-results

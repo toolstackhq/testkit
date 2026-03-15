@@ -12,6 +12,8 @@ export default [
     ignores: [
       "node_modules/**",
       "reports/**",
+      "allure-results/**",
+      "allure-report/**",
       "test-results/**",
       "playwright-report/**"
     ]

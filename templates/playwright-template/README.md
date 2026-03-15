@@ -8,7 +8,7 @@ This template demonstrates a maintainable Playwright automation architecture wit
 - Generic test data generation using deterministic factories and generators.
 - Environment and secret abstractions that resolve values per `TEST_ENV`.
 - Architecture guardrails enforced with local ESLint rules.
-- CI-ready reporting with HTML reports, JSONL execution events, traces, screenshots, and video artifacts on failure.
+- CI-ready reporting with the default Playwright HTML report, optional Allure reporting, JSONL execution events, traces, screenshots, and video artifacts on failure.
 
 ## Structure
 
@@ -39,6 +39,14 @@ playwright-template
 3. Install workspace dependencies from the repository root with `npm install`.
 4. Run tests from this directory with `npm test`.
 
+## Reporting
+
+- The default report remains Playwright's HTML reporter at `reports/html`.
+- Allure is also wired in and writes raw execution data to `allure-results`.
+- Generate the richer Allure report with `npm run report:allure`.
+- Open the generated reports with `npm run report:playwright` or `npm run report:allure:open`.
+- If you do not want Allure, remove the `allure-playwright` reporter line in [`playwright.config.ts`](./playwright.config.ts).
+
 ## Design rules
 
 - Tests describe short workflows and assertions only.
@@ -53,3 +61,4 @@ playwright-template
 - `scripts/run-tests.sh` is the CI entrypoint.
 - The included GitHub Actions workflow validates the template twice: once directly on the runner and once by building and running `docker/Dockerfile`.
 - `docker/Dockerfile` is therefore a first-class CI path, not just a reference artifact.
+- Both CI paths upload Playwright artifacts and Allure outputs so teams can inspect failures without rerunning locally.

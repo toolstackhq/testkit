@@ -2,7 +2,7 @@ FROM node:20-bookworm-slim
 
 WORKDIR /workspace
 
-COPY package.json package-lock.json tsconfig.json playwright.config.ts eslint.config.mjs ./
+COPY package.json package-lock.json tsconfig.json playwright.config.ts eslint.config.mjs allurerc.mjs ./
 COPY config ./config
 COPY components ./components
 COPY data ./data

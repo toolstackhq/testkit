@@ -13,9 +13,13 @@ logs/
 traces/
 test-results/
 playwright-report/
+allure-results/
+allure-report/
 
 templates/playwright-template/reports/
 templates/playwright-template/logs/
 templates/playwright-template/traces/
 templates/playwright-template/test-results/
 templates/playwright-template/playwright-report/
+templates/playwright-template/allure-results/
+templates/playwright-template/allure-report/
