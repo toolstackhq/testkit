@@ -51,5 +51,5 @@ playwright-template
 ## CI usage
 
 - `scripts/run-tests.sh` is the CI entrypoint.
-- The included GitHub Actions workflow installs dependencies, installs Playwright browsers, starts the demo apps, runs the suite, and uploads artifacts.
-- `docker/Dockerfile` provides an alternative containerized runtime for CI systems outside GitHub Actions.
+- The included GitHub Actions workflow validates the template twice: once directly on the runner and once by building and running `docker/Dockerfile`.
+- `docker/Dockerfile` is therefore a first-class CI path, not just a reference artifact.
