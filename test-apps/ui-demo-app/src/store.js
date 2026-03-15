@@ -3,79 +3,41 @@ const state = {
     username: process.env.UI_DEMO_USERNAME || "tester",
     password: process.env.UI_DEMO_PASSWORD || "Password123!"
   },
-  customers: [],
-  accounts: [],
-  transactions: []
+  people: []
 };
 
-function findCustomer(customerId) {
-  return state.customers.find((customer) => customer.customerId === customerId);
+function findPerson(personId) {
+  return state.people.find((person) => person.personId === personId);
 }
 
-function findAccount(accountId) {
-  return state.accounts.find((account) => account.accountId === accountId);
-}
-
-function createCustomer(customer) {
-  if (findCustomer(customer.customerId)) {
-    throw new Error(`Customer ${customer.customerId} already exists`);
+function createPerson(person) {
+  if (findPerson(person.personId)) {
+    throw new Error(`Person ${person.personId} already exists`);
   }
 
-  state.customers.push({
-    customerId: customer.customerId,
-    firstName: customer.firstName,
-    lastName: customer.lastName,
-    email: customer.email
+  state.people.push({
+    personId: person.personId,
+    name: person.name,
+    role: person.role,
+    email: person.email
   });
 }
 
-function createAccount(account) {
-  if (!findCustomer(account.customerId)) {
-    throw new Error(`Customer ${account.customerId} was not found`);
+function getPeople(search = "") {
+  const query = String(search).trim().toLowerCase();
+  if (!query) {
+    return state.people;
   }
 
-  if (findAccount(account.accountId)) {
-    throw new Error(`Account ${account.accountId} already exists`);
-  }
-
-  state.accounts.push({
-    accountId: account.accountId,
-    customerId: account.customerId,
-    accountType: account.accountType,
-    balance: Number(account.initialDeposit)
+  return state.people.filter((person) => {
+    return [person.name, person.role, person.email].some((value) =>
+      value.toLowerCase().includes(query)
+    );
   });
-}
-
-function postTransaction(transaction) {
-  const account = findAccount(transaction.accountId);
-  if (!account) {
-    throw new Error(`Account ${transaction.accountId} was not found`);
-  }
-
-  const amount = Number(transaction.amount);
-  account.balance += amount;
-
-  state.transactions.push({
-    transactionId: transaction.transactionId,
-    accountId: transaction.accountId,
-    transactionType: "Deposit",
-    amount,
-    description: transaction.description
-  });
-}
-
-function getMetrics() {
-  return {
-    customers: state.customers.length,
-    accounts: state.accounts.length,
-    transactions: state.transactions.length
-  };
 }
 
 module.exports = {
   state,
-  createCustomer,
-  createAccount,
-  postTransaction,
-  getMetrics
+  createPerson,
+  getPeople
 };

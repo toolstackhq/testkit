@@ -91,9 +91,10 @@ Required secret:
 
 ## What the Playwright template demonstrates
 
-- Tests modeled as business workflows rather than selector scripts.
-- Page objects and reusable components that own all locators.
-- Deterministic test data via factories, generators, and schemas.
+- Tests modeled as small user journeys rather than selector scripts.
+- A simple two-page UI example: login, then add one person.
+- Page objects that own all locators.
+- Deterministic test data via generic factories and generators.
 - Environment-aware config and extensible secret resolution.
 - CI-friendly observability through traces, screenshots, videos, structured logs, and artifact uploads.
 - ESLint rules that protect the automation architecture.

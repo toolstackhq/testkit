@@ -1,11 +1,11 @@
 # Playwright Template
 
-This template demonstrates a maintainable Playwright automation architecture built around business workflows instead of raw browser interactions.
+This template demonstrates a maintainable Playwright automation architecture without forcing a heavy demo domain up front.
 
 ## Highlights
 
-- TypeScript-first framework structure with page objects, components, fixtures, utilities, and environment-aware configuration.
-- Structured data generation using deterministic factories and generators backed by `zod` schemas.
+- TypeScript-first framework structure with page objects, fixtures, utilities, and environment-aware configuration.
+- Generic test data generation using deterministic factories and generators.
 - Environment and secret abstractions that resolve values per `TEST_ENV`.
 - Architecture guardrails enforced with local ESLint rules.
 - CI-ready reporting with HTML reports, JSONL execution events, traces, screenshots, and video artifacts on failure.
@@ -20,8 +20,7 @@ playwright-template
 ├── fixtures
 ├── data
 │   ├── factories
-│   ├── generators
-│   └── schemas
+│   └── generators
 ├── config
 ├── utils
 ├── reporters
@@ -42,9 +41,10 @@ playwright-template
 
 ## Design rules
 
-- Tests describe workflows and assertions only.
-- Page objects and components own selectors.
+- Tests describe short workflows and assertions only.
+- Page objects own selectors.
 - Page objects return state; assertions stay in test files.
+- The starter example should stay small enough to understand in one read.
 - `waitForTimeout` is forbidden.
 - Tags such as `@smoke`, `@regression`, and `@critical` are used for targeted runs.
 

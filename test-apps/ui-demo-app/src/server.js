@@ -3,15 +3,8 @@ const http = require("node:http");
 const path = require("node:path");
 const querystring = require("node:querystring");
 
-const { createAccount, createCustomer, getMetrics, postTransaction, state } = require("./store");
-const {
-  accountsPage,
-  customersPage,
-  dashboardPage,
-  layout,
-  loginPage,
-  transactionsPage
-} = require("./templates");
+const { createPerson, getPeople, state } = require("./store");
+const { layout, loginPage, peoplePage } = require("./templates");
 
 const host = process.env.HOST || "0.0.0.0";
 const port = Number(process.env.PORT || "3000");
@@ -59,10 +52,6 @@ function isAuthenticated(request) {
   return parseCookies(request).session === "authenticated";
 }
 
-function pageMessage(url) {
-  return new URL(url, "http://127.0.0.1").searchParams.get("message") || "";
-}
-
 function protectedRoute(request, response) {
   if (!isAuthenticated(request)) {
     redirect(response, "/login");
@@ -70,6 +59,10 @@ function protectedRoute(request, response) {
   }
 
   return true;
+}
+
+function pageMessage(url) {
+  return new URL(url, "http://127.0.0.1").searchParams.get("message") || "";
 }
 
 const server = http.createServer(async (request, response) => {
@@ -83,7 +76,7 @@ const server = http.createServer(async (request, response) => {
   }
 
   if (request.method === "GET" && url.pathname === "/health") {
-    sendJson(response, { status: "ok", metrics: getMetrics() });
+    sendJson(response, { status: "ok", people: state.people.length });
     return;
   }
 
@@ -104,7 +97,7 @@ const server = http.createServer(async (request, response) => {
       body.password === state.credentials.password
     ) {
       response.writeHead(302, {
-        Location: "/dashboard",
+        Location: "/people",
         "Set-Cookie": "session=authenticated; HttpOnly; Path=/; SameSite=Lax"
       });
       response.end();
@@ -115,7 +108,7 @@ const server = http.createServer(async (request, response) => {
     return;
   }
 
-  if (request.method === "GET" && url.pathname === "/dashboard") {
+  if (request.method === "GET" && url.pathname === "/people") {
     if (!protectedRoute(request, response)) {
       return;
     }
@@ -123,8 +116,8 @@ const server = http.createServer(async (request, response) => {
     sendHtml(
       response,
       layout({
-        title: "Dashboard",
-        body: dashboardPage(getMetrics()),
+        title: "People",
+        body: peoplePage(getPeople(url.searchParams.get("search") || "")),
         flashMessage: pageMessage(request.url),
         username: state.credentials.username
       })
@@ -132,98 +125,17 @@ const server = http.createServer(async (request, response) => {
     return;
   }
 
-  if (request.method === "GET" && url.pathname === "/customers") {
-    if (!protectedRoute(request, response)) {
-      return;
-    }
-
-    sendHtml(
-      response,
-      layout({
-        title: "Customers",
-        body: customersPage(state.customers),
-        flashMessage: pageMessage(request.url),
-        username: state.credentials.username
-      })
-    );
-    return;
-  }
-
-  if (request.method === "POST" && url.pathname === "/customers") {
+  if (request.method === "POST" && url.pathname === "/people") {
     if (!protectedRoute(request, response)) {
       return;
     }
 
     try {
       const body = await readBody(request);
-      createCustomer(body);
-      redirect(response, "/customers?message=Customer%20created");
+      createPerson(body);
+      redirect(response, "/people?message=Person%20added");
     } catch (error) {
-      redirect(response, `/customers?message=${encodeURIComponent(error.message)}`);
-    }
-    return;
-  }
-
-  if (request.method === "GET" && url.pathname === "/accounts") {
-    if (!protectedRoute(request, response)) {
-      return;
-    }
-
-    sendHtml(
-      response,
-      layout({
-        title: "Accounts",
-        body: accountsPage(state.accounts),
-        flashMessage: pageMessage(request.url),
-        username: state.credentials.username
-      })
-    );
-    return;
-  }
-
-  if (request.method === "POST" && url.pathname === "/accounts") {
-    if (!protectedRoute(request, response)) {
-      return;
-    }
-
-    try {
-      const body = await readBody(request);
-      createAccount(body);
-      redirect(response, "/accounts?message=Account%20opened");
-    } catch (error) {
-      redirect(response, `/accounts?message=${encodeURIComponent(error.message)}`);
-    }
-    return;
-  }
-
-  if (request.method === "GET" && url.pathname === "/transactions") {
-    if (!protectedRoute(request, response)) {
-      return;
-    }
-
-    sendHtml(
-      response,
-      layout({
-        title: "Transactions",
-        body: transactionsPage(state.transactions),
-        flashMessage: pageMessage(request.url),
-        username: state.credentials.username
-      })
-    );
-    return;
-  }
-
-  if (request.method === "POST" && url.pathname === "/transactions") {
-    if (!protectedRoute(request, response)) {
-      return;
-    }
-
-    try {
-      const body = await readBody(request);
-      postTransaction(body);
-      redirect(response, "/transactions?message=Deposit%20posted");
-    } catch (error) {
-      redirect(response, `/transactions?message=${encodeURIComponent(error.message)}`);
+      redirect(response, `/people?message=${encodeURIComponent(error.message)}`);
     }
     return;
   }

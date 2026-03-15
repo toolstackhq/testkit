@@ -33,6 +33,12 @@ From the repository root:
 npm test
 ```
 
+The default example covers:
+
+- sign in
+- add one person
+- verify the list
+
 Tag-filtered runs:
 
 ```bash

@@ -16,7 +16,7 @@
 
 ## Evolving the Playwright template
 
-- Add new domain factories under `data/factories`.
+- Start with generic factories under `data/factories` and add domain-specific ones only when needed.
 - Add shared UI primitives under `components`.
 - Keep locators out of `tests`.
 - Update the local ESLint plugin when new architectural rules need to be enforced.
