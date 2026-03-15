@@ -45,6 +45,9 @@ playwright-template
 - Allure is also wired in and writes raw execution data to `allure-results`.
 - Generate the richer single-file Allure report with `npm run report:allure`.
 - The generated Allure report is written to `reports/allure/index.html`.
+- The repo uses the standard Allure generate flow with the Awesome plugin configured for single-file output.
+- Some newer Allure docs show `allure generate <dir> --single-file`; the installed CLI version here expects single-file to come from config instead.
+- If you generated `allure-results` with an older dependency set, delete `allure-results/` and rerun the tests before regenerating the report.
 - Open the generated reports with `npm run report:playwright` or `npm run report:allure:open`.
 - If you do not want Allure, remove the `allure-playwright` reporter line in [`playwright.config.ts`](./playwright.config.ts).
 
