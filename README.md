@@ -1,119 +1,81 @@
 # qa-patterns
 
-`qa-patterns` is a pattern library for modern automation testing frameworks and deterministic reference applications.
+`qa-patterns` is a repository of reusable test automation patterns.
 
-It includes:
+It currently includes:
 
-- A production-ready Playwright template built with TypeScript.
-- A deterministic UI demo application for end-to-end automation.
-- A deterministic Express API server for API workflow automation.
-- Documentation and CI assets that make the repository easy to extend.
-
-## Repository layout
-
-```text
-qa-patterns
-├── .github/workflows
-├── docs
-├── templates
-│   └── playwright-template
-├── test-apps
-│   ├── api-demo-server
-│   └── ui-demo-app
-├── tools
-│   └── create-qa-patterns
-├── package.json
-└── README.md
-```
+- a Playwright + TypeScript framework template
+- a deterministic UI demo app for browser testing
+- a deterministic API demo server for API testing
+- CI, linting, reporting, and extension patterns
 
 ## Quick start
 
-1. Install dependencies from the repository root:
+1. Install dependencies:
 
-   ```bash
-   npm install
-   ```
+```bash
+npm install
+```
 
-2. Start the deterministic demo applications in separate terminals:
+2. Start the demo apps in separate terminals:
 
-   ```bash
-   npm run dev:ui
-   ```
+```bash
+npm run dev:ui
+```
 
-   ```bash
-   npm run dev:api
-   ```
+```bash
+npm run dev:api
+```
 
 3. Run the Playwright template:
 
-   ```bash
-   npm test
-   ```
-
-## Usage pattern
-
-This repository is meant to be used in two ways:
-
-1. As a reference implementation:
-
-   - run the bundled UI and API demo apps
-   - execute the Playwright template against them
-   - study the page objects, fixtures, data factories, config, lint rules, and CI workflow
-
-2. As a starting point for new automation projects:
-
-   - copy or adapt `templates/playwright-template`
-   - replace the demo app URLs with your system URLs through `TEST_ENV` config
-   - extend `pages/`, `components/`, `fixtures/`, and `data/` around your own business workflows
-   - keep selectors in page objects and keep raw test data generation inside factories
-
-The future CLI package is the distribution point for scaffolded starters:
-
 ```bash
-npm install -g @toolstackhq/create-qa-patterns
-create-qa-patterns
+npm test
 ```
 
-Today the CLI is a placeholder. The repository itself is the primary usable artifact.
+## What the framework includes
 
-## Release pattern
+- page objects with selectors kept out of test files
+- reusable fixtures for config, logging, data, and pages
+- generic test data with `DataFactory`
+- environment-aware runtime config with `TEST_ENV=dev|staging|prod`
+- env-based secret resolution through a `SecretManager`
+- Playwright HTML reporting by default
+- optional Allure single-file reporting
+- ESLint rules to protect framework conventions
+- GitHub Actions and Docker support for CI
 
-The repository now follows the same release approach used in `mockit` for the publishable CLI package:
+## Main commands
 
-1. Update [`tools/create-qa-patterns/package.json`](./tools/create-qa-patterns/package.json) with the next version.
-2. Commit the change to `main`.
-3. Create and push a matching git tag such as `v0.1.0`.
-4. GitHub Actions runs [`release-publish.yml`](./.github/workflows/release-publish.yml), validates the tag against the CLI package version, packs the artifact, publishes to npm with provenance, and creates a GitHub release.
+From the repository root:
 
-Required secret:
+```bash
+npm test
+npm run test:smoke
+npm run test:regression
+npm run lint
+npm run typecheck
+```
 
-- `NPM_TOKEN` with publish access for `@toolstackhq/create-qa-patterns`
+From `templates/playwright-template`:
 
-## What the Playwright template demonstrates
-
-- Tests modeled as small user journeys rather than selector scripts.
-- A simple two-page UI example: login, then add one person.
-- Page objects that own all locators.
-- Deterministic test data via generic factories and generators.
-- Environment-aware config and extensible secret resolution.
-- CI-friendly observability through traces, screenshots, videos, structured logs, and artifact uploads.
-- Default Playwright HTML reporting with optional Allure reporting already wired in.
-- ESLint rules that protect the automation architecture.
+```bash
+npm run report:playwright
+npm run report:allure
+```
 
 ## Documentation
 
-- [Architecture](./docs/architecture.md)
-- [Local development](./docs/local-development.md)
-- [Extending the repository](./docs/extending-the-repository.md)
-- [Playwright template guide](./templates/playwright-template/README.md)
+- [Docs index](./docs/README.md)
+- [Run locally](./docs/local-development.md)
+- [Write and extend tests](./docs/extending-the-repository.md)
+- [Framework architecture](./docs/architecture.md)
+- [Reporting](./docs/reporting.md)
+- [CI and quality checks](./docs/ci-and-quality.md)
+- [Security and secrets](./docs/security.md)
+- [Playwright template package](./templates/playwright-template/README.md)
 
 ## Default local credentials
 
-- Username: `tester`
-- Password: `Password123!`
-
-## Notes
-
-- The UI demo app and API demo server both keep state in memory for deterministic runs.
-- The root GitHub Actions workflow runs the Playwright template against the bundled demo applications.
-- The `tools/create-qa-patterns` package is a future scaffolding entrypoint.
+- username: `tester`
+- password: `Password123!`

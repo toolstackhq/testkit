@@ -1,67 +1,50 @@
 # Playwright Template
 
-This template demonstrates a maintainable Playwright automation architecture without forcing a heavy demo domain up front.
+This is a Playwright + TypeScript automation framework template.
 
-## Highlights
+It includes:
 
-- TypeScript-first framework structure with page objects, fixtures, utilities, and environment-aware configuration.
-- Generic test data generation using deterministic factories and generators.
-- Environment and secret abstractions that resolve values per `TEST_ENV`.
-- Architecture guardrails enforced with local ESLint rules.
-- CI-ready reporting with the default Playwright HTML report, optional Allure reporting, JSONL execution events, traces, screenshots, and video artifacts on failure.
+- page objects
+- shared fixtures
+- generic test data
+- environment-aware config
+- env-based secret management
+- Playwright HTML reporting
+- optional Allure reporting
+- lint rules for framework conventions
+- CI and Docker support
 
-## Structure
+## Main commands
 
-```text
-playwright-template
-├── tests
-├── pages
-├── components
-├── fixtures
-├── data
-│   ├── factories
-│   └── generators
-├── config
-├── utils
-├── reporters
-├── lint
-├── scripts
-├── docker
-└── .github/workflows
+From the repository root:
+
+```bash
+npm test
+npm run test:smoke
+npm run test:regression
+npm run lint
+npm run typecheck
 ```
 
-## Running locally
+From this directory:
 
-1. Copy `.env.example` to `.env` if you need overrides.
-2. Start the demo applications from the repository root:
-   - `npm run dev:ui`
-   - `npm run dev:api`
-3. Install workspace dependencies from the repository root with `npm install`.
-4. Run tests from this directory with `npm test`.
+```bash
+npm run report:playwright
+npm run report:allure
+```
 
-## Reporting
+## Read next
 
-- The default report remains Playwright's HTML reporter at `reports/html`.
-- Allure is also wired in and writes raw execution data to `allure-results`.
-- Generate the richer single-file Allure report with `npm run report:allure`.
-- The generated Allure report is written to `reports/allure/index.html`.
-- The repo uses the Allure 3 Awesome plugin for single-file output and generates the report through a small Node wrapper so it works reliably on both Node 18 and Node 20.
-- If you generated `allure-results` with an older dependency set, delete `allure-results/` and rerun the tests before regenerating the report.
-- Open the generated reports with `npm run report:playwright` or `npm run report:allure:open`.
-- If you do not want Allure, remove the `allure-playwright` reporter line in [`playwright.config.ts`](./playwright.config.ts).
+- [Run locally](../../docs/local-development.md)
+- [Framework architecture](../../docs/architecture.md)
+- [Write and extend tests](../../docs/extending-the-repository.md)
+- [Reporting](../../docs/reporting.md)
+- [CI and quality checks](../../docs/ci-and-quality.md)
+- [Security and secrets](../../docs/security.md)
 
-## Design rules
+## Important defaults
 
-- Tests describe short workflows and assertions only.
-- Page objects own selectors.
-- Page objects return state; assertions stay in test files.
-- The starter example should stay small enough to understand in one read.
-- `waitForTimeout` is forbidden.
-- Tags such as `@smoke`, `@regression`, and `@critical` are used for targeted runs.
-
-## CI usage
-
-- `scripts/run-tests.sh` is the CI entrypoint.
-- The included GitHub Actions workflow validates the template twice: once directly on the runner and once by building and running `docker/Dockerfile`.
-- `docker/Dockerfile` is therefore a first-class CI path, not just a reference artifact.
-- Both CI paths upload Playwright artifacts and Allure outputs so teams can inspect failures without rerunning locally.
+- default UI URL: `http://127.0.0.1:3000`
+- default API URL: `http://127.0.0.1:3001`
+- default username: `tester`
+- default password: `Password123!`

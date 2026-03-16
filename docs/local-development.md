@@ -1,16 +1,18 @@
-# Local Development
+# Run Locally
 
-## Install dependencies
+## Install
 
-Run this once from the repository root:
+From the repository root:
 
 ```bash
 npm install
 ```
 
-## Start the deterministic applications
+Node `18.18+` is required.
 
-Run each service in its own terminal:
+## Start the demo apps
+
+Run each app in its own terminal from the repository root:
 
 ```bash
 npm run dev:ui
@@ -20,12 +22,12 @@ npm run dev:ui
 npm run dev:api
 ```
 
-The default endpoints are:
+Default endpoints:
 
 - UI app: `http://127.0.0.1:3000`
 - API server: `http://127.0.0.1:3001`
 
-## Run the Playwright template
+## Run tests
 
 From the repository root:
 
@@ -33,13 +35,7 @@ From the repository root:
 npm test
 ```
 
-The default example covers:
-
-- sign in
-- add one person
-- verify the list
-
-Tag-filtered runs:
+Targeted runs:
 
 ```bash
 npm run test:smoke
@@ -49,8 +45,35 @@ npm run test:smoke
 npm run test:regression
 ```
 
-## Environment and secrets
+The current example flow is intentionally small:
 
-- `TEST_ENV` selects `dev`, `staging`, or `prod`.
-- The template resolves `DEV_*`, `STAGING_*`, or `PROD_*` values first, then falls back to generic keys.
-- Copy `templates/playwright-template/.env.example` to `templates/playwright-template/.env` for local overrides.
+- sign in
+- add one person
+- verify the list
+
+## Local config
+
+The Playwright template supports:
+
+- `TEST_ENV=dev`
+- `TEST_ENV=staging`
+- `TEST_ENV=prod`
+
+For local overrides, copy:
+
+```bash
+templates/playwright-template/.env.example
+```
+
+to:
+
+```bash
+templates/playwright-template/.env
+```
+
+The template loads:
+
+- `.env`
+- `.env.<TEST_ENV>`
+
+with environment-specific values taking priority.

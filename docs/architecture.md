@@ -1,30 +1,38 @@
-# Architecture
+# Framework Architecture
 
-`qa-patterns` is organized as an npm workspace so teams can install once at the repository root and then run any template or demo application in isolation.
+## Repository layout
 
-## Repository modules
+- `templates/playwright-template`: the main automation framework template
+- `test-apps/ui-demo-app`: deterministic UI app used by browser tests
+- `test-apps/api-demo-server`: deterministic API app used by API tests
+- `tools/create-qa-patterns`: future scaffolding CLI
+- `docs`: usage and extension guides
 
-- `templates/playwright-template`: Reference automation framework with Playwright, TypeScript, fixtures, page objects, data factories, environment configuration, and CI assets.
-- `test-apps/ui-demo-app`: Deterministic server-rendered UI with just `login` and `people` pages.
-- `test-apps/api-demo-server`: Deterministic Express API with a small `people` resource.
-- `tools/create-qa-patterns`: Placeholder CLI package for future project scaffolding.
-- `docs`: Architecture, local setup, and extension guidance.
+## Playwright template layout
 
-## Playwright template layers
+- `tests`: business-level test flows and assertions
+- `pages`: page objects that own locators and user actions
+- `components`: reusable UI fragments shared by pages
+- `fixtures`: shared runtime wiring for config, data, logger, and page objects
+- `data/factories`: generic builders such as `DataFactory.person()`
+- `data/generators`: deterministic ID and faker helpers
+- `config`: environment loading and secret access
+- `utils`: logging and test step helpers
+- `reporters`: custom structured reporter output
+- `lint`: local ESLint rules that enforce framework standards
+- `docker`: container setup for CI
 
-- `tests`: Small user journeys and workflow validation only.
-- `pages`: Screen-level page objects that own selectors and business actions.
-- `components`: Reusable UI fragments such as flash messages.
-- `fixtures`: Composition root for runtime configuration, logging, generic data factories, and page objects.
-- `data`: Deterministic generators plus generic factories such as `DataFactory.person()`.
-- `config`: Environment resolution and secret abstractions.
-- `utils`: Logging and step instrumentation.
-- `reporters`: CI-facing execution reporters.
-- `lint`: Local ESLint plugin that protects the architecture.
+## Design rules
 
-## Determinism strategy
+- tests should describe user behavior, not selectors
+- locators should stay in page objects
+- assertions should stay in test files
+- data generation should come from factories, not inline object literals everywhere
+- the starter should stay small enough to understand quickly
 
-- The demo applications store state in memory and expose fixed ports by default.
-- The Playwright template uses a `TEST_RUN_ID` to generate stable IDs for each run.
-- Environment defaults are explicit, and `.env` files can override them per environment.
-- Page objects use semantic selectors or `data-testid`, which keeps tests resilient and readable.
+## Determinism
+
+- demo app state is in memory and resets on process start
+- default ports are fixed
+- `TEST_RUN_ID` can be used to generate stable test data per run
+- the example data layer stays generic on purpose

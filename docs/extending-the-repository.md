@@ -1,30 +1,98 @@
-# Extending The Repository
+# Write And Extend Tests
 
-## Adding a new framework template
+## Add a new test
 
-1. Create a new package under `templates/`.
-2. Keep framework-specific docs and CI files inside that template package.
-3. Add the package path to the root `workspaces` array.
-4. Provide at least one deterministic reference test against the demo applications or a new demo system.
+Add new tests under:
 
-## Adding new demo apps
+```bash
+templates/playwright-template/tests
+```
 
-1. Place the application under `test-apps/`.
-2. Keep the state model deterministic and reset on process start.
-3. Expose a `/health` endpoint so CI can wait for service readiness.
-4. Document the expected ports and credentials.
+Use the shared fixtures:
 
-## Evolving the Playwright template
+```ts
+import { expect, test } from "../fixtures/test-fixtures";
+```
 
-- Start with generic factories under `data/factories` and add domain-specific ones only when needed.
-- Add shared UI primitives under `components`.
-- Keep locators out of `tests`.
-- Update the local ESLint plugin when new architectural rules need to be enforced.
+Keep each test focused on a short workflow:
 
-## Future CLI direction
+- prepare data with `dataFactory`
+- drive the app through page objects
+- assert in the test
 
-The `create-qa-patterns` package is intentionally minimal today. It is the reserved integration point for future commands such as:
+## Add a new page object
 
-- `create-qa-patterns playwright`
-- `create-qa-patterns api`
-- `create-qa-patterns demo-app`
+Create a new file under:
+
+```bash
+templates/playwright-template/pages
+```
+
+Rules:
+
+- keep locators in the page object
+- expose user actions and simple state reads
+- do not put `expect()` assertions in the page object
+
+## Extend fixtures
+
+Update:
+
+```bash
+templates/playwright-template/fixtures/test-fixtures.ts
+```
+
+This is where shared objects are wired into tests, including:
+
+- runtime config
+- logger
+- step logger
+- data factory
+- page objects
+
+If you add a new page or helper used across many tests, add it here.
+
+## Extend data
+
+Start with generic data in:
+
+```bash
+templates/playwright-template/data/factories
+```
+
+Current pattern:
+
+- `DataFactory.person()`
+
+Only add domain-specific factories when the project actually needs them.
+
+## Add tags
+
+The template supports tags in test titles:
+
+- `@smoke`
+- `@regression`
+- `@critical`
+
+Example:
+
+```ts
+test("login and add one person @smoke @critical", async () => {
+  // ...
+});
+```
+
+## Extend the repository
+
+To add another framework template:
+
+1. create a new package under `templates/`
+2. add it to the root `workspaces`
+3. include its own README, CI workflow, and at least one deterministic example
+
+To add another demo app:
+
+1. create it under `test-apps/`
+2. keep its state deterministic
+3. expose a `/health` endpoint
+4. document its port and default credentials
