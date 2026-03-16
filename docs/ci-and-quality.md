@@ -22,7 +22,7 @@ There is also a lightweight scheduled watcher:
 .github/workflows/dependency-watch.yml
 ```
 
-It runs weekly and by manual dispatch. It checks whether `@playwright/test` is behind the latest stable version and whether `npm audit` reports vulnerabilities. When something needs attention, it creates or updates a GitHub issue titled `Dependency watch alert`.
+It runs weekly and by manual dispatch. It checks whether `@playwright/test` is behind the latest stable version and audits the Playwright and Cypress template lockfiles separately. When something needs attention, it creates or updates a GitHub issue titled `Dependency watch alert`.
 
 ## CI entrypoint
 

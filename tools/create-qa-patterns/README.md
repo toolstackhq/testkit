@@ -20,6 +20,8 @@ Generate into a new directory:
 create-qa-patterns my-project
 ```
 
+The generated project is initialized with `git init` automatically and includes a default `.gitignore` for common local artifacts.
+
 Generate the Playwright template explicitly:
 
 ```bash
@@ -60,5 +62,6 @@ The CLI checks:
 - `npm` availability for install and test actions
 - `npx` availability for template setup that depends on it
 - `docker` availability and warns if it is missing
+- `git` availability so the scaffold can start as a repository immediately
 
 If `npx playwright install` fails because the host is missing browser dependencies, the CLI keeps the generated project and prints the recovery steps instead of treating scaffold generation as failed.

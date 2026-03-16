@@ -42,12 +42,20 @@ jobs:
             echo "- Current \`@playwright/test\`: ${{ steps.watch.outputs.playwright_current_version }}"
             echo "- Latest \`@playwright/test\`: ${{ steps.watch.outputs.playwright_latest_version }}"
             echo "- Playwright update available: ${{ steps.watch.outputs.playwright_update_available }}"
-            echo "- Vulnerabilities total: ${{ steps.watch.outputs.vulnerabilities_total }}"
-            echo "- Critical: ${{ steps.watch.outputs.vulnerabilities_critical }}"
-            echo "- High: ${{ steps.watch.outputs.vulnerabilities_high }}"
-            echo "- Moderate: ${{ steps.watch.outputs.vulnerabilities_moderate }}"
-            echo "- Low: ${{ steps.watch.outputs.vulnerabilities_low }}"
-            echo "- Info: ${{ steps.watch.outputs.vulnerabilities_info }}"
+            echo
+            echo "### Template audit summary"
+            echo "- Playwright template vulnerabilities: ${{ steps.watch.outputs.playwright_template_vulnerabilities_total }}"
+            echo "  - Critical: ${{ steps.watch.outputs.playwright_template_vulnerabilities_critical }}"
+            echo "  - High: ${{ steps.watch.outputs.playwright_template_vulnerabilities_high }}"
+            echo "  - Moderate: ${{ steps.watch.outputs.playwright_template_vulnerabilities_moderate }}"
+            echo "  - Low: ${{ steps.watch.outputs.playwright_template_vulnerabilities_low }}"
+            echo "  - Info: ${{ steps.watch.outputs.playwright_template_vulnerabilities_info }}"
+            echo "- Cypress template vulnerabilities: ${{ steps.watch.outputs.cypress_template_vulnerabilities_total }}"
+            echo "  - Critical: ${{ steps.watch.outputs.cypress_template_vulnerabilities_critical }}"
+            echo "  - High: ${{ steps.watch.outputs.cypress_template_vulnerabilities_high }}"
+            echo "  - Moderate: ${{ steps.watch.outputs.cypress_template_vulnerabilities_moderate }}"
+            echo "  - Low: ${{ steps.watch.outputs.cypress_template_vulnerabilities_low }}"
+            echo "  - Info: ${{ steps.watch.outputs.cypress_template_vulnerabilities_info }}"
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Create or update dependency watch issue
@@ -63,14 +71,23 @@ jobs:
               `- Latest \`@playwright/test\`: ${{ steps.watch.outputs.playwright_latest_version }}`,
               `- Playwright update available: ${{ steps.watch.outputs.playwright_update_available }}`,
               "",
-              "## npm audit summary",
+              "## Template audit summary",
               "",
-              `- Total: ${{ steps.watch.outputs.vulnerabilities_total }}`,
-              `- Critical: ${{ steps.watch.outputs.vulnerabilities_critical }}`,
-              `- High: ${{ steps.watch.outputs.vulnerabilities_high }}`,
-              `- Moderate: ${{ steps.watch.outputs.vulnerabilities_moderate }}`,
-              `- Low: ${{ steps.watch.outputs.vulnerabilities_low }}`,
-              `- Info: ${{ steps.watch.outputs.vulnerabilities_info }}`,
+              "### Playwright template",
+              `- Total: ${{ steps.watch.outputs.playwright_template_vulnerabilities_total }}`,
+              `- Critical: ${{ steps.watch.outputs.playwright_template_vulnerabilities_critical }}`,
+              `- High: ${{ steps.watch.outputs.playwright_template_vulnerabilities_high }}`,
+              `- Moderate: ${{ steps.watch.outputs.playwright_template_vulnerabilities_moderate }}`,
+              `- Low: ${{ steps.watch.outputs.playwright_template_vulnerabilities_low }}`,
+              `- Info: ${{ steps.watch.outputs.playwright_template_vulnerabilities_info }}`,
+              "",
+              "### Cypress template",
+              `- Total: ${{ steps.watch.outputs.cypress_template_vulnerabilities_total }}`,
+              `- Critical: ${{ steps.watch.outputs.cypress_template_vulnerabilities_critical }}`,
+              `- High: ${{ steps.watch.outputs.cypress_template_vulnerabilities_high }}`,
+              `- Moderate: ${{ steps.watch.outputs.cypress_template_vulnerabilities_moderate }}`,
+              `- Low: ${{ steps.watch.outputs.cypress_template_vulnerabilities_low }}`,
+              `- Info: ${{ steps.watch.outputs.cypress_template_vulnerabilities_info }}`,
               "",
               "This issue is maintained by `.github/workflows/dependency-watch.yml`."
             ].join("\n");

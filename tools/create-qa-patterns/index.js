@@ -18,6 +18,19 @@ const DEFAULT_GITIGNORE = `node_modules/
 .env.*
 !.env.example
 
+.DS_Store
+*.log
+*.tgz
+.idea/
+.vscode/
+.nyc_output/
+coverage/
+dist/
+build/
+tmp/
+temp/
+downloads/
+cypress.env.json
 reports/
 cypress/screenshots/
 cypress/videos/
@@ -171,7 +184,8 @@ function collectPrerequisites() {
   return {
     npm: commandExists("npm"),
     npx: commandExists("npx"),
-    docker: commandExists("docker")
+    docker: commandExists("docker"),
+    git: commandExists("git")
   };
 }
 
@@ -188,7 +202,11 @@ function printPrerequisiteWarnings(prerequisites) {
     process.stdout.write(`${colors.yellow("Warning:")} docker was not found. Docker-based template flows will not run until Docker is installed.\n`);
   }
 
-  if (!prerequisites.npm || !prerequisites.npx || !prerequisites.docker) {
+  if (!prerequisites.git) {
+    process.stdout.write(`${colors.yellow("Warning:")} git was not found. The generated project cannot be initialized as a repository automatically.\n`);
+  }
+
+  if (!prerequisites.npm || !prerequisites.npx || !prerequisites.docker || !prerequisites.git) {
     process.stdout.write("\n");
   }
 }
@@ -206,6 +224,7 @@ function createSummary(template, targetDirectory, generatedInCurrentDirectory) {
     targetDirectory,
     generatedInCurrentDirectory,
     demoAppsManagedByTemplate: Boolean(template.demoAppsManagedByTemplate),
+    gitInit: "not-run",
     npmInstall: "not-run",
     extraSetup: template.setup ? "not-run" : null,
     testRun: "not-run"
@@ -463,6 +482,21 @@ function customizeProject(targetDirectory, template) {
   }
 }
 
+function initializeGitRepository(targetDirectory) {
+  if (fs.existsSync(path.join(targetDirectory, ".git"))) {
+    return;
+  }
+
+  const result = spawnSync(getCommandName("git"), ["init"], {
+    cwd: targetDirectory,
+    encoding: "utf8"
+  });
+
+  if (result.status !== 0) {
+    throw new Error(result.stderr || "git init failed.");
+  }
+}
+
 function renderProgress(completed, total, label) {
   const width = 24;
   const filled = Math.round((completed / total) * width);
@@ -472,7 +506,7 @@ function renderProgress(completed, total, label) {
   process.stdout.write(`\r[${bar}] ${percentage}% ${label}`);
 }
 
-async function scaffoldProject(template, targetDirectory) {
+async function scaffoldProject(template, targetDirectory, prerequisites) {
   const templateName = template.id;
   const templateDirectory = path.resolve(__dirname, "templates", templateName);
 
@@ -501,6 +535,10 @@ async function scaffoldProject(template, targetDirectory) {
   customizeProject(targetDirectory, template);
   renderProgress(3, steps.length, steps[2]);
   await sleep(80);
+
+  if (prerequisites.git) {
+    initializeGitRepository(targetDirectory);
+  }
 
   renderProgress(4, steps.length, steps[3]);
   await sleep(60);
@@ -620,6 +658,7 @@ function printSummary(summary) {
   process.stdout.write(`\n${colors.bold("Summary")}\n`);
   process.stdout.write(`  Template: ${summary.template.id}\n`);
   process.stdout.write(`  Target: ${summary.targetDirectory}\n`);
+  process.stdout.write(`  Git repository: ${formatStatus(summary.gitInit)}\n`);
   process.stdout.write(
     `  Demo apps: ${summary.demoAppsManagedByTemplate ? "bundled and auto-started in dev when using default local URLs" : "external application required"}\n`
   );
@@ -714,9 +753,11 @@ async function main() {
     throw new Error(`Unsupported template "${templateName}".`);
   }
 
+  const prerequisites = collectPrerequisites();
   const summary = createSummary(template, targetDirectory, generatedInCurrentDirectory);
-  printPrerequisiteWarnings(collectPrerequisites());
-  await scaffoldProject(template, targetDirectory);
+  printPrerequisiteWarnings(prerequisites);
+  await scaffoldProject(template, targetDirectory, prerequisites);
+  summary.gitInit = prerequisites.git ? "completed" : "unavailable";
   printSuccess(template, targetDirectory, generatedInCurrentDirectory);
   await runPostGenerateActions(template, targetDirectory, summary);
   printSummary(summary);
