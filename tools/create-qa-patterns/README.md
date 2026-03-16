@@ -1,24 +1,23 @@
 # @toolstackhq/create-qa-patterns
 
-This package is the future scaffolding entrypoint for the `qa-patterns` repository.
+CLI for generating QA framework templates from `qa-patterns`.
 
-## Current status
+## Install
 
-The package is intentionally minimal today. It exists so the repository can reserve the CLI name and publish a stable install target while the scaffold commands evolve.
+```bash
+npm install -g @toolstackhq/create-qa-patterns
+```
 
 ## Usage
 
 ```bash
-npm install -g @toolstackhq/create-qa-patterns
 create-qa-patterns
 ```
 
-Current output:
+## Supported templates
 
-- prints a placeholder message
+The generator command is not enabled in the current release.
 
-Planned direction:
+Planned first template:
 
-- scaffold a Playwright automation framework
-- scaffold reference demo applications
-- generate standardized config, lint, CI, and reporting assets
+- `playwright-template`
