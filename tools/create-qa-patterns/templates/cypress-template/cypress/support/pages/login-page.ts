@@ -3,15 +3,15 @@ export const loginPage = {
     return cy.visit("/login");
   },
 
-  usernameInput(): Cypress.Chainable<JQuery<HTMLElement>> {
+  usernameInput(): Cypress.Chainable {
     return cy.get("#username");
   },
 
-  passwordInput(): Cypress.Chainable<JQuery<HTMLElement>> {
+  passwordInput(): Cypress.Chainable {
     return cy.get("#password");
   },
 
-  submitButton(): Cypress.Chainable<JQuery<HTMLElement>> {
+  submitButton(): Cypress.Chainable {
     return cy.contains("button", "Sign in");
   },
 

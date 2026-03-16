@@ -101,6 +101,12 @@ export default [
     }
   },
   {
+    files: ["cypress/support/commands.ts"],
+    rules: {
+      "@typescript-eslint/no-namespace": "off"
+    }
+  },
+  {
     files: ["cypress/support/pages/**/*.ts"],
     rules: {
       "no-restricted-syntax": [

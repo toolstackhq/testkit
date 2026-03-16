@@ -1,51 +1,51 @@
 import type { PersonRecord } from "../data/data-factory";
 
 export const peoplePage = {
-  heading(): Cypress.Chainable<JQuery<HTMLElement>> {
+  heading(): Cypress.Chainable {
     return cy.contains("h1", "People");
   },
 
-  welcomeMessage(): Cypress.Chainable<JQuery<HTMLElement>> {
+  welcomeMessage(): Cypress.Chainable {
     return cy.get("[data-testid='welcome-message']");
   },
 
-  flashMessage(): Cypress.Chainable<JQuery<HTMLElement>> {
+  flashMessage(): Cypress.Chainable {
     return cy.get("[data-testid='flash-message']");
   },
 
-  personIdInput(): Cypress.Chainable<JQuery<HTMLElement>> {
+  personIdInput(): Cypress.Chainable {
     return cy.get("#personId");
   },
 
-  nameInput(): Cypress.Chainable<JQuery<HTMLElement>> {
+  nameInput(): Cypress.Chainable {
     return cy.get("#name");
   },
 
-  roleInput(): Cypress.Chainable<JQuery<HTMLElement>> {
+  roleInput(): Cypress.Chainable {
     return cy.get("#role");
   },
 
-  emailInput(): Cypress.Chainable<JQuery<HTMLElement>> {
+  emailInput(): Cypress.Chainable {
     return cy.get("#email");
   },
 
-  submitButton(): Cypress.Chainable<JQuery<HTMLElement>> {
+  submitButton(): Cypress.Chainable {
     return cy.contains("button", "Add person");
   },
 
-  personRow(personId: string): Cypress.Chainable<JQuery<HTMLElement>> {
+  personRow(personId: string): Cypress.Chainable {
     return cy.get(`[data-testid='person-row-${personId}']`);
   },
 
-  nameCell(personId: string): Cypress.Chainable<JQuery<HTMLElement>> {
+  nameCell(personId: string): Cypress.Chainable {
     return this.personRow(personId).find("td").eq(0);
   },
 
-  roleCell(personId: string): Cypress.Chainable<JQuery<HTMLElement>> {
+  roleCell(personId: string): Cypress.Chainable {
     return this.personRow(personId).find("td").eq(1);
   },
 
-  emailCell(personId: string): Cypress.Chainable<JQuery<HTMLElement>> {
+  emailCell(personId: string): Cypress.Chainable {
     return this.personRow(personId).find("td").eq(2);
   },
 
