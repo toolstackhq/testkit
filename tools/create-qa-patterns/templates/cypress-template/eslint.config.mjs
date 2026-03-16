@@ -13,6 +13,11 @@ const cypressGlobals = {
   afterEach: "readonly"
 };
 
+const nodeGlobals = {
+  process: "readonly",
+  console: "readonly"
+};
+
 export default [
   {
     ignores: ["demo-apps/**", "node_modules/**", "reports/**"]
@@ -25,13 +30,17 @@ export default [
       parserOptions: {
         project: "./tsconfig.json"
       },
-      globals: cypressGlobals
+      globals: {
+        ...cypressGlobals,
+        ...nodeGlobals
+      }
     },
     plugins: {
       "@typescript-eslint": tsPlugin
     },
     rules: {
       ...tsPlugin.configs.recommended.rules,
+      "no-undef": "off",
       "@typescript-eslint/no-unused-vars": [
         "error",
         {
@@ -39,6 +48,16 @@ export default [
           varsIgnorePattern: "^_"
         }
       ]
+    }
+  },
+  {
+    files: ["scripts/**/*.mjs"],
+    languageOptions: {
+      globals: {
+        ...nodeGlobals,
+        fetch: "readonly",
+        setTimeout: "readonly"
+      }
     }
   },
   {

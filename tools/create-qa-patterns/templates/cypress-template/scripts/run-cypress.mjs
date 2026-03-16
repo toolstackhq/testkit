@@ -48,7 +48,7 @@ async function waitForHealthcheck(url, timeoutMs = 30_000) {
 
   while (Date.now() - start < timeoutMs) {
     try {
-      const response = await fetch(url);
+      const response = await globalThis.fetch(url);
       if (response.ok) {
         return;
       }
@@ -56,7 +56,7 @@ async function waitForHealthcheck(url, timeoutMs = 30_000) {
       // Service is not ready yet.
     }
 
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    await new Promise((resolve) => globalThis.setTimeout(resolve, 500));
   }
 
   throw new Error(`Timed out waiting for ${url}`);
