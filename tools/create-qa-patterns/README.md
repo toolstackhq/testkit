@@ -29,3 +29,15 @@ create-qa-patterns playwright-template my-project
 ## Supported templates
 
 - `playwright-template`
+
+## Interactive flow
+
+When run in a terminal, the CLI shows:
+
+- a template picker with keyboard selection
+- short template descriptions
+- scaffold progress while files are generated
+- optional post-generate actions for:
+  - `npm install`
+  - `npx playwright install`
+  - `npm test`
