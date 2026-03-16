@@ -1,0 +1,31 @@
+{
+  "name": "@toolstackhq/cypress-template",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Production-ready Cypress automation framework template with a deterministic UI starter app.",
+  "scripts": {
+    "test": "node ./scripts/run-cypress.mjs run",
+    "open": "node ./scripts/run-cypress.mjs open",
+    "cy:run": "cypress run",
+    "cy:open": "cypress open",
+    "demo:ui": "node ./demo-apps/ui-demo-app/src/server.js",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "ci": "bash ./scripts/run-tests.sh"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^8.4.1",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.12.0",
+    "@types/node": "^22.7.4",
+    "@typescript-eslint/eslint-plugin": "^8.8.1",
+    "@typescript-eslint/parser": "^8.8.1",
+    "cypress": "^13.17.0",
+    "eslint": "^9.12.0",
+    "typescript": "^5.6.2"
+  }
+}

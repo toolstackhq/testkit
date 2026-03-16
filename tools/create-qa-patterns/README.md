@@ -26,9 +26,16 @@ Generate the Playwright template explicitly:
 create-qa-patterns playwright-template my-project
 ```
 
+Generate the Cypress template explicitly:
+
+```bash
+create-qa-patterns cypress-template my-project
+```
+
 ## Supported templates
 
 - `playwright-template`
+- `cypress-template`
 
 ## Interactive flow
 
@@ -39,8 +46,11 @@ When run in a terminal, the CLI shows:
 - scaffold progress while files are generated
 - optional post-generate actions for:
   - `npm install`
-  - `npx playwright install`
   - `npm test`
+
+For Playwright projects, the interactive flow also offers:
+
+- `npx playwright install`
 
 ## Prerequisite checks
 
@@ -48,7 +58,7 @@ The CLI checks:
 
 - required Node.js version
 - `npm` availability for install and test actions
-- `npx` availability for Playwright browser installation
+- `npx` availability for template setup that depends on it
 - `docker` availability and warns if it is missing
 
 If `npx playwright install` fails because the host is missing browser dependencies, the CLI keeps the generated project and prints the recovery steps instead of treating scaffold generation as failed.

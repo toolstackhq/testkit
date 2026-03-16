@@ -55,6 +55,16 @@ The current example flow is intentionally small:
 - add one person
 - verify the list
 
+To run the Cypress template directly:
+
+```bash
+cd templates/cypress-template
+npm install
+npm test
+```
+
+For the Cypress template in local `dev`, `npm test` auto-starts its bundled UI demo app when the default local URL is still in use.
+
 ## What the tests depend on
 
 The test suite can auto-start the bundled local demo apps in `dev`, but that only applies when the template is using its default local URLs.

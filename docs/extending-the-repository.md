@@ -8,6 +8,12 @@ Add new tests under:
 templates/playwright-template/tests
 ```
 
+or:
+
+```bash
+templates/cypress-template/cypress/e2e
+```
+
 Use the shared fixtures:
 
 ```ts
@@ -26,6 +32,12 @@ Create a new file under:
 
 ```bash
 templates/playwright-template/pages
+```
+
+For Cypress page modules, add files under:
+
+```bash
+templates/cypress-template/cypress/support/pages
 ```
 
 Rules:
@@ -52,12 +64,24 @@ This is where shared objects are wired into tests, including:
 
 If you add a new page or helper used across many tests, add it here.
 
+For Cypress, shared commands live in:
+
+```bash
+templates/cypress-template/cypress/support/commands.ts
+```
+
 ## Extend data
 
 Start with generic data in:
 
 ```bash
 templates/playwright-template/data/factories
+```
+
+or for Cypress:
+
+```bash
+templates/cypress-template/cypress/support/data
 ```
 
 Current pattern:
@@ -87,7 +111,7 @@ test("login and add one person @smoke @critical", async () => {
 To add another framework template:
 
 1. create a new package under `templates/`
-2. add it to the root `workspaces`
+2. decide whether it should be a root workspace or a standalone template package
 3. include its own README, CI workflow, and at least one deterministic example
 
 To add another demo app:

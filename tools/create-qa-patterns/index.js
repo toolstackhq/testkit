@@ -19,6 +19,10 @@ const DEFAULT_GITIGNORE = `node_modules/
 !.env.example
 
 reports/
+cypress/screenshots/
+cypress/videos/
+reports/screenshots/
+reports/videos/
 allure-results/
 allure-report/
 test-results/
@@ -30,7 +34,29 @@ const TEMPLATES = [
     id: DEFAULT_TEMPLATE,
     aliases: ["playwright", "pw"],
     label: "Playwright Template",
-    description: "TypeScript starter with page objects, fixtures, multi-environment config, reporting, linting, CI and Docker."
+    description: "TypeScript starter with page objects, fixtures, multi-environment config, reporting, linting, CI and Docker.",
+    defaultPackageName: "playwright-template",
+    demoAppsManagedByTemplate: true,
+    setup: {
+      availability: "npx",
+      prompt: "Run npx playwright install now?",
+      summaryLabel: "Playwright browser install",
+      nextStep: "npx playwright install",
+      run(targetDirectory) {
+        return runCommand("npx", ["playwright", "install"], targetDirectory);
+      },
+      recovery(targetDirectory) {
+        printPlaywrightInstallRecovery(targetDirectory);
+      }
+    }
+  },
+  {
+    id: "cypress-template",
+    aliases: ["cypress", "cy"],
+    label: "Cypress Template",
+    description: "TypeScript starter with Cypress e2e specs, custom commands, page modules, env-based config, CI, and a bundled demo app.",
+    defaultPackageName: "cypress-template",
+    demoAppsManagedByTemplate: true
   }
 ];
 
@@ -71,6 +97,8 @@ const colors = {
 };
 
 function printHelp() {
+  const supportedTemplates = TEMPLATES.map((template) => `  ${template.id}${template.aliases.length > 0 ? ` (${template.aliases.join(", ")})` : ""}`).join("\n");
+
   process.stdout.write(`${colors.bold("create-qa-patterns")}
 
 Usage:
@@ -82,9 +110,7 @@ Interactive mode:
   When run without an explicit template, the CLI shows an interactive template picker.
 
 Supported templates:
-  playwright-template
-  playwright
-  pw
+${supportedTemplates}
 `);
 }
 
@@ -155,7 +181,7 @@ function printPrerequisiteWarnings(prerequisites) {
   }
 
   if (!prerequisites.npx) {
-    process.stdout.write(`${colors.yellow("Warning:")} npx was not found. Playwright browser installation will be unavailable.\n`);
+    process.stdout.write(`${colors.yellow("Warning:")} npx was not found. Template setup steps that depend on npx will be unavailable.\n`);
   }
 
   if (!prerequisites.docker) {
@@ -174,14 +200,14 @@ function createLineInterface() {
   });
 }
 
-function createSummary(templateName, targetDirectory, generatedInCurrentDirectory, demoAppsManagedByTemplate) {
+function createSummary(template, targetDirectory, generatedInCurrentDirectory) {
   return {
-    templateName,
+    template,
     targetDirectory,
     generatedInCurrentDirectory,
-    demoAppsManagedByTemplate,
+    demoAppsManagedByTemplate: Boolean(template.demoAppsManagedByTemplate),
     npmInstall: "not-run",
-    playwrightInstall: "not-run",
+    extraSetup: template.setup ? "not-run" : null,
     testRun: "not-run"
   };
 }
@@ -333,7 +359,9 @@ function resolveNonInteractiveArgs(args) {
     const templateName = resolveTemplate(args[0]);
 
     if (!templateName) {
-      throw new Error(`Unsupported template "${args[0]}". Use "playwright-template".`);
+      throw new Error(
+        `Unsupported template "${args[0]}". Supported templates: ${TEMPLATES.map((template) => template.id).join(", ")}.`
+      );
     }
 
     return {
@@ -385,14 +413,14 @@ function ensureScaffoldTarget(targetDirectory) {
   }
 }
 
-function toPackageName(targetDirectory) {
+function toPackageName(targetDirectory, template) {
   const baseName = path.basename(targetDirectory).toLowerCase();
   const normalized = baseName
     .replace(/[^a-z0-9-_]+/g, "-")
     .replace(/^-+|-+$/g, "")
     .replace(/-{2,}/g, "-");
 
-  return normalized || "playwright-template";
+  return normalized || template.defaultPackageName || "qa-patterns-template";
 }
 
 function updateJsonFile(filePath, update) {
@@ -401,8 +429,8 @@ function updateJsonFile(filePath, update) {
   fs.writeFileSync(filePath, `${JSON.stringify(next, null, 2)}\n`, "utf8");
 }
 
-function customizeProject(targetDirectory) {
-  const packageName = toPackageName(targetDirectory);
+function customizeProject(targetDirectory, template) {
+  const packageName = toPackageName(targetDirectory, template);
   const packageJsonPath = path.join(targetDirectory, "package.json");
   const packageLockPath = path.join(targetDirectory, "package-lock.json");
   const gitignorePath = path.join(targetDirectory, ".gitignore");
@@ -444,7 +472,8 @@ function renderProgress(completed, total, label) {
   process.stdout.write(`\r[${bar}] ${percentage}% ${label}`);
 }
 
-async function scaffoldProject(templateName, targetDirectory) {
+async function scaffoldProject(template, targetDirectory) {
+  const templateName = template.id;
   const templateDirectory = path.resolve(__dirname, "templates", templateName);
 
   if (!fs.existsSync(templateDirectory)) {
@@ -469,7 +498,7 @@ async function scaffoldProject(templateName, targetDirectory) {
   renderProgress(2, steps.length, steps[1]);
   await sleep(80);
 
-  customizeProject(targetDirectory);
+  customizeProject(targetDirectory, template);
   renderProgress(3, steps.length, steps[2]);
   await sleep(80);
 
@@ -526,11 +555,9 @@ function runCommand(command, args, cwd) {
   });
 }
 
-function printSuccess(templateName, targetDirectory, generatedInCurrentDirectory) {
-  const template = getTemplate(templateName);
-
+function printSuccess(template, targetDirectory, generatedInCurrentDirectory) {
   process.stdout.write(`\n${colors.green(colors.bold("Success"))}
-Generated ${template ? template.label : templateName} in ${targetDirectory}
+Generated ${template ? template.label : template.id} in ${targetDirectory}
 \n`);
 
   if (!generatedInCurrentDirectory) {
@@ -549,8 +576,8 @@ function printNextSteps(summary) {
     steps.push("npm install");
   }
 
-  if (summary.playwrightInstall !== "completed") {
-    steps.push("npx playwright install");
+  if (summary.template.setup && summary.extraSetup !== "completed") {
+    steps.push(summary.template.setup.nextStep);
   }
 
   if (summary.testRun !== "completed") {
@@ -591,17 +618,19 @@ function formatStatus(status) {
 
 function printSummary(summary) {
   process.stdout.write(`\n${colors.bold("Summary")}\n`);
-  process.stdout.write(`  Template: ${summary.templateName}\n`);
+  process.stdout.write(`  Template: ${summary.template.id}\n`);
   process.stdout.write(`  Target: ${summary.targetDirectory}\n`);
   process.stdout.write(
     `  Demo apps: ${summary.demoAppsManagedByTemplate ? "bundled and auto-started in dev when using default local URLs" : "external application required"}\n`
   );
   process.stdout.write(`  npm install: ${formatStatus(summary.npmInstall)}\n`);
-  process.stdout.write(`  Playwright browser install: ${formatStatus(summary.playwrightInstall)}\n`);
+  if (summary.template.setup) {
+    process.stdout.write(`  ${summary.template.setup.summaryLabel}: ${formatStatus(summary.extraSetup)}\n`);
+  }
   process.stdout.write(`  npm test: ${formatStatus(summary.testRun)}\n`);
 }
 
-async function runPostGenerateActions(targetDirectory, summary) {
+async function runPostGenerateActions(template, targetDirectory, summary) {
   if (!process.stdin.isTTY || !process.stdout.isTTY) {
     return;
   }
@@ -622,29 +651,35 @@ async function runPostGenerateActions(targetDirectory, summary) {
     summary.npmInstall = "unavailable";
   }
 
-  if (prerequisites.npx) {
-    const shouldInstallPlaywright = await askYesNo("Run npx playwright install now?", true);
+  if (template.setup) {
+    if (prerequisites[template.setup.availability]) {
+      const shouldRunExtraSetup = await askYesNo(template.setup.prompt, true);
 
-    if (shouldInstallPlaywright) {
-      try {
-        await runCommand("npx", ["playwright", "install"], targetDirectory);
-        summary.playwrightInstall = "completed";
-      } catch (error) {
-        summary.playwrightInstall = "manual-recovery";
-        printPlaywrightInstallRecovery(targetDirectory);
+      if (shouldRunExtraSetup) {
+        try {
+          await template.setup.run(targetDirectory);
+          summary.extraSetup = "completed";
+        } catch (error) {
+          summary.extraSetup = "manual-recovery";
+          if (typeof template.setup.recovery === "function") {
+            template.setup.recovery(targetDirectory);
+          }
 
-        const shouldContinue = await askYesNo("Continue without completing Playwright browser install?", true);
+          const shouldContinue = await askYesNo("Continue without completing setup?", true);
 
-        if (!shouldContinue) {
-          throw error;
+          if (!shouldContinue) {
+            throw error;
+          }
         }
+      } else {
+        summary.extraSetup = "skipped";
       }
     } else {
-      summary.playwrightInstall = "skipped";
+      process.stdout.write(
+        `${colors.yellow("Skipping")} ${template.setup.summaryLabel.toLowerCase()} prompt because ${template.setup.availability} is not available.\n`
+      );
+      summary.extraSetup = "unavailable";
     }
-  } else {
-    process.stdout.write(`${colors.yellow("Skipping")} Playwright browser install prompt because npx is not available.\n`);
-    summary.playwrightInstall = "unavailable";
   }
 
   if (prerequisites.npm) {
@@ -673,11 +708,17 @@ async function main() {
   }
 
   const { templateName, targetDirectory, generatedInCurrentDirectory } = await resolveScaffoldArgs(args);
-  const summary = createSummary(templateName, targetDirectory, generatedInCurrentDirectory, true);
+  const template = getTemplate(templateName);
+
+  if (!template) {
+    throw new Error(`Unsupported template "${templateName}".`);
+  }
+
+  const summary = createSummary(template, targetDirectory, generatedInCurrentDirectory);
   printPrerequisiteWarnings(collectPrerequisites());
-  await scaffoldProject(templateName, targetDirectory);
-  printSuccess(templateName, targetDirectory, generatedInCurrentDirectory);
-  await runPostGenerateActions(targetDirectory, summary);
+  await scaffoldProject(template, targetDirectory);
+  printSuccess(template, targetDirectory, generatedInCurrentDirectory);
+  await runPostGenerateActions(template, targetDirectory, summary);
   printSummary(summary);
   printNextSteps(summary);
 }

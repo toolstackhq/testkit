@@ -17,6 +17,7 @@ It gives teams a clean starting point for building automation frameworks without
 It currently includes:
 
 - a Playwright + TypeScript framework template
+- a Cypress + TypeScript framework template
 - a deterministic UI demo app for browser testing
 - a deterministic API demo server for API testing
 - CI, linting, reporting, and extension patterns
@@ -35,6 +36,7 @@ This repository aims for a middle ground:
 ## Feature set
 
 - workflow-first Playwright tests instead of selector-heavy scripts
+- Cypress-native UI tests with custom commands and page modules
 - page objects that own all locators
 - shared fixtures for runtime config, pages, logging, and test data
 - generic data factories so tests stay readable
@@ -107,6 +109,7 @@ npm run report:allure
 - [CI and quality checks](./docs/ci-and-quality.md)
 - [Security and secrets](./docs/security.md)
 - [Playwright template package](./templates/playwright-template/README.md)
+- [Cypress template package](./templates/cypress-template/README.md)
 
 ## Default local credentials
 

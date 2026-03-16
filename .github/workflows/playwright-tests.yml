@@ -124,3 +124,40 @@ jobs:
             templates/playwright-template/reports
             templates/playwright-template/allure-results
             templates/playwright-template/test-results
+
+  cypress-template:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install template dependencies
+        working-directory: templates/cypress-template
+        run: npm ci
+
+      - name: Run lint and typecheck
+        working-directory: templates/cypress-template
+        run: |
+          npm run lint
+          npm run typecheck
+
+      - name: Run Cypress tests
+        uses: cypress-io/github-action@v7
+        with:
+          working-directory: templates/cypress-template
+          install: false
+          start: npm run demo:ui
+          wait-on: "http://127.0.0.1:3000/health"
+          command: npm run cy:run
+
+      - name: Upload Cypress artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-template-artifacts
+          path: |
+            templates/cypress-template/reports
