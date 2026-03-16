@@ -1,6 +1,6 @@
 {
   "name": "@toolstackhq/create-qa-patterns",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Placeholder CLI for future test framework scaffolding.",
   "license": "MIT",
   "repository": {
