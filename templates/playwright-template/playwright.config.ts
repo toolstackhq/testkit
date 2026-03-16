@@ -3,6 +3,11 @@ import { defineConfig, devices } from "@playwright/test";
 import { loadRuntimeConfig } from "./config/runtime-config";
 
 const runtimeConfig = loadRuntimeConfig();
+const shouldAutoStartDemoApps =
+  runtimeConfig.testEnv === "dev" &&
+  runtimeConfig.uiBaseUrl === "http://127.0.0.1:3000" &&
+  runtimeConfig.apiBaseUrl === "http://127.0.0.1:3001" &&
+  process.env.PW_DISABLE_LOCAL_DEMO_APPS !== "true";
 
 export default defineConfig({
   testDir: "./tests",
@@ -35,6 +40,22 @@ export default defineConfig({
     testRunId: runtimeConfig.testRunId,
     apiBaseUrl: runtimeConfig.apiBaseUrl
   },
+  webServer: shouldAutoStartDemoApps
+    ? [
+        {
+          command: "npm run demo:ui",
+          url: `${runtimeConfig.uiBaseUrl}/health`,
+          reuseExistingServer: !process.env.CI,
+          timeout: 30_000
+        },
+        {
+          command: "npm run demo:api",
+          url: `${runtimeConfig.apiBaseUrl}/health`,
+          reuseExistingServer: !process.env.CI,
+          timeout: 30_000
+        }
+      ]
+    : undefined,
   projects: [
     {
       name: "chromium",

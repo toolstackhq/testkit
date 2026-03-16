@@ -35,6 +35,7 @@ This is a Playwright + TypeScript automation framework template for UI and API t
 - page objects in `pages/` own locators and user actions
 - runtime config is loaded from `config/runtime-config.ts`
 - application URLs and credentials are resolved from `TEST_ENV`
+- bundled demo apps auto-start during `npm test` in local `dev` mode when the default local URLs are in use
 - reports and artifacts are written under `reports/`, `allure-results/`, and `test-results/`
 
 ## Project structure
@@ -64,22 +65,22 @@ playwright-template
 npm install
 ```
 
-2. Start the target apps you want the tests to hit.
-
-For the local demo apps from the root repo:
-
-```bash
-npm run dev:ui
-```
-
-```bash
-npm run dev:api
-```
-
-3. Run tests.
+2. Run tests.
 
 ```bash
 npm test
+```
+
+In local `dev`, the template starts its bundled demo apps automatically before the tests run.
+
+If you want to run the demo apps manually for debugging:
+
+```bash
+npm run demo:ui
+```
+
+```bash
+npm run demo:api
 ```
 
 Default local values:
@@ -137,6 +138,12 @@ STAGING_APP_PASSWORD=my-password \
 npx playwright test
 ```
 
+If you want to disable the bundled local demo apps even in `dev`, use:
+
+```bash
+PW_DISABLE_LOCAL_DEMO_APPS=true npm test
+```
+
 If your team uses a real secret system later, replace the implementation behind `config/secret-manager.ts`.
 
 ## Main commands
@@ -146,6 +153,8 @@ npm test
 npm run test:smoke
 npm run test:regression
 npm run test:critical
+npm run demo:ui
+npm run demo:api
 npm run lint
 npm run typecheck
 npm run report:playwright
@@ -203,6 +212,7 @@ test("do something @smoke", async ({ dataFactory, loginPage }) => {
 
 Common extension points:
 
+- update or replace the bundled demo apps under `demo-apps/`
 - add page objects under `pages/`
 - add reusable UI pieces under `components/`
 - extend fixtures in `fixtures/test-fixtures.ts`

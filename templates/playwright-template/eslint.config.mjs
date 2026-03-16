@@ -20,6 +20,19 @@ export default [
   },
   js.configs.recommended,
   {
+    files: ["demo-apps/**/*.js"],
+    languageOptions: {
+      globals: {
+        __dirname: "readonly",
+        console: "readonly",
+        module: "readonly",
+        process: "readonly",
+        require: "readonly",
+        URL: "readonly"
+      }
+    }
+  },
+  {
     files: ["**/*.ts"],
     languageOptions: {
       parser: tsParser,

@@ -11,6 +11,7 @@ const MIN_NODE_VERSION = {
   minor: 18,
   patch: 0
 };
+const COLOR_ENABLED = Boolean(process.stdout.isTTY) && !("NO_COLOR" in process.env);
 const DEFAULT_GITIGNORE = `node_modules/
 
 .env
@@ -40,8 +41,37 @@ const TEMPLATE_ALIASES = new Map(
   ])
 );
 
+function style(text, ...codes) {
+  if (!COLOR_ENABLED) {
+    return text;
+  }
+
+  return `\u001b[${codes.join(";")}m${text}\u001b[0m`;
+}
+
+const colors = {
+  bold(text) {
+    return style(text, 1);
+  },
+  dim(text) {
+    return style(text, 2);
+  },
+  cyan(text) {
+    return style(text, 36);
+  },
+  green(text) {
+    return style(text, 32);
+  },
+  yellow(text) {
+    return style(text, 33);
+  },
+  red(text) {
+    return style(text, 31);
+  }
+};
+
 function printHelp() {
-  process.stdout.write(`create-qa-patterns
+  process.stdout.write(`${colors.bold("create-qa-patterns")}
 
 Usage:
   create-qa-patterns
@@ -121,15 +151,15 @@ function collectPrerequisites() {
 
 function printPrerequisiteWarnings(prerequisites) {
   if (!prerequisites.npm) {
-    process.stdout.write("Warning: npm was not found. Automated install and test steps will be unavailable.\n");
+    process.stdout.write(`${colors.yellow("Warning:")} npm was not found. Automated install and test steps will be unavailable.\n`);
   }
 
   if (!prerequisites.npx) {
-    process.stdout.write("Warning: npx was not found. Playwright browser installation will be unavailable.\n");
+    process.stdout.write(`${colors.yellow("Warning:")} npx was not found. Playwright browser installation will be unavailable.\n`);
   }
 
   if (!prerequisites.docker) {
-    process.stdout.write("Warning: docker was not found. Docker-based template flows will not run until Docker is installed.\n");
+    process.stdout.write(`${colors.yellow("Warning:")} docker was not found. Docker-based template flows will not run until Docker is installed.\n`);
   }
 
   if (!prerequisites.npm || !prerequisites.npx || !prerequisites.docker) {
@@ -142,6 +172,18 @@ function createLineInterface() {
     input: process.stdin,
     output: process.stdout
   });
+}
+
+function createSummary(templateName, targetDirectory, generatedInCurrentDirectory, demoAppsManagedByTemplate) {
+  return {
+    templateName,
+    targetDirectory,
+    generatedInCurrentDirectory,
+    demoAppsManagedByTemplate,
+    npmInstall: "not-run",
+    playwrightInstall: "not-run",
+    testRun: "not-run"
+  };
 }
 
 function askQuestion(prompt) {
@@ -446,7 +488,7 @@ function getCommandName(base) {
 
 function printPlaywrightInstallRecovery(targetDirectory) {
   process.stdout.write(`
-Playwright browser installation did not complete.
+${colors.yellow("Playwright browser installation did not complete.")}
 
 Common cause:
   Missing OS packages required to run Playwright browsers.
@@ -487,17 +529,17 @@ function runCommand(command, args, cwd) {
 function printSuccess(templateName, targetDirectory, generatedInCurrentDirectory) {
   const template = getTemplate(templateName);
 
-  process.stdout.write(`\nSuccess
+  process.stdout.write(`\n${colors.green(colors.bold("Success"))}
 Generated ${template ? template.label : templateName} in ${targetDirectory}
 \n`);
 
   if (!generatedInCurrentDirectory) {
-    process.stdout.write(`Change directory first:\n  cd ${path.relative(process.cwd(), targetDirectory) || "."}\n\n`);
+    process.stdout.write(`${colors.cyan("Change directory first:")}\n  cd ${path.relative(process.cwd(), targetDirectory) || "."}\n\n`);
   }
 }
 
 function printNextSteps(targetDirectory, generatedInCurrentDirectory) {
-  process.stdout.write("Next steps:\n");
+  process.stdout.write(`${colors.cyan("Next steps:")}\n`);
 
   if (!generatedInCurrentDirectory) {
     process.stdout.write(`  cd ${path.relative(process.cwd(), targetDirectory) || "."}\n`);
@@ -508,7 +550,34 @@ function printNextSteps(targetDirectory, generatedInCurrentDirectory) {
   process.stdout.write("  npm test\n");
 }
 
-async function runPostGenerateActions(targetDirectory) {
+function formatStatus(status) {
+  switch (status) {
+    case "completed":
+      return colors.green("completed");
+    case "skipped":
+      return colors.dim("skipped");
+    case "unavailable":
+      return colors.yellow("unavailable");
+    case "manual-recovery":
+      return colors.yellow("manual recovery required");
+    default:
+      return colors.dim("not run");
+  }
+}
+
+function printSummary(summary) {
+  process.stdout.write(`\n${colors.bold("Summary")}\n`);
+  process.stdout.write(`  Template: ${summary.templateName}\n`);
+  process.stdout.write(`  Target: ${summary.targetDirectory}\n`);
+  process.stdout.write(
+    `  Demo apps: ${summary.demoAppsManagedByTemplate ? "bundled and auto-started in dev when using default local URLs" : "external application required"}\n`
+  );
+  process.stdout.write(`  npm install: ${formatStatus(summary.npmInstall)}\n`);
+  process.stdout.write(`  Playwright browser install: ${formatStatus(summary.playwrightInstall)}\n`);
+  process.stdout.write(`  npm test: ${formatStatus(summary.testRun)}\n`);
+}
+
+async function runPostGenerateActions(targetDirectory, summary) {
   if (!process.stdin.isTTY || !process.stdout.isTTY) {
     return;
   }
@@ -520,9 +589,13 @@ async function runPostGenerateActions(targetDirectory) {
 
     if (shouldInstallDependencies) {
       await runCommand("npm", ["install"], targetDirectory);
+      summary.npmInstall = "completed";
+    } else {
+      summary.npmInstall = "skipped";
     }
   } else {
-    process.stdout.write("Skipping npm install prompt because npm is not available.\n");
+    process.stdout.write(`${colors.yellow("Skipping")} npm install prompt because npm is not available.\n`);
+    summary.npmInstall = "unavailable";
   }
 
   if (prerequisites.npx) {
@@ -531,7 +604,9 @@ async function runPostGenerateActions(targetDirectory) {
     if (shouldInstallPlaywright) {
       try {
         await runCommand("npx", ["playwright", "install"], targetDirectory);
+        summary.playwrightInstall = "completed";
       } catch (error) {
+        summary.playwrightInstall = "manual-recovery";
         printPlaywrightInstallRecovery(targetDirectory);
 
         const shouldContinue = await askYesNo("Continue without completing Playwright browser install?", true);
@@ -540,9 +615,12 @@ async function runPostGenerateActions(targetDirectory) {
           throw error;
         }
       }
+    } else {
+      summary.playwrightInstall = "skipped";
     }
   } else {
-    process.stdout.write("Skipping Playwright browser install prompt because npx is not available.\n");
+    process.stdout.write(`${colors.yellow("Skipping")} Playwright browser install prompt because npx is not available.\n`);
+    summary.playwrightInstall = "unavailable";
   }
 
   if (prerequisites.npm) {
@@ -550,9 +628,13 @@ async function runPostGenerateActions(targetDirectory) {
 
     if (shouldRunTests) {
       await runCommand("npm", ["test"], targetDirectory);
+      summary.testRun = "completed";
+    } else {
+      summary.testRun = "skipped";
     }
   } else {
-    process.stdout.write("Skipping npm test prompt because npm is not available.\n");
+    process.stdout.write(`${colors.yellow("Skipping")} npm test prompt because npm is not available.\n`);
+    summary.testRun = "unavailable";
   }
 }
 
@@ -567,10 +649,12 @@ async function main() {
   }
 
   const { templateName, targetDirectory, generatedInCurrentDirectory } = await resolveScaffoldArgs(args);
+  const summary = createSummary(templateName, targetDirectory, generatedInCurrentDirectory, true);
   printPrerequisiteWarnings(collectPrerequisites());
   await scaffoldProject(templateName, targetDirectory);
   printSuccess(templateName, targetDirectory, generatedInCurrentDirectory);
-  await runPostGenerateActions(targetDirectory);
+  await runPostGenerateActions(targetDirectory, summary);
+  printSummary(summary);
   printNextSteps(targetDirectory, generatedInCurrentDirectory);
 }
 

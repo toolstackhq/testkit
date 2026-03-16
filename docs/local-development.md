@@ -27,6 +27,8 @@ Default endpoints:
 - UI app: `http://127.0.0.1:3000`
 - API server: `http://127.0.0.1:3001`
 
+These manual app commands are mainly useful for interactive debugging.
+
 ## Run tests
 
 From the repository root:
@@ -34,6 +36,8 @@ From the repository root:
 ```bash
 npm test
 ```
+
+For the Playwright template in local `dev`, `npm test` will auto-start the bundled demo apps inside the template when the default local URLs are being used.
 
 Targeted runs:
 
@@ -53,9 +57,9 @@ The current example flow is intentionally small:
 
 ## What the tests depend on
 
-The test suite does not start the target applications by itself.
+The test suite can auto-start the bundled local demo apps in `dev`, but that only applies when the template is using its default local URLs.
 
-Before running UI or API tests, the target systems must already be reachable:
+In all other cases, the target systems must already be reachable:
 
 - UI app for browser tests
 - API app for API tests
