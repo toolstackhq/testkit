@@ -4,6 +4,16 @@
 
 It gives teams a clean starting point for building automation frameworks without having to invent the structure from scratch.
 
+## Table of contents
+
+- [Why this repo exists](#why-this-repo-exists)
+- [Feature set](#feature-set)
+- [How it works](#how-it-works)
+- [Quick start](#quick-start)
+- [Main commands](#main-commands)
+- [Documentation](#documentation)
+- [Default local credentials](#default-local-credentials)
+
 It currently includes:
 
 - a Playwright + TypeScript framework template
