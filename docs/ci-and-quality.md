@@ -24,6 +24,14 @@ There is also a lightweight scheduled watcher:
 
 It runs weekly and by manual dispatch. It checks whether `@playwright/test` is behind the latest stable version and audits the Playwright and Cypress template lockfiles separately. When something needs attention, it creates or updates a GitHub issue titled `Dependency watch alert`.
 
+Generated projects are validated separately in:
+
+```bash
+.github/workflows/generated-template-validation.yml
+```
+
+That workflow packs the published CLI artifact, scaffolds fresh Playwright and Cypress projects into temporary directories, installs their dependencies, and runs their real validation commands. This protects the npm package path instead of only checking the templates inside the monorepo.
+
 ## CI entrypoint
 
 The Playwright template CI command is:

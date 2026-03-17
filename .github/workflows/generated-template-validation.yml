@@ -1,0 +1,170 @@
+name: Generated Template Validation
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  pack-cli:
+    runs-on: ubuntu-latest
+    outputs:
+      tarball-name: ${{ steps.pack.outputs.tarball-name }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install workspace dependencies
+        run: npm ci
+
+      - name: Pack CLI
+        id: pack
+        run: |
+          tarball_name="$(npm pack --workspace @toolstackhq/create-qa-patterns | tail -n 1)"
+          echo "tarball-name=${tarball_name}" >> "$GITHUB_OUTPUT"
+
+      - name: Upload packed CLI
+        uses: actions/upload-artifact@v4
+        with:
+          name: packed-create-qa-patterns
+          path: ${{ steps.pack.outputs.tarball-name }}
+
+  validate-generated-playwright:
+    runs-on: ubuntu-latest
+    needs: pack-cli
+
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Download packed CLI
+        uses: actions/download-artifact@v4
+        with:
+          name: packed-create-qa-patterns
+          path: /tmp/packed-create-qa-patterns
+
+      - name: Install packed CLI
+        run: npm install -g /tmp/packed-create-qa-patterns/${{ needs.pack-cli.outputs.tarball-name }}
+
+      - name: Scaffold generated Playwright project
+        run: |
+          target_dir="/tmp/generated-playwright-template"
+          rm -rf "$target_dir"
+          create-qa-patterns playwright-template "$target_dir" --yes --no-install --no-setup --no-test
+
+      - name: Verify scaffolded Playwright files
+        run: |
+          target_dir="/tmp/generated-playwright-template"
+          test -d "$target_dir/.git"
+          test -f "$target_dir/.gitignore"
+          test -f "$target_dir/package.json"
+          test -f "$target_dir/package-lock.json"
+          test -f "$target_dir/playwright.config.ts"
+          test -f "$target_dir/tests/ui-journey.spec.ts"
+
+      - name: Install generated Playwright dependencies
+        working-directory: /tmp/generated-playwright-template
+        run: npm install
+
+      - name: Install Playwright browsers
+        working-directory: /tmp/generated-playwright-template
+        run: npx playwright install --with-deps chromium
+
+      - name: Run generated Playwright validation
+        working-directory: /tmp/generated-playwright-template
+        env:
+          TEST_ENV: dev
+          TEST_RUN_ID: ci-generated
+        run: |
+          npm run lint
+          npm run typecheck
+          npm test
+
+      - name: Generate Allure report
+        if: always()
+        working-directory: /tmp/generated-playwright-template
+        run: npm run report:allure
+
+      - name: Upload generated Playwright artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: generated-playwright-artifacts
+          if-no-files-found: ignore
+          path: |
+            /tmp/generated-playwright-template/reports
+            /tmp/generated-playwright-template/allure-results
+            /tmp/generated-playwright-template/test-results
+
+  validate-generated-cypress:
+    runs-on: ubuntu-latest
+    needs: pack-cli
+
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Download packed CLI
+        uses: actions/download-artifact@v4
+        with:
+          name: packed-create-qa-patterns
+          path: /tmp/packed-create-qa-patterns
+
+      - name: Install packed CLI
+        run: npm install -g /tmp/packed-create-qa-patterns/${{ needs.pack-cli.outputs.tarball-name }}
+
+      - name: Scaffold generated Cypress project
+        run: |
+          target_dir="/tmp/generated-cypress-template"
+          rm -rf "$target_dir"
+          create-qa-patterns cypress-template "$target_dir" --yes --no-install --no-setup --no-test
+
+      - name: Verify scaffolded Cypress files
+        run: |
+          target_dir="/tmp/generated-cypress-template"
+          test -d "$target_dir/.git"
+          test -f "$target_dir/.gitignore"
+          test -f "$target_dir/package.json"
+          test -f "$target_dir/package-lock.json"
+          test -f "$target_dir/cypress.config.ts"
+          test -f "$target_dir/cypress/e2e/ui-journey.cy.ts"
+
+      - name: Install generated Cypress dependencies
+        working-directory: /tmp/generated-cypress-template
+        run: npm install
+
+      - name: Run generated Cypress lint and typecheck
+        working-directory: /tmp/generated-cypress-template
+        run: |
+          npm run lint
+          npm run typecheck
+
+      - name: Run generated Cypress tests
+        uses: cypress-io/github-action@v7
+        with:
+          working-directory: /tmp/generated-cypress-template
+          install: false
+          command: npm test
+
+      - name: Upload generated Cypress artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: generated-cypress-artifacts
+          if-no-files-found: ignore
+          path: |
+            /tmp/generated-cypress-template/reports
+            /tmp/generated-cypress-template/cypress/screenshots
+            /tmp/generated-cypress-template/cypress/videos

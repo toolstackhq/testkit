@@ -118,6 +118,14 @@ Usage:
   create-qa-patterns
   create-qa-patterns <target-directory>
   create-qa-patterns <template> [target-directory]
+  create-qa-patterns --template <template> [target-directory]
+
+Options:
+  --yes          Accept all post-generate prompts
+  --no-install   Skip npm install
+  --no-setup     Skip template-specific setup such as Playwright browser install
+  --no-test      Skip npm test
+  --template     Explicitly choose a template without using positional arguments
 
 Interactive mode:
   When run without an explicit template, the CLI shows an interactive template picker.
@@ -125,6 +133,58 @@ Interactive mode:
 Supported templates:
 ${supportedTemplates}
 `);
+}
+
+function parseCliOptions(args) {
+  const options = {
+    yes: false,
+    noInstall: false,
+    noSetup: false,
+    noTest: false,
+    templateName: null,
+    positionalArgs: []
+  };
+
+  for (let index = 0; index < args.length; index += 1) {
+    const arg = args[index];
+
+    switch (arg) {
+      case "--yes":
+        options.yes = true;
+        break;
+      case "--no-install":
+        options.noInstall = true;
+        break;
+      case "--no-setup":
+        options.noSetup = true;
+        break;
+      case "--no-test":
+        options.noTest = true;
+        break;
+      case "--template": {
+        const templateValue = args[index + 1];
+        if (!templateValue) {
+          throw new Error("Missing value for --template.");
+        }
+
+        const templateName = resolveTemplate(templateValue);
+        if (!templateName) {
+          throw new Error(
+            `Unsupported template "${templateValue}". Supported templates: ${TEMPLATES.map((template) => template.id).join(", ")}.`
+          );
+        }
+
+        options.templateName = templateName;
+        index += 1;
+        break;
+      }
+      default:
+        options.positionalArgs.push(arg);
+        break;
+    }
+  }
+
+  return options;
 }
 
 function parseNodeVersion(version) {
@@ -347,7 +407,27 @@ async function selectTemplateInteractively() {
   });
 }
 
-function resolveNonInteractiveArgs(args) {
+function resolveNonInteractiveArgs(args, options = {}) {
+  if (options.templateName) {
+    if (args.length > 1) {
+      throw new Error("Too many arguments. Run `create-qa-patterns --help` for usage.");
+    }
+
+    if (args.length === 0) {
+      return {
+        templateName: options.templateName,
+        targetDirectory: process.cwd(),
+        generatedInCurrentDirectory: true
+      };
+    }
+
+    return {
+      templateName: options.templateName,
+      targetDirectory: path.resolve(process.cwd(), args[0]),
+      generatedInCurrentDirectory: false
+    };
+  }
+
   if (args.length === 0) {
     return {
       templateName: DEFAULT_TEMPLATE,
@@ -670,20 +750,22 @@ function printSummary(summary) {
 }
 
 async function runPostGenerateActions(template, targetDirectory, summary) {
-  if (!process.stdin.isTTY || !process.stdout.isTTY) {
-    return;
-  }
-
   const prerequisites = collectPrerequisites();
+  const options = summary.options;
+  const canPrompt = process.stdin.isTTY && process.stdout.isTTY;
 
   if (prerequisites.npm) {
-    const shouldInstallDependencies = await askYesNo("Run npm install now?", true);
-
-    if (shouldInstallDependencies) {
-      await runCommand("npm", ["install"], targetDirectory);
-      summary.npmInstall = "completed";
-    } else {
+    if (options.noInstall) {
       summary.npmInstall = "skipped";
+    } else {
+      const shouldInstallDependencies = options.yes ? true : canPrompt ? await askYesNo("Run npm install now?", true) : false;
+
+      if (shouldInstallDependencies) {
+        await runCommand("npm", ["install"], targetDirectory);
+        summary.npmInstall = "completed";
+      } else {
+        summary.npmInstall = canPrompt ? "skipped" : "not-run";
+      }
     }
   } else {
     process.stdout.write(`${colors.yellow("Skipping")} npm install prompt because npm is not available.\n`);
@@ -691,8 +773,10 @@ async function runPostGenerateActions(template, targetDirectory, summary) {
   }
 
   if (template.setup) {
-    if (prerequisites[template.setup.availability]) {
-      const shouldRunExtraSetup = await askYesNo(template.setup.prompt, true);
+    if (options.noSetup) {
+      summary.extraSetup = "skipped";
+    } else if (prerequisites[template.setup.availability]) {
+      const shouldRunExtraSetup = options.yes ? true : canPrompt ? await askYesNo(template.setup.prompt, true) : false;
 
       if (shouldRunExtraSetup) {
         try {
@@ -711,7 +795,7 @@ async function runPostGenerateActions(template, targetDirectory, summary) {
           }
         }
       } else {
-        summary.extraSetup = "skipped";
+        summary.extraSetup = canPrompt ? "skipped" : "not-run";
       }
     } else {
       process.stdout.write(
@@ -722,13 +806,17 @@ async function runPostGenerateActions(template, targetDirectory, summary) {
   }
 
   if (prerequisites.npm) {
-    const shouldRunTests = await askYesNo("Run npm test now?", false);
-
-    if (shouldRunTests) {
-      await runCommand("npm", ["test"], targetDirectory);
-      summary.testRun = "completed";
-    } else {
+    if (options.noTest) {
       summary.testRun = "skipped";
+    } else {
+      const shouldRunTests = options.yes ? true : canPrompt ? await askYesNo("Run npm test now?", false) : false;
+
+      if (shouldRunTests) {
+        await runCommand("npm", ["test"], targetDirectory);
+        summary.testRun = "completed";
+      } else {
+        summary.testRun = canPrompt ? "skipped" : "not-run";
+      }
     }
   } else {
     process.stdout.write(`${colors.yellow("Skipping")} npm test prompt because npm is not available.\n`);
@@ -737,16 +825,20 @@ async function runPostGenerateActions(template, targetDirectory, summary) {
 }
 
 async function main() {
-  const args = process.argv.slice(2);
+  const rawArgs = process.argv.slice(2);
 
   assertSupportedNodeVersion();
 
-  if (args.includes("--help") || args.includes("-h")) {
+  if (rawArgs.includes("--help") || rawArgs.includes("-h")) {
     printHelp();
     return;
   }
 
-  const { templateName, targetDirectory, generatedInCurrentDirectory } = await resolveScaffoldArgs(args);
+  const options = parseCliOptions(rawArgs);
+  const args = options.positionalArgs;
+  const { templateName, targetDirectory, generatedInCurrentDirectory } = options.templateName
+    ? resolveNonInteractiveArgs(args, options)
+    : await resolveScaffoldArgs(args);
   const template = getTemplate(templateName);
 
   if (!template) {
@@ -755,6 +847,7 @@ async function main() {
 
   const prerequisites = collectPrerequisites();
   const summary = createSummary(template, targetDirectory, generatedInCurrentDirectory);
+  summary.options = options;
   printPrerequisiteWarnings(prerequisites);
   await scaffoldProject(template, targetDirectory, prerequisites);
   summary.gitInit = prerequisites.git ? "completed" : "unavailable";

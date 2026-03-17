@@ -34,6 +34,12 @@ Generate the Cypress template explicitly:
 create-qa-patterns cypress-template my-project
 ```
 
+Generate without post-create prompts, which is useful for CI or scripted setup:
+
+```bash
+create-qa-patterns playwright-template my-project --yes --no-install --no-setup --no-test
+```
+
 ## Supported templates
 
 - `playwright-template`
@@ -53,6 +59,14 @@ When run in a terminal, the CLI shows:
 For Playwright projects, the interactive flow also offers:
 
 - `npx playwright install`
+
+For non-interactive automation, the CLI also supports:
+
+- `--yes`
+- `--no-install`
+- `--no-setup`
+- `--no-test`
+- `--template <template>`
 
 ## Prerequisite checks
 
