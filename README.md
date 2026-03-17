@@ -108,12 +108,14 @@ npm run report:allure
 ## Documentation
 
 - [Docs index](./docs/README.md)
+- [MCP docs site](https://toolstackhq.github.io/qa-patterns/)
 - [Run locally](./docs/local-development.md)
 - [Write and extend tests](./docs/extending-the-repository.md)
 - [Framework architecture](./docs/architecture.md)
 - [Reporting](./docs/reporting.md)
 - [CI and quality checks](./docs/ci-and-quality.md)
 - [Security and secrets](./docs/security.md)
+- [MCP server package](./packages/mcp-server/README.md)
 - [Playwright template package](./templates/playwright-template/README.md)
 - [Cypress template package](./templates/cypress-template/README.md)
 
