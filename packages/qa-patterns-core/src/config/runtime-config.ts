@@ -16,6 +16,7 @@ const runtimeConfigSchema = z.object({
   testEnv: z.enum(["dev", "staging", "prod"]),
   testRunId: z.string().min(1),
   uiBaseUrl: z.string().url(),
+  apiBaseUrl: z.string().url(),
   credentials: z.object({
     username: z.string().min(1),
     password: z.string().min(1)
@@ -32,11 +33,16 @@ export function loadRuntimeConfig(): RuntimeConfig {
     process.env[`${environment.toUpperCase()}_UI_BASE_URL`] ??
     process.env.UI_BASE_URL ??
     defaults.uiBaseUrl;
+  const apiBaseUrl =
+    process.env[`${environment.toUpperCase()}_API_BASE_URL`] ??
+    process.env.API_BASE_URL ??
+    defaults.apiBaseUrl;
 
   return runtimeConfigSchema.parse({
     testEnv: environment,
     testRunId: process.env.TEST_RUN_ID ?? "local",
     uiBaseUrl,
+    apiBaseUrl,
     credentials: {
       username:
         secretManager.getOptionalSecret("APP_USERNAME", environment) ?? defaults.credentials.username,

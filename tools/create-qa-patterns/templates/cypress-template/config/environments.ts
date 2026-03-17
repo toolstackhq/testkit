@@ -8,7 +8,7 @@ type EnvironmentDefaults = {
   };
 };
 
-const environmentDefaults: Record<TestEnvironment, EnvironmentDefaults> = {
+const DEFAULTS: Record<TestEnvironment, EnvironmentDefaults> = {
   dev: {
     uiBaseUrl: "http://127.0.0.1:3000",
     credentials: {
@@ -20,18 +20,18 @@ const environmentDefaults: Record<TestEnvironment, EnvironmentDefaults> = {
     uiBaseUrl: "https://staging-ui.example.internal",
     credentials: {
       username: "staging-user",
-      password: "staging-password"
+      password: "replace-me"
     }
   },
   prod: {
     uiBaseUrl: "https://ui.example.internal",
     credentials: {
       username: "prod-user",
-      password: "prod-password"
+      password: "replace-me"
     }
   }
 };
 
-export function getEnvironmentDefaults(environment: TestEnvironment): EnvironmentDefaults {
-  return environmentDefaults[environment];
+export function getEnvironmentDefaults(testEnv: TestEnvironment): EnvironmentDefaults {
+  return DEFAULTS[testEnv];
 }

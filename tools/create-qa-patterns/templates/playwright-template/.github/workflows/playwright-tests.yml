@@ -26,20 +26,6 @@ jobs:
         working-directory: templates/playwright-template
         run: npx playwright install --with-deps chromium
 
-      - name: Start API demo server
-        run: npm run dev --workspace @toolstackhq/api-demo-server &
-
-      - name: Start UI demo app
-        run: npm run dev --workspace @toolstackhq/ui-demo-app &
-
-      - name: Wait for demo services
-        run: |
-          for target in http://127.0.0.1:3000/health http://127.0.0.1:3001/health; do
-            until curl --silent --fail "$target" >/dev/null; do
-              sleep 1
-            done
-          done
-
       - name: Run Playwright validation
         working-directory: templates/playwright-template
         env:

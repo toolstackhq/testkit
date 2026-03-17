@@ -1,0 +1,11 @@
+{
+  "name": "@toolstackhq/qa-patterns-core",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Shared source files for qa-patterns templates. Not published; used only within this monorepo.",
+  "dependencies": {
+    "@faker-js/faker": "^8.4.1",
+    "dotenv": "^16.4.5",
+    "zod": "^3.23.8"
+  }
+}

@@ -1,19 +1,28 @@
 import type { TestEnvironment } from "./test-env";
 
 export interface SecretProvider {
-  getOptionalSecret(secretName: string, environment: TestEnvironment): string | undefined;
+  getSecret(key: string, testEnv: TestEnvironment): string | undefined;
 }
 
 export class EnvSecretProvider implements SecretProvider {
-  getOptionalSecret(secretName: string, environment: TestEnvironment): string | undefined {
-    return process.env[`${environment.toUpperCase()}_${secretName}`] ?? process.env[secretName];
+  getSecret(key: string, testEnv: TestEnvironment): string | undefined {
+    const envPrefix = testEnv.toUpperCase();
+    return process.env[`${envPrefix}_${key}`] ?? process.env[key];
   }
 }
 
 export class SecretManager {
-  constructor(private readonly secretProvider: SecretProvider) {}
+  constructor(private readonly provider: SecretProvider) {}
 
-  getOptionalSecret(secretName: string, environment: TestEnvironment): string | undefined {
-    return this.secretProvider.getOptionalSecret(secretName, environment);
+  getRequiredSecret(key: string, testEnv: TestEnvironment): string {
+    const value = this.provider.getSecret(key, testEnv);
+    if (!value) {
+      throw new Error(`Missing secret "${key}" for TEST_ENV=${testEnv}`);
+    }
+    return value;
+  }
+
+  getOptionalSecret(key: string, testEnv: TestEnvironment): string | undefined {
+    return this.provider.getSecret(key, testEnv);
   }
 }

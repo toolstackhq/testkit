@@ -2,12 +2,23 @@
 
 ## Repository layout
 
+- `packages/qa-patterns-core`: shared source files used by both templates (config, data factories, generators)
 - `templates/playwright-template`: the main automation framework template
 - `templates/cypress-template`: Cypress UI automation template with Cypress-native commands and support modules
 - `test-apps/ui-demo-app`: deterministic UI app used by browser tests
 - `test-apps/api-demo-server`: deterministic API app used by API tests
 - `tools/create-qa-patterns`: scaffolding CLI for the included templates
 - `docs`: usage and extension guides
+
+## Shared code (qa-patterns-core)
+
+Config, data factory, ID generator, and seeded faker logic is shared between the Playwright and Cypress templates. The canonical source lives in `packages/qa-patterns-core/src/`. A sync script copies these files into each template with any framework-specific transforms applied.
+
+- Edit shared code in `packages/qa-patterns-core/src/`
+- Run `npm run sync` to propagate changes to both templates and CLI bundles
+- Run `npm run sync:check` (also runs in CI) to verify templates are in sync
+
+Scaffolded projects receive full standalone copies of all files. There is no runtime dependency on the shared package.
 
 ## Playwright template layout
 

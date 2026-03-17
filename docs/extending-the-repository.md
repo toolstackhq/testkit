@@ -90,6 +90,21 @@ Current pattern:
 
 Only add domain-specific factories when the project actually needs them.
 
+## Modify shared code
+
+The following files are shared between both templates and managed by `packages/qa-patterns-core`:
+
+- `config/test-env.ts`, `config/secret-manager.ts`, `config/environments.ts`, `config/runtime-config.ts`
+- `data/factories/data-factory.ts`, `data/generators/id-generator.ts`, `data/generators/seeded-faker.ts`
+
+To modify shared code:
+
+1. Edit the canonical source in `packages/qa-patterns-core/src/`
+2. Run `npm run sync` to propagate changes to both templates and CLI bundles
+3. Verify with `npm run sync:check`
+
+Do not edit these files directly in the template directories. The sync script will overwrite them.
+
 ## Add tags
 
 The template supports tags in test titles:

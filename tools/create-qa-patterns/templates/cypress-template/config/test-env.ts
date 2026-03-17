@@ -1,13 +1,9 @@
-export type TestEnvironment = "dev" | "staging" | "prod";
+import { z } from "zod";
 
-const testEnvironmentValues = new Set<TestEnvironment>(["dev", "staging", "prod"]);
+export const testEnvironmentSchema = z.enum(["dev", "staging", "prod"]);
+
+export type TestEnvironment = z.infer<typeof testEnvironmentSchema>;
 
 export function loadTestEnvironment(): TestEnvironment {
-  const testEnv = process.env.TEST_ENV ?? "dev";
-
-  if (!testEnvironmentValues.has(testEnv as TestEnvironment)) {
-    throw new Error(`Unsupported TEST_ENV "${testEnv}". Expected one of: dev, staging, prod.`);
-  }
-
-  return testEnv as TestEnvironment;
+  return testEnvironmentSchema.parse(process.env.TEST_ENV ?? "dev");
 }

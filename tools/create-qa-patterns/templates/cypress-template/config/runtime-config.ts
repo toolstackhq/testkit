@@ -27,6 +27,7 @@ export type RuntimeConfig = z.infer<typeof runtimeConfigSchema>;
 export function loadRuntimeConfig(): RuntimeConfig {
   const defaults = getEnvironmentDefaults(environment);
   const secretManager = new SecretManager(new EnvSecretProvider());
+
   const uiBaseUrl =
     process.env[`${environment.toUpperCase()}_UI_BASE_URL`] ??
     process.env.UI_BASE_URL ??

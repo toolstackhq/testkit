@@ -1,13 +1,17 @@
 export class IdGenerator {
   private readonly counters = new Map<string, number>();
 
-  constructor(private readonly testRunId: string) {}
+  constructor(private readonly runId: string) {}
 
   next(prefix: string): string {
-    const currentCount = this.counters.get(prefix) ?? 0;
-    const nextCount = currentCount + 1;
-    this.counters.set(prefix, nextCount);
+    const counter = (this.counters.get(prefix) ?? 0) + 1;
+    this.counters.set(prefix, counter);
+    return `${prefix}-${this.runId}-${String(counter).padStart(4, "0")}`;
+  }
 
-    return `${prefix}-${this.testRunId}-${String(nextCount).padStart(4, "0")}`;
+  nextSequence(prefix: string): number {
+    const counter = (this.counters.get(prefix) ?? 0) + 1;
+    this.counters.set(prefix, counter);
+    return counter;
   }
 }

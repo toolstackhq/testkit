@@ -1,5 +1,5 @@
-import { IdGenerator } from "./id-generator";
 import { createSeededFaker } from "./seeded-faker";
+import { IdGenerator } from "./id-generator";
 
 export type PersonRecord = {
   personId: string;

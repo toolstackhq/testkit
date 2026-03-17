@@ -1,4 +1,4 @@
-import { faker } from "@faker-js/faker";
+import { Faker, en } from "@faker-js/faker";
 
 function hashSeed(value: string): number {
   return value.split("").reduce((seed, character) => {
@@ -6,8 +6,8 @@ function hashSeed(value: string): number {
   }, 0);
 }
 
-export function createSeededFaker(seedInput: string) {
-  const instance = faker;
+export function createSeededFaker(seedInput: string): Faker {
+  const instance = new Faker({ locale: [en] });
   instance.seed(Math.abs(hashSeed(seedInput)));
   return instance;
 }
