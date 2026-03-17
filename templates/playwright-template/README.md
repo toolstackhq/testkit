@@ -21,6 +21,7 @@ This is a Playwright + TypeScript automation framework template for UI and API t
 - page object pattern with selectors kept out of tests
 - shared fixtures for config, logging, data, and page objects
 - generic data factory pattern with `DataFactory`
+- folder-level `README.md` guides and file-header comments for easier onboarding
 - multi-environment runtime config with `dev`, `staging`, and `prod`
 - env-based secret resolution with a replaceable `SecretProvider`
 - Playwright HTML report by default

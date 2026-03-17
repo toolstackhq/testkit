@@ -1,3 +1,4 @@
+// Deterministic id generator for repeatable local and CI runs.
 export class IdGenerator {
   private readonly counters = new Map<string, number>();
 

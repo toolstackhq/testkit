@@ -1,3 +1,4 @@
+// Central Cypress configuration for specs, retries, artifacts, and runtime env values.
 import { defineConfig } from "cypress";
 
 import { loadRuntimeConfig } from "./config/runtime-config";

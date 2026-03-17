@@ -1,3 +1,4 @@
+// Builds a local Allure report from raw test results after a test run completes.
 import { AllureReport, readConfig } from "@allurereport/core";
 import { readdir, rm, stat } from "node:fs/promises";
 import { join, resolve } from "node:path";

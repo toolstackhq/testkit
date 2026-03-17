@@ -1,3 +1,4 @@
+// Starter Cypress scenario that demonstrates the preferred spec style for this template.
 import { DataFactory } from "../support/data/data-factory";
 import { loadAppConfig } from "../support/app-config";
 import { peoplePage } from "../support/pages/people-page";

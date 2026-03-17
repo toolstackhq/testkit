@@ -1,3 +1,4 @@
+// Reads runtime values from Cypress env so specs stay clean and framework-aware.
 type Credentials = {
   username: string;
   password: string;

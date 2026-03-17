@@ -1,3 +1,4 @@
+// Small wrapper that records named test steps in a consistent way.
 import { test } from "@playwright/test";
 
 import type { Logger } from "./logger";

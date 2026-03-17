@@ -1,3 +1,4 @@
+// Custom reporter that writes machine-readable test lifecycle events to disk.
 import fs from "node:fs";
 import path from "node:path";
 

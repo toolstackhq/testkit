@@ -1,3 +1,4 @@
+// Central Playwright configuration for local runs, CI, reporters, and demo app startup.
 import { defineConfig, devices } from "@playwright/test";
 
 import { loadRuntimeConfig } from "./config/runtime-config";

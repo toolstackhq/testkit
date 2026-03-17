@@ -1,3 +1,4 @@
+// Defines the built-in environment defaults used when env vars are not provided.
 import type { TestEnvironment } from "./test-env";
 
 type EnvironmentDefaults = {

@@ -1,3 +1,4 @@
+// Page module for the people screen used in the starter Cypress journey.
 import type { PersonRecord } from "../data/data-factory";
 
 export const peoplePage = {

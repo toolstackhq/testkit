@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+// Starts the local demo app when needed, then launches Cypress in run or open mode.
 import process from "node:process";
 import path from "node:path";
 import { spawn } from "node:child_process";

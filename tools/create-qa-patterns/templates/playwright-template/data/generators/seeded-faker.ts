@@ -1,3 +1,4 @@
+// Seeded faker wrapper so generated values stay stable for a given run id.
 import { Faker, en } from "@faker-js/faker";
 
 function hashSeed(value: string): number {

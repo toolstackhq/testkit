@@ -1,3 +1,4 @@
+// Generic data builders that keep tests readable and deterministic.
 import { createSeededFaker } from "./seeded-faker";
 import { IdGenerator } from "./id-generator";
 

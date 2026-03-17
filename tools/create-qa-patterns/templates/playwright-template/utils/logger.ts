@@ -1,3 +1,4 @@
+// Structured JSON logger used by tests, pages, and helper classes.
 import fs from "node:fs";
 import path from "node:path";
 

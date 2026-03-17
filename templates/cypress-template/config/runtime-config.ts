@@ -1,3 +1,4 @@
+// Builds the runtime configuration object that tests and fixtures consume.
 import path from "node:path";
 
 import dotenv from "dotenv";

@@ -21,6 +21,7 @@ This is a Cypress + TypeScript automation framework template for a small determi
 - Cypress-native custom commands for common user actions
 - page modules that own selectors and keep spec files focused on behavior
 - generic `DataFactory` helpers for repeatable UI data
+- folder-level `README.md` guides and file-header comments for easier onboarding
 - multi-environment runtime config with `dev`, `staging`, and `prod`
 - env-based secret resolution with a replaceable `SecretProvider`
 - built-in screenshots and videos on failure

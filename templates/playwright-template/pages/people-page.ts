@@ -1,3 +1,4 @@
+// Page object for the people screen used in the starter UI workflow.
 import type { Page } from "@playwright/test";
 
 import type { PersonRecord } from "../data/factories/data-factory";

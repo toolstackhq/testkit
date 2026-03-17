@@ -1,3 +1,4 @@
+// Starter API journey that pairs with the deterministic demo API server.
 import { expect, test } from "../fixtures/test-fixtures";
 
 test.describe("API starter flow", () => {

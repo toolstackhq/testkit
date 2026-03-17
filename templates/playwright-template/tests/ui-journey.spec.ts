@@ -1,3 +1,4 @@
+// Starter UI journey that shows the preferred Playwright test style in this template.
 import { expect, test } from "../fixtures/test-fixtures";
 
 test.describe("UI starter journey", () => {

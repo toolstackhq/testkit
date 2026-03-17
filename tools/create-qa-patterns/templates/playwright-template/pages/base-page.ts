@@ -1,3 +1,4 @@
+// Base page with shared helpers that concrete page objects can build on.
 import type { Page } from "@playwright/test";
 
 import { FlashMessage } from "../components/flash-message";

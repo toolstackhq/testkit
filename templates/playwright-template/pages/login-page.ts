@@ -1,3 +1,4 @@
+// Page object for the login screen and its user actions.
 import type { Page } from "@playwright/test";
 
 import type { Logger } from "../utils/logger";

@@ -1,3 +1,4 @@
+// Shared Playwright fixtures so tests can stay small and focus on behavior.
 import { test as base } from "@playwright/test";
 
 import { loadRuntimeConfig, type RuntimeConfig } from "../config/runtime-config";

@@ -1,3 +1,4 @@
+// Registers the custom Cypress commands that the starter specs rely on.
 import type { PersonRecord } from "./data/data-factory";
 import { loginPage } from "./pages/login-page";
 import { peoplePage } from "./pages/people-page";

@@ -1,3 +1,4 @@
+// Page module for the login screen used by custom Cypress commands.
 export const loginPage = {
   visit(): Cypress.Chainable {
     return cy.visit("/login");
