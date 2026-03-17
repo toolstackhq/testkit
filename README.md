@@ -22,11 +22,11 @@ It gives teams a clean starting point for building automation frameworks without
 
 It currently includes:
 
-- a Playwright + TypeScript framework template
-- a Cypress + TypeScript framework template
-- a deterministic UI demo app for browser testing
-- a deterministic API demo server for API testing
-- CI, linting, reporting, and extension patterns
+- a `Playwright` + `TypeScript` framework template
+- a `Cypress` + `TypeScript` framework template
+- a deterministic `UI` demo app for browser testing
+- a deterministic `API` demo server for API testing
+- `CI`, linting, reporting, and extension patterns
 
 ## Why this repo exists
 

@@ -168,3 +168,47 @@ jobs:
             /tmp/generated-cypress-template/reports
             /tmp/generated-cypress-template/cypress/screenshots
             /tmp/generated-cypress-template/cypress/videos
+
+  smoke-generated-cypress-happy-path:
+    runs-on: ubuntu-latest
+    needs: pack-cli
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Download packed CLI
+        uses: actions/download-artifact@v4
+        with:
+          name: packed-create-qa-patterns
+          path: /tmp/packed-create-qa-patterns
+
+      - name: Install packed CLI
+        run: npm install -g /tmp/packed-create-qa-patterns/${{ needs.pack-cli.outputs.tarball-name }}
+
+      - name: Scaffold generated Cypress project with default yes flow
+        run: |
+          target_dir="/tmp/generated-cypress-template-happy-path"
+          rm -rf "$target_dir"
+          create-qa-patterns cypress-template "$target_dir" --yes
+
+      - name: Verify happy-path generated Cypress project
+        run: |
+          target_dir="/tmp/generated-cypress-template-happy-path"
+          test -d "$target_dir/.git"
+          test -f "$target_dir/.gitignore"
+          test -f "$target_dir/package.json"
+          test -f "$target_dir/cypress.config.ts"
+
+      - name: Upload happy-path Cypress artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: generated-cypress-happy-path-artifacts
+          if-no-files-found: ignore
+          path: |
+            /tmp/generated-cypress-template-happy-path/reports
+            /tmp/generated-cypress-template-happy-path/cypress/screenshots
+            /tmp/generated-cypress-template-happy-path/cypress/videos

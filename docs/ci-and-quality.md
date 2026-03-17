@@ -32,6 +32,8 @@ Generated projects are validated separately in:
 
 That workflow packs the published CLI artifact, scaffolds fresh Playwright and Cypress projects into temporary directories, installs their dependencies, and runs their real validation commands. This protects the npm package path instead of only checking the templates inside the monorepo.
 
+It also includes a smaller `Cypress` happy-path smoke that runs the CLI with `--yes` end to end. That job exists to prove the default scaffold experience works, while the main generated-project jobs keep failures easier to diagnose.
+
 ## CI entrypoint
 
 The Playwright template CI command is:
