@@ -1,34 +1,39 @@
 #!/usr/bin/env node
 
-import fs from "node:fs";
-import path from "node:path";
-import process from "node:process";
-import { spawn } from "node:child_process";
-import { fileURLToPath } from "node:url";
+import fs from 'node:fs';
+import path from 'node:path';
+import process from 'node:process';
+import { spawn } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
 
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import * as z from "zod/v4";
+import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
+import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
+import * as z from 'zod/v4';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const REPO_ROOT = path.resolve(__dirname, "../../..");
-const CLI_ENTRY = path.join(REPO_ROOT, "tools/create-qa-patterns/index.js");
-const DEBUG = process.env.QA_PATTERNS_MCP_DEBUG === "true";
+const REPO_ROOT = path.resolve(__dirname, '../../..');
+const CLI_ENTRY = path.join(REPO_ROOT, 'tools/create-qa-patterns/index.js');
+const DEBUG = process.env.QA_PATTERNS_MCP_DEBUG === 'true';
 
 const TEMPLATE_DEFINITIONS = {
-  "playwright-template": {
-    id: "playwright-template",
-    label: "Playwright Template",
+  'playwright-template': {
+    id: 'playwright-template',
+    label: 'Playwright Template',
     description:
-      "TypeScript automation framework with page objects, fixtures, deterministic demo apps, Docker, CI, and optional Allure reporting.",
-    mainCommands: ["npm install", "npx playwright install", "npm test", "npm run report:allure"]
+      'TypeScript automation framework with page objects, fixtures, deterministic demo apps, Docker, CI, and optional Allure reporting.',
+    mainCommands: [
+      'npm install',
+      'npx playwright install',
+      'npm test',
+      'npm run report:allure'
+    ]
   },
-  "cypress-template": {
-    id: "cypress-template",
-    label: "Cypress Template",
+  'cypress-template': {
+    id: 'cypress-template',
+    label: 'Cypress Template',
     description:
-      "TypeScript Cypress starter with custom commands, page modules, deterministic UI demo app, CI, and optional Allure reporting.",
-    mainCommands: ["npm install", "npm test", "npm run report:allure"]
+      'TypeScript Cypress starter with custom commands, page modules, deterministic UI demo app, CI, and optional Allure reporting.',
+    mainCommands: ['npm install', 'npm test', 'npm run report:allure']
   }
 };
 
@@ -37,13 +42,14 @@ function formatJson(value) {
 }
 
 function toToolResult(value) {
-  const structuredContent = typeof value === "string" ? { message: value } : value;
+  const structuredContent =
+    typeof value === 'string' ? { message: value } : value;
 
   return {
     content: [
       {
-        type: "text",
-        text: typeof value === "string" ? value : formatJson(value)
+        type: 'text',
+        text: typeof value === 'string' ? value : formatJson(value)
       }
     ],
     structuredContent
@@ -65,23 +71,23 @@ function resolveTargetDirectory(targetDirectory) {
 }
 
 function detectTemplateFromProject(targetDirectory) {
-  if (fs.existsSync(path.join(targetDirectory, "playwright.config.ts"))) {
-    return "playwright-template";
+  if (fs.existsSync(path.join(targetDirectory, 'playwright.config.ts'))) {
+    return 'playwright-template';
   }
 
-  if (fs.existsSync(path.join(targetDirectory, "cypress.config.ts"))) {
-    return "cypress-template";
+  if (fs.existsSync(path.join(targetDirectory, 'cypress.config.ts'))) {
+    return 'cypress-template';
   }
 
   throw new Error(`Could not detect template type for ${targetDirectory}.`);
 }
 
 function resolveCommandName(command) {
-  if (process.platform !== "win32") {
+  if (process.platform !== 'win32') {
     return command;
   }
 
-  return ["npm", "npx", "node"].includes(command) ? `${command}.cmd` : command;
+  return ['npm', 'npx', 'node'].includes(command) ? `${command}.cmd` : command;
 }
 
 function runCommand(command, args, cwd) {
@@ -89,22 +95,22 @@ function runCommand(command, args, cwd) {
     const child = spawn(resolveCommandName(command), args, {
       cwd,
       env: process.env,
-      stdio: ["ignore", "pipe", "pipe"]
+      stdio: ['ignore', 'pipe', 'pipe']
     });
 
-    let stdout = "";
-    let stderr = "";
+    let stdout = '';
+    let stderr = '';
 
-    child.stdout.on("data", (chunk) => {
+    child.stdout.on('data', (chunk) => {
       stdout += chunk.toString();
     });
 
-    child.stderr.on("data", (chunk) => {
+    child.stderr.on('data', (chunk) => {
       stderr += chunk.toString();
     });
 
-    child.on("error", reject);
-    child.on("close", (code) => {
+    child.on('error', reject);
+    child.on('close', (code) => {
       if (code === 0) {
         resolve({ code, stdout, stderr });
         return;
@@ -113,12 +119,12 @@ function runCommand(command, args, cwd) {
       reject(
         new Error(
           [
-            `${command} ${args.join(" ")} exited with code ${code}.`,
+            `${command} ${args.join(' ')} exited with code ${code}.`,
             stdout && `stdout:\n${stdout.trim()}`,
             stderr && `stderr:\n${stderr.trim()}`
           ]
             .filter(Boolean)
-            .join("\n\n")
+            .join('\n\n')
         )
       );
     });
@@ -134,24 +140,24 @@ async function scaffoldTemplate({
 }) {
   const template = resolveTemplate(templateId);
   const targetDirectory = resolveTargetDirectory(targetDirectoryInput);
-  const cliArgs = [CLI_ENTRY, template.id, targetDirectory, "--yes"];
+  const cliArgs = [CLI_ENTRY, template.id, targetDirectory, '--yes'];
 
   if (!installDependencies) {
-    cliArgs.push("--no-install");
+    cliArgs.push('--no-install');
   }
 
   if (!runSetup) {
-    cliArgs.push("--no-setup");
+    cliArgs.push('--no-setup');
   }
 
   if (!runTests) {
-    cliArgs.push("--no-test");
+    cliArgs.push('--no-test');
   }
 
-  const result = await runCommand("node", cliArgs, REPO_ROOT);
-  const packageJsonPath = path.join(targetDirectory, "package.json");
+  const result = await runCommand('node', cliArgs, REPO_ROOT);
+  const packageJsonPath = path.join(targetDirectory, 'package.json');
   const packageName = fs.existsSync(packageJsonPath)
-    ? JSON.parse(fs.readFileSync(packageJsonPath, "utf8")).name
+    ? JSON.parse(fs.readFileSync(packageJsonPath, 'utf8')).name
     : path.basename(targetDirectory);
 
   return {
@@ -160,10 +166,10 @@ async function scaffoldTemplate({
     targetDirectory,
     packageName,
     steps: {
-      gitInit: "completed",
-      installDependencies: installDependencies ? "completed" : "skipped",
-      runSetup: runSetup ? "completed" : "skipped",
-      runTests: runTests ? "completed" : "skipped"
+      gitInit: 'completed',
+      installDependencies: installDependencies ? 'completed' : 'skipped',
+      runSetup: runSetup ? 'completed' : 'skipped',
+      runTests: runTests ? 'completed' : 'skipped'
     },
     stdout: result.stdout.trim(),
     stderr: result.stderr.trim()
@@ -183,29 +189,33 @@ async function validateProject({
 
   if (installDependencies) {
     steps.push({
-      name: "npm install",
-      result: await runCommand("npm", ["install"], targetDirectory)
+      name: 'npm install',
+      result: await runCommand('npm', ['install'], targetDirectory)
     });
   }
 
-  if (templateId === "playwright-template" && installBrowsers) {
+  if (templateId === 'playwright-template' && installBrowsers) {
     steps.push({
-      name: "npx playwright install --with-deps chromium",
-      result: await runCommand("npx", ["playwright", "install", "--with-deps", "chromium"], targetDirectory)
+      name: 'npx playwright install --with-deps chromium',
+      result: await runCommand(
+        'npx',
+        ['playwright', 'install', '--with-deps', 'chromium'],
+        targetDirectory
+      )
     });
   }
 
   steps.push({
-    name: "npm run lint",
-    result: await runCommand("npm", ["run", "lint"], targetDirectory)
+    name: 'npm run lint',
+    result: await runCommand('npm', ['run', 'lint'], targetDirectory)
   });
   steps.push({
-    name: "npm run typecheck",
-    result: await runCommand("npm", ["run", "typecheck"], targetDirectory)
+    name: 'npm run typecheck',
+    result: await runCommand('npm', ['run', 'typecheck'], targetDirectory)
   });
   steps.push({
-    name: "npm test",
-    result: await runCommand("npm", ["test"], targetDirectory)
+    name: 'npm test',
+    result: await runCommand('npm', ['test'], targetDirectory)
   });
 
   return {
@@ -232,39 +242,39 @@ function getNextSteps({ template, target_directory: targetDirectoryInput }) {
 }
 
 const server = new McpServer({
-  name: "qa-patterns-mcp",
-  version: "1.0.0"
+  name: 'qa-patterns-mcp',
+  version: '1.0.0'
 });
 
 if (DEBUG) {
-  console.error("[qa-patterns-mcp] debug enabled");
-  process.stdin.on("data", (chunk) => {
-    console.error("[qa-patterns-mcp] stdin", chunk.toString().trim());
+  console.error('[qa-patterns-mcp] debug enabled');
+  process.stdin.on('data', (chunk) => {
+    console.error('[qa-patterns-mcp] stdin', chunk.toString().trim());
   });
-  process.on("beforeExit", (code) => {
-    console.error("[qa-patterns-mcp] beforeExit", code);
+  process.on('beforeExit', (code) => {
+    console.error('[qa-patterns-mcp] beforeExit', code);
   });
-  process.on("exit", (code) => {
-    console.error("[qa-patterns-mcp] exit", code);
+  process.on('exit', (code) => {
+    console.error('[qa-patterns-mcp] exit', code);
   });
-  process.on("uncaughtException", (error) => {
-    console.error("[qa-patterns-mcp] uncaughtException", error);
+  process.on('uncaughtException', (error) => {
+    console.error('[qa-patterns-mcp] uncaughtException', error);
   });
-  process.on("unhandledRejection", (error) => {
-    console.error("[qa-patterns-mcp] unhandledRejection", error);
+  process.on('unhandledRejection', (error) => {
+    console.error('[qa-patterns-mcp] unhandledRejection', error);
   });
   server.server.onerror = (error) => {
-    console.error("[qa-patterns-mcp] protocol error", error);
+    console.error('[qa-patterns-mcp] protocol error', error);
   };
   server.server.oninitialized = () => {
-    console.error("[qa-patterns-mcp] initialized");
+    console.error('[qa-patterns-mcp] initialized');
   };
 }
 
 server.registerTool(
-  "list_templates",
+  'list_templates',
   {
-    description: "List the scaffold templates exposed by qa-patterns.",
+    description: 'List the scaffold templates exposed by qa-patterns.',
     outputSchema: {
       templates: z.array(
         z.object({
@@ -277,21 +287,24 @@ server.registerTool(
   },
   async () => {
     return toToolResult({
-      templates: Object.values(TEMPLATE_DEFINITIONS).map(({ id, label, description }) => ({
-        id,
-        label,
-        description
-      }))
+      templates: Object.values(TEMPLATE_DEFINITIONS).map(
+        ({ id, label, description }) => ({
+          id,
+          label,
+          description
+        })
+      )
     });
   }
 );
 
 server.registerTool(
-  "describe_template",
+  'describe_template',
   {
-    description: "Describe one template, including its purpose and main commands.",
+    description:
+      'Describe one template, including its purpose and main commands.',
     inputSchema: {
-      template: z.enum(["playwright-template", "cypress-template"])
+      template: z.enum(['playwright-template', 'cypress-template'])
     },
     outputSchema: {
       template: z.string(),
@@ -312,11 +325,12 @@ server.registerTool(
 );
 
 server.registerTool(
-  "scaffold_template",
+  'scaffold_template',
   {
-    description: "Scaffold a qa-patterns template into a target directory using the existing CLI.",
+    description:
+      'Scaffold a qa-patterns template into a target directory using the existing CLI.',
     inputSchema: {
-      template: z.enum(["playwright-template", "cypress-template"]),
+      template: z.enum(['playwright-template', 'cypress-template']),
       target_directory: z.string(),
       install_dependencies: z.boolean().optional(),
       run_setup: z.boolean().optional(),
@@ -343,12 +357,12 @@ server.registerTool(
 );
 
 server.registerTool(
-  "validate_project",
+  'validate_project',
   {
     description: "Run the generated project's validation commands.",
     inputSchema: {
       target_directory: z.string(),
-      template: z.enum(["playwright-template", "cypress-template"]).optional(),
+      template: z.enum(['playwright-template', 'cypress-template']).optional(),
       install_dependencies: z.boolean().optional(),
       install_browsers: z.boolean().optional()
     },
@@ -371,11 +385,11 @@ server.registerTool(
 );
 
 server.registerTool(
-  "get_next_steps",
+  'get_next_steps',
   {
-    description: "Return the next shell commands for a generated template.",
+    description: 'Return the next shell commands for a generated template.',
     inputSchema: {
-      template: z.enum(["playwright-template", "cypress-template"]),
+      template: z.enum(['playwright-template', 'cypress-template']),
       target_directory: z.string()
     },
     outputSchema: {
@@ -393,12 +407,12 @@ async function main() {
   const transport = new StdioServerTransport();
   await server.connect(transport);
   if (DEBUG) {
-    console.error("[qa-patterns-mcp] connected");
+    console.error('[qa-patterns-mcp] connected');
   }
   process.stdin.resume();
 }
 
 main().catch((error) => {
-  console.error("qa-patterns MCP server failed to start:", error);
+  console.error('qa-patterns MCP server failed to start:', error);
   process.exit(1);
 });

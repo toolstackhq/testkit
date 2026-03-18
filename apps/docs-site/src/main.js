@@ -1,6 +1,6 @@
-import "./styles.css";
+import './styles.css';
 
-document.querySelector("#app").innerHTML = `
+document.querySelector('#app').innerHTML = `
   <div class="shell">
     <header class="hero">
       <div class="hero__copy">

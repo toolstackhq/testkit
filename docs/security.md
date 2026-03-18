@@ -51,6 +51,8 @@ from:
 templates/playwright-template
 ```
 
+If `.env` is missing in a generated project, the local run scripts create one with random demo credentials for the bundled sample app.
+
 ## What is and is not built in
 
 Built in:

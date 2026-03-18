@@ -91,8 +91,7 @@ npm run report:allure
 Default local values:
 
 - UI base URL: `http://127.0.0.1:3000`
-- username: `tester`
-- password: `Password123!`
+- credentials: generated into local `.env` on first run
 
 ## Environment and secrets
 
@@ -112,7 +111,7 @@ Credentials resolve the same way:
 
 1. `DEV_APP_USERNAME` or `DEV_APP_PASSWORD`
 2. `APP_USERNAME` or `APP_PASSWORD`
-3. built-in defaults for the selected environment
+3. built-in empty defaults for the selected environment
 
 For local overrides, copy:
 
@@ -125,6 +124,8 @@ to:
 ```bash
 .env
 ```
+
+On the first local run, the template also creates a `.env` file with random demo credentials if one does not already exist.
 
 If you want to disable the bundled local demo app even in `dev`, use:
 
@@ -172,11 +173,14 @@ Keep the pattern simple:
 Example shape:
 
 ```ts
-it("does something", () => {
-  const dataFactory = new DataFactory("local");
+import { loadAppConfig } from '../support/app-config';
+
+it('does something', () => {
+  const appConfig = loadAppConfig();
+  const dataFactory = new DataFactory('local');
   const person = dataFactory.person();
 
-  cy.signIn("tester", "Password123!");
+  cy.signIn(appConfig.credentials.username, appConfig.credentials.password);
   cy.addPerson(person);
 });
 ```

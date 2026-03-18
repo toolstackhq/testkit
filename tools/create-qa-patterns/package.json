@@ -16,15 +16,17 @@
   },
   "files": [
     "index.js",
+    "lib",
     "templates",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "tests"
   ],
   "bin": {
     "create-qa-patterns": "./index.js"
   },
   "scripts": {
     "start": "node ./index.js",
-    "test": "node ./index.js --help"
+    "test": "node --test ./tests/*.test.js"
   }
 }

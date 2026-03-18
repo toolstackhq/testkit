@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - "templates/playwright-template/**"
-      - "test-apps/**"
-      - "package.json"
+      - 'templates/playwright-template/**'
+      - 'test-apps/**'
+      - 'package.json'
 
 jobs:
   playwright:
@@ -17,7 +17,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: '20'
 
       - name: Install workspace dependencies
         run: npm ci
@@ -56,7 +56,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: '20'
 
       - name: Install workspace dependencies
         run: npm ci

@@ -17,7 +17,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: '20'
 
       - name: Install template dependencies
         working-directory: templates/cypress-template
@@ -35,7 +35,7 @@ jobs:
           working-directory: templates/cypress-template
           install: false
           start: npm run demo:ui
-          wait-on: "http://127.0.0.1:3000/health"
+          wait-on: 'http://127.0.0.1:3000/health'
           command: npm run cy:run
 
       - name: Upload Cypress artifacts

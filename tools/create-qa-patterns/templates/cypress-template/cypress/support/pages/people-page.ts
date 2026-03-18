@@ -1,9 +1,9 @@
 // Page module for the people screen used in the starter Cypress journey.
-import type { PersonRecord } from "../data/data-factory";
+import type { PersonRecord } from '../data/data-factory';
 
 export const peoplePage = {
   heading(): Cypress.Chainable {
-    return cy.contains("h1", "People");
+    return cy.contains('h1', 'People');
   },
 
   welcomeMessage(): Cypress.Chainable {
@@ -15,23 +15,23 @@ export const peoplePage = {
   },
 
   personIdInput(): Cypress.Chainable {
-    return cy.get("#personId");
+    return cy.get('#personId');
   },
 
   nameInput(): Cypress.Chainable {
-    return cy.get("#name");
+    return cy.get('#name');
   },
 
   roleInput(): Cypress.Chainable {
-    return cy.get("#role");
+    return cy.get('#role');
   },
 
   emailInput(): Cypress.Chainable {
-    return cy.get("#email");
+    return cy.get('#email');
   },
 
   submitButton(): Cypress.Chainable {
-    return cy.contains("button", "Add person");
+    return cy.contains('button', 'Add person');
   },
 
   personRow(personId: string): Cypress.Chainable {
@@ -39,15 +39,15 @@ export const peoplePage = {
   },
 
   nameCell(personId: string): Cypress.Chainable {
-    return this.personRow(personId).find("td").eq(0);
+    return this.personRow(personId).find('td').eq(0);
   },
 
   roleCell(personId: string): Cypress.Chainable {
-    return this.personRow(personId).find("td").eq(1);
+    return this.personRow(personId).find('td').eq(1);
   },
 
   emailCell(personId: string): Cypress.Chainable {
-    return this.personRow(personId).find("td").eq(2);
+    return this.personRow(personId).find('td').eq(2);
   },
 
   addPerson(person: PersonRecord): void {

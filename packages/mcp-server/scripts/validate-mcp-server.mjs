@@ -1,32 +1,32 @@
-import path from "node:path";
-import process from "node:process";
+import path from 'node:path';
+import process from 'node:process';
 
-import { Client } from "@modelcontextprotocol/sdk/client/index.js";
-import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
+import { Client } from '@modelcontextprotocol/sdk/client/index.js';
+import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
 
 const EXPECTED_TOOLS = [
-  "list_templates",
-  "describe_template",
-  "scaffold_template",
-  "validate_project",
-  "get_next_steps"
+  'list_templates',
+  'describe_template',
+  'scaffold_template',
+  'validate_project',
+  'get_next_steps'
 ];
 
 async function main() {
   const client = new Client({
-    name: "qa-patterns-mcp-validator",
-    version: "1.0.0"
+    name: 'qa-patterns-mcp-validator',
+    version: '1.0.0'
   });
 
   const transport = new StdioClientTransport({
     command: process.execPath,
-    args: [path.resolve("src/index.mjs")],
+    args: [path.resolve('src/index.mjs')],
     cwd: process.cwd(),
-    stderr: "pipe"
+    stderr: 'pipe'
   });
 
-  let stderr = "";
-  transport.stderr?.on("data", (chunk) => {
+  let stderr = '';
+  transport.stderr?.on('data', (chunk) => {
     stderr += chunk.toString();
   });
 
@@ -34,10 +34,12 @@ async function main() {
     await client.connect(transport);
     const result = await client.listTools();
     const toolNames = result.tools.map((tool) => tool.name);
-    const missingTools = EXPECTED_TOOLS.filter((tool) => !toolNames.includes(tool));
+    const missingTools = EXPECTED_TOOLS.filter(
+      (tool) => !toolNames.includes(tool)
+    );
 
     if (missingTools.length > 0) {
-      throw new Error(`Missing expected MCP tools: ${missingTools.join(", ")}`);
+      throw new Error(`Missing expected MCP tools: ${missingTools.join(', ')}`);
     }
 
     console.log(

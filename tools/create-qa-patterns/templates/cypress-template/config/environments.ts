@@ -1,5 +1,5 @@
 // Defines the built-in environment defaults used when env vars are not provided.
-import type { TestEnvironment } from "./test-env";
+import type { TestEnvironment } from './test-env';
 
 type EnvironmentDefaults = {
   uiBaseUrl: string;
@@ -11,28 +11,33 @@ type EnvironmentDefaults = {
 
 const DEFAULTS: Record<TestEnvironment, EnvironmentDefaults> = {
   dev: {
-    uiBaseUrl: "http://127.0.0.1:3000",
+    uiBaseUrl: 'http://127.0.0.1:3000',
+    apiBaseUrl: 'http://127.0.0.1:3001',
     credentials: {
-      username: "tester",
-      password: "Password123!"
+      username: '',
+      password: ''
     }
   },
   staging: {
-    uiBaseUrl: "https://staging-ui.example.internal",
+    uiBaseUrl: 'https://staging-ui.example.internal',
+    apiBaseUrl: 'https://staging-api.example.internal',
     credentials: {
-      username: "staging-user",
-      password: "replace-me"
+      username: '',
+      password: ''
     }
   },
   prod: {
-    uiBaseUrl: "https://ui.example.internal",
+    uiBaseUrl: 'https://ui.example.internal',
+    apiBaseUrl: 'https://api.example.internal',
     credentials: {
-      username: "prod-user",
-      password: "replace-me"
+      username: '',
+      password: ''
     }
   }
 };
 
-export function getEnvironmentDefaults(testEnv: TestEnvironment): EnvironmentDefaults {
+export function getEnvironmentDefaults(
+  testEnv: TestEnvironment
+): EnvironmentDefaults {
   return DEFAULTS[testEnv];
 }

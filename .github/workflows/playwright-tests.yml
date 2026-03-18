@@ -9,13 +9,25 @@ on:
   pull_request:
 
 jobs:
+  format-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install workspace dependencies
+        run: npm ci
+      - name: Verify formatting
+        run: npm run format:check
+
   sync-check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: '20'
       - name: Verify shared code is in sync
         run: node scripts/sync-templates.mjs --check
 
@@ -27,7 +39,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: '20'
 
       - name: Install workspace dependencies
         run: npm ci
@@ -66,7 +78,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: '20'
 
       - name: Install workspace dependencies
         run: npm ci
@@ -129,7 +141,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: '20'
 
       - name: Install template dependencies
         working-directory: templates/cypress-template
@@ -147,7 +159,7 @@ jobs:
           working-directory: templates/cypress-template
           install: false
           start: npm run demo:ui
-          wait-on: "http://127.0.0.1:3000/health"
+          wait-on: 'http://127.0.0.1:3000/health'
           command: npm run cy:run
 
       - name: Generate Cypress Allure report

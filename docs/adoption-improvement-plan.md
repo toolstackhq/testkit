@@ -25,13 +25,13 @@ The Playwright and Cypress templates duplicate ~15-20% of their code. Identical 
 
 ### Evidence of drift
 
-| File | Playwright | Cypress | Drift |
-|------|-----------|---------|-------|
-| `secret-manager.ts` | Interface method: `getSecret()`, has `getRequiredSecret()` + `getOptionalSecret()` | Interface method: `getOptionalSecret()`, no `getRequiredSecret()` | Method names and capabilities diverged |
-| `environments.ts` | Constant: `DEFAULTS`, param: `testEnv`, staging password: `"replace-me"` | Constant: `environmentDefaults`, param: `environment`, staging password: `"staging-password"` | Naming and sentinel values diverged |
-| `seeded-faker.ts` | Hash: bitwise `((seed << 5) - seed + char) \| 0` | Hash: simple `accumulator + charCode` | **Different hash algorithms = different seeded data** |
-| `id-generator.ts` | Has `nextSequence()` method | Missing `nextSequence()` entirely | Feature gap |
-| `runtime-config.ts` | Has `apiBaseUrl` field | Missing `apiBaseUrl` | Intentional, but the 90% overlap is duplicated |
+| File                | Playwright                                                                         | Cypress                                                                                       | Drift                                                 |
+| ------------------- | ---------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- | ----------------------------------------------------- |
+| `secret-manager.ts` | Interface method: `getSecret()`, has `getRequiredSecret()` + `getOptionalSecret()` | Interface method: `getOptionalSecret()`, no `getRequiredSecret()`                             | Method names and capabilities diverged                |
+| `environments.ts`   | Constant: `DEFAULTS`, param: `testEnv`, staging password: `"replace-me"`           | Constant: `environmentDefaults`, param: `environment`, staging password: `"staging-password"` | Naming and sentinel values diverged                   |
+| `seeded-faker.ts`   | Hash: bitwise `((seed << 5) - seed + char) \| 0`                                   | Hash: simple `accumulator + charCode`                                                         | **Different hash algorithms = different seeded data** |
+| `id-generator.ts`   | Has `nextSequence()` method                                                        | Missing `nextSequence()` entirely                                                             | Feature gap                                           |
+| `runtime-config.ts` | Has `apiBaseUrl` field                                                             | Missing `apiBaseUrl`                                                                          | Intentional, but the 90% overlap is duplicated        |
 
 ### Shared code (candidates for extraction)
 
@@ -82,8 +82,9 @@ The scaffolding tool resolves `@toolstackhq/qa-patterns-core` at generation time
 ### Before
 
 **`templates/playwright-template/config/secret-manager.ts`** (29 lines):
+
 ```ts
-import type { TestEnvironment } from "./test-env";
+import type { TestEnvironment } from './test-env';
 
 export interface SecretProvider {
   getSecret(key: string, testEnv: TestEnvironment): string | undefined;
@@ -114,23 +115,36 @@ export class SecretManager {
 ```
 
 **`templates/cypress-template/config/secret-manager.ts`** (20 lines — drifted):
+
 ```ts
-import type { TestEnvironment } from "./test-env";
+import type { TestEnvironment } from './test-env';
 
 export interface SecretProvider {
-  getOptionalSecret(secretName: string, environment: TestEnvironment): string | undefined;
+  getOptionalSecret(
+    secretName: string,
+    environment: TestEnvironment
+  ): string | undefined;
 }
 
 export class EnvSecretProvider implements SecretProvider {
-  getOptionalSecret(secretName: string, environment: TestEnvironment): string | undefined {
-    return process.env[`${environment.toUpperCase()}_${secretName}`] ?? process.env[secretName];
+  getOptionalSecret(
+    secretName: string,
+    environment: TestEnvironment
+  ): string | undefined {
+    return (
+      process.env[`${environment.toUpperCase()}_${secretName}`] ??
+      process.env[secretName]
+    );
   }
 }
 
 export class SecretManager {
   constructor(private readonly secretProvider: SecretProvider) {}
 
-  getOptionalSecret(secretName: string, environment: TestEnvironment): string | undefined {
+  getOptionalSecret(
+    secretName: string,
+    environment: TestEnvironment
+  ): string | undefined {
     return this.secretProvider.getOptionalSecret(secretName, environment);
   }
 }
@@ -139,8 +153,9 @@ export class SecretManager {
 ### After
 
 **`packages/qa-patterns-core/src/config/secret-manager.ts`** (single source of truth):
+
 ```ts
-export type TestEnvironment = "dev" | "staging" | "prod";
+export type TestEnvironment = 'dev' | 'staging' | 'prod';
 
 export interface SecretProvider {
   getSecret(key: string, testEnv: TestEnvironment): string | undefined;
@@ -171,8 +186,13 @@ export class SecretManager {
 ```
 
 **`templates/playwright-template/config/secret-manager.ts`** (re-export only):
+
 ```ts
-export { SecretProvider, EnvSecretProvider, SecretManager } from "@toolstackhq/qa-patterns-core/config/secret-manager";
+export {
+  SecretProvider,
+  EnvSecretProvider,
+  SecretManager
+} from '@toolstackhq/qa-patterns-core/config/secret-manager';
 ```
 
 ### Effort estimate
@@ -192,6 +212,7 @@ Moderate. Requires careful extraction, updating all imports in both templates, a
 ### Problem
 
 The project has ESLint for code quality rules but no formatter. In a team setting, this means:
+
 - PRs contain noise diffs from different editors using different formatting
 - New engineers scaffolding projects get inconsistent formatting from the start
 - No automated fix for formatting — only manual attention
@@ -211,6 +232,7 @@ Add Prettier to both templates and the root monorepo. Use `eslint-config-prettie
 ### Before
 
 **`templates/playwright-template/package.json`** scripts (no format command):
+
 ```json
 {
   "scripts": {
@@ -225,15 +247,17 @@ Add Prettier to both templates and the root monorepo. Use `eslint-config-prettie
 ```
 
 **`templates/playwright-template/eslint.config.mjs`** (no prettier integration):
+
 ```js
-import tseslint from "typescript-eslint";
-import architecturePlugin from "./lint/architecture-plugin.cjs";
+import tseslint from 'typescript-eslint';
+import architecturePlugin from './lint/architecture-plugin.cjs';
 // ... rules only, no prettier
 ```
 
 ### After
 
 **New file: `templates/playwright-template/.prettierrc`**:
+
 ```json
 {
   "printWidth": 100,
@@ -245,6 +269,7 @@ import architecturePlugin from "./lint/architecture-plugin.cjs";
 ```
 
 **New file: `templates/playwright-template/.prettierignore`**:
+
 ```
 node_modules/
 test-results/
@@ -255,6 +280,7 @@ reports/
 ```
 
 **Updated `templates/playwright-template/package.json`** scripts:
+
 ```json
 {
   "scripts": {
@@ -275,18 +301,20 @@ reports/
 ```
 
 **Updated `templates/playwright-template/eslint.config.mjs`**:
+
 ```js
-import tseslint from "typescript-eslint";
-import prettierConfig from "eslint-config-prettier";
-import architecturePlugin from "./lint/architecture-plugin.cjs";
+import tseslint from 'typescript-eslint';
+import prettierConfig from 'eslint-config-prettier';
+import architecturePlugin from './lint/architecture-plugin.cjs';
 
 export default tseslint.config(
   // ... existing rules ...
-  prettierConfig  // must be last — disables conflicting ESLint rules
+  prettierConfig // must be last — disables conflicting ESLint rules
 );
 ```
 
 **Updated CI workflow** (`scripts/run-tests.sh` or GitHub Actions):
+
 ```bash
 npm run format:check   # fails CI if files are unformatted
 npm run lint
@@ -398,33 +426,37 @@ version.test.js:
 
 ```js
 // test/cli.integration.test.js
-const { execSync } = require("node:child_process");
-const fs = require("node:fs");
-const os = require("node:os");
-const path = require("node:path");
+const { execSync } = require('node:child_process');
+const fs = require('node:fs');
+const os = require('node:os');
+const path = require('node:path');
 
-test("scaffold creates a valid playwright project", () => {
-  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "qa-scaffold-"));
-  const targetDir = path.join(tmpDir, "my-project");
+test('scaffold creates a valid playwright project', () => {
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'qa-scaffold-'));
+  const targetDir = path.join(tmpDir, 'my-project');
 
   execSync(`node bin/create-qa-patterns.js playwright-template ${targetDir}`, {
-    cwd: path.resolve(__dirname, ".."),
-    stdio: "pipe"
+    cwd: path.resolve(__dirname, '..'),
+    stdio: 'pipe'
   });
 
   // Verify structure
-  expect(fs.existsSync(path.join(targetDir, "package.json"))).toBe(true);
-  expect(fs.existsSync(path.join(targetDir, "playwright.config.ts"))).toBe(true);
-  expect(fs.existsSync(path.join(targetDir, "tests"))).toBe(true);
-  expect(fs.existsSync(path.join(targetDir, ".git"))).toBe(true);
-  expect(fs.existsSync(path.join(targetDir, ".gitignore"))).toBe(true);
+  expect(fs.existsSync(path.join(targetDir, 'package.json'))).toBe(true);
+  expect(fs.existsSync(path.join(targetDir, 'playwright.config.ts'))).toBe(
+    true
+  );
+  expect(fs.existsSync(path.join(targetDir, 'tests'))).toBe(true);
+  expect(fs.existsSync(path.join(targetDir, '.git'))).toBe(true);
+  expect(fs.existsSync(path.join(targetDir, '.gitignore'))).toBe(true);
 
   // Verify package.json was customized
-  const pkg = JSON.parse(fs.readFileSync(path.join(targetDir, "package.json"), "utf8"));
-  expect(pkg.name).toBe("my-project");
+  const pkg = JSON.parse(
+    fs.readFileSync(path.join(targetDir, 'package.json'), 'utf8')
+  );
+  expect(pkg.name).toBe('my-project');
 
   // Verify no node_modules leaked from monorepo
-  expect(fs.existsSync(path.join(targetDir, "node_modules"))).toBe(false);
+  expect(fs.existsSync(path.join(targetDir, 'node_modules'))).toBe(false);
 
   // Cleanup
   fs.rmSync(tmpDir, { recursive: true, force: true });
@@ -518,6 +550,7 @@ create-qa-patterns upgrade [--dry-run]
 ```
 
 Logic:
+
 1. Read `.qa-patterns.json` from current directory
 2. Resolve the matching template from the installed CLI version
 3. Generate a unified diff between the template and the current project, excluding:
@@ -574,6 +607,7 @@ create-qa-patterns upgrade --apply
 ```
 
 **New file: `.qa-patterns.json`** (written during scaffold):
+
 ```json
 {
   "template": "playwright-template",
@@ -584,6 +618,7 @@ create-qa-patterns upgrade --apply
 ```
 
 **New file: `.qa-patterns-ignore`** (user-maintained):
+
 ```
 # Files customized for this project — skip during upgrade
 config/environments.ts
@@ -608,12 +643,12 @@ Large. This is the most complex item on the list. The diff engine, ignore handli
 
 The demo apps and template config defaults contain hardcoded credentials:
 
-| Location | Value |
-|----------|-------|
-| `test-apps/ui-demo-app/src/store.js:3` | `process.env.UI_DEMO_USERNAME \|\| "tester"` |
-| `test-apps/ui-demo-app/src/store.js:4` | `process.env.UI_DEMO_PASSWORD \|\| "Password123!"` |
-| `templates/playwright-template/config/environments.ts:17-18` | `username: "tester"`, `password: "Password123!"` |
-| `templates/cypress-template/config/environments.ts:14-15` | `username: "tester"`, `password: "Password123!"` |
+| Location                                                     | Value                                              |
+| ------------------------------------------------------------ | -------------------------------------------------- |
+| `test-apps/ui-demo-app/src/store.js:3`                       | `process.env.UI_DEMO_USERNAME \|\| "tester"`       |
+| `test-apps/ui-demo-app/src/store.js:4`                       | `process.env.UI_DEMO_PASSWORD \|\| "Password123!"` |
+| `templates/playwright-template/config/environments.ts:17-18` | `username: "tester"`, `password: "Password123!"`   |
+| `templates/cypress-template/config/environments.ts:14-15`    | `username: "tester"`, `password: "Password123!"`   |
 
 While these are demo-only credentials, internal security scanners (Semgrep, TruffleHog, GitHub secret scanning) will flag them in every scaffolded project. Engineers will waste time writing exemptions or ignoring scanner results — both bad outcomes.
 
@@ -624,35 +659,37 @@ Move all credentials to `.env.example` and `.env` files. The demo apps and templ
 ### Before
 
 **`test-apps/ui-demo-app/src/store.js`** (hardcoded fallbacks):
+
 ```js
 const state = {
   credentials: {
-    username: process.env.UI_DEMO_USERNAME || "tester",
-    password: process.env.UI_DEMO_PASSWORD || "Password123!"
+    username: process.env.UI_DEMO_USERNAME || 'tester',
+    password: process.env.UI_DEMO_PASSWORD || 'Password123!'
   },
   people: []
 };
 ```
 
 **`templates/playwright-template/config/environments.ts`** (hardcoded in defaults):
+
 ```ts
 const DEFAULTS: Record<TestEnvironment, EnvironmentDefaults> = {
   dev: {
-    uiBaseUrl: "http://127.0.0.1:3000",
-    apiBaseUrl: "http://127.0.0.1:3001",
+    uiBaseUrl: 'http://127.0.0.1:3000',
+    apiBaseUrl: 'http://127.0.0.1:3001',
     credentials: {
-      username: "tester",
-      password: "Password123!"
+      username: 'tester',
+      password: 'Password123!'
     }
   },
   staging: {
-    uiBaseUrl: "https://staging-ui.example.internal",
-    apiBaseUrl: "https://staging-api.example.internal",
+    uiBaseUrl: 'https://staging-ui.example.internal',
+    apiBaseUrl: 'https://staging-api.example.internal',
     credentials: {
-      username: "staging-user",
-      password: "replace-me"
+      username: 'staging-user',
+      password: 'replace-me'
     }
-  },
+  }
   // ...
 };
 ```
@@ -660,13 +697,14 @@ const DEFAULTS: Record<TestEnvironment, EnvironmentDefaults> = {
 ### After
 
 **`test-apps/ui-demo-app/src/store.js`** (env-only, fail if missing):
+
 ```js
 function requiredEnv(key) {
   const value = process.env[key];
   if (!value) {
     throw new Error(
       `Missing environment variable "${key}". ` +
-      `Copy .env.example to .env and fill in the values.`
+        `Copy .env.example to .env and fill in the values.`
     );
   }
   return value;
@@ -674,14 +712,15 @@ function requiredEnv(key) {
 
 const state = {
   credentials: {
-    username: requiredEnv("UI_DEMO_USERNAME"),
-    password: requiredEnv("UI_DEMO_PASSWORD")
+    username: requiredEnv('UI_DEMO_USERNAME'),
+    password: requiredEnv('UI_DEMO_PASSWORD')
   },
   people: []
 };
 ```
 
 **`test-apps/ui-demo-app/.env.example`** (checked into source):
+
 ```env
 # Demo app credentials — copy this file to .env
 UI_DEMO_USERNAME=tester
@@ -689,25 +728,27 @@ UI_DEMO_PASSWORD=Password123!
 ```
 
 **`test-apps/ui-demo-app/.env`** (gitignored, created by setup script):
+
 ```env
 UI_DEMO_USERNAME=tester
 UI_DEMO_PASSWORD=Password123!
 ```
 
 **`templates/playwright-template/config/environments.ts`** (no inline credentials):
+
 ```ts
 const DEFAULTS: Record<TestEnvironment, EnvironmentDefaults> = {
   dev: {
-    uiBaseUrl: "http://127.0.0.1:3000",
-    apiBaseUrl: "http://127.0.0.1:3001"
+    uiBaseUrl: 'http://127.0.0.1:3000',
+    apiBaseUrl: 'http://127.0.0.1:3001'
   },
   staging: {
-    uiBaseUrl: "https://staging-ui.example.internal",
-    apiBaseUrl: "https://staging-api.example.internal"
+    uiBaseUrl: 'https://staging-ui.example.internal',
+    apiBaseUrl: 'https://staging-api.example.internal'
   },
   prod: {
-    uiBaseUrl: "https://ui.example.internal",
-    apiBaseUrl: "https://api.example.internal"
+    uiBaseUrl: 'https://ui.example.internal',
+    apiBaseUrl: 'https://api.example.internal'
   }
 };
 ```
@@ -715,6 +756,7 @@ const DEFAULTS: Record<TestEnvironment, EnvironmentDefaults> = {
 Credentials are loaded exclusively through the `SecretManager` → `EnvSecretProvider` chain, which reads from environment variables (set via `.env` files or CI secrets).
 
 **Updated `templates/playwright-template/.env.example`**:
+
 ```env
 # Test environment: dev | staging | prod
 TEST_ENV=dev
@@ -733,6 +775,7 @@ APP_PASSWORD=Password123!
 ### Effort estimate
 
 Small-medium. The code changes are straightforward. The coordination effort is in:
+
 - Updating CI workflows to set the env vars explicitly
 - Updating the docs to reflect the new setup step
 - Updating the CLI to copy `.env.example` → `.env` during scaffold
@@ -759,13 +802,14 @@ Add a new CI job that scaffolds a project from scratch and validates the full li
 ### Before
 
 **Current CI** (`/.github/workflows/playwright-tests.yml`):
+
 ```yaml
 # Only validates templates IN the monorepo
 jobs:
   playwright-template:
     steps:
       - uses: actions/checkout@v4
-      - run: npm ci                          # monorepo install
+      - run: npm ci # monorepo install
       - run: npx playwright install --with-deps
       - run: npm run lint -w templates/playwright-template
       - run: npm run typecheck -w templates/playwright-template
@@ -773,6 +817,7 @@ jobs:
 ```
 
 This does NOT validate:
+
 - That `fs.cpSync` produces a working standalone project
 - That `package.json` has all required dependencies (not leaking from monorepo hoisting)
 - That the bundled CI workflow file is valid for a standalone repo
@@ -781,83 +826,85 @@ This does NOT validate:
 ### After
 
 **New CI job** (add to `.github/workflows/playwright-tests.yml` or create new file):
+
 ```yaml
-  scaffold-validation:
-    name: Validate scaffolded project (end-to-end)
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        template: [playwright-template, cypress-template]
-    steps:
-      - uses: actions/checkout@v4
+scaffold-validation:
+  name: Validate scaffolded project (end-to-end)
+  runs-on: ubuntu-latest
+  strategy:
+    matrix:
+      template: [playwright-template, cypress-template]
+  steps:
+    - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "22"
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '22'
 
-      # Scaffold a fresh project using the CLI (no monorepo context)
-      - name: Scaffold project
-        run: |
-          node tools/create-qa-patterns/index.js ${{ matrix.template }} /tmp/scaffolded-project
+    # Scaffold a fresh project using the CLI (no monorepo context)
+    - name: Scaffold project
+      run: |
+        node tools/create-qa-patterns/index.js ${{ matrix.template }} /tmp/scaffolded-project
 
-      # Verify file structure
-      - name: Verify generated files
-        run: |
-          cd /tmp/scaffolded-project
-          test -f package.json
-          test -f .gitignore
-          test -d .git
-          test -f tsconfig.json
+    # Verify file structure
+    - name: Verify generated files
+      run: |
+        cd /tmp/scaffolded-project
+        test -f package.json
+        test -f .gitignore
+        test -d .git
+        test -f tsconfig.json
 
-      # Install dependencies (standalone — no workspace resolution)
-      - name: Install dependencies
-        run: |
-          cd /tmp/scaffolded-project
-          npm install
+    # Install dependencies (standalone — no workspace resolution)
+    - name: Install dependencies
+      run: |
+        cd /tmp/scaffolded-project
+        npm install
 
-      # Install browsers (Playwright only)
-      - name: Install Playwright browsers
-        if: matrix.template == 'playwright-template'
-        run: |
-          cd /tmp/scaffolded-project
-          npx playwright install --with-deps
+    # Install browsers (Playwright only)
+    - name: Install Playwright browsers
+      if: matrix.template == 'playwright-template'
+      run: |
+        cd /tmp/scaffolded-project
+        npx playwright install --with-deps
 
-      # Run lint
-      - name: Lint
-        run: |
-          cd /tmp/scaffolded-project
-          npm run lint
+    # Run lint
+    - name: Lint
+      run: |
+        cd /tmp/scaffolded-project
+        npm run lint
 
-      # Run typecheck
-      - name: Typecheck
-        run: |
-          cd /tmp/scaffolded-project
-          npm run typecheck
+    # Run typecheck
+    - name: Typecheck
+      run: |
+        cd /tmp/scaffolded-project
+        npm run typecheck
 
-      # Run tests
-      - name: Run tests
-        run: |
-          cd /tmp/scaffolded-project
-          npm test
-        env:
-          TEST_ENV: dev
-          TEST_RUN_ID: scaffold-validation
+    # Run tests
+    - name: Run tests
+      run: |
+        cd /tmp/scaffolded-project
+        npm test
+      env:
+        TEST_ENV: dev
+        TEST_RUN_ID: scaffold-validation
 
-      # Validate the bundled CI workflow is valid YAML
-      - name: Validate bundled CI workflow
-        run: |
-          cd /tmp/scaffolded-project
-          if [ -d ".github/workflows" ]; then
-            for f in .github/workflows/*.yml; do
-              echo "Validating $f"
-              python3 -c "import yaml; yaml.safe_load(open('$f'))"
-            done
-          fi
+    # Validate the bundled CI workflow is valid YAML
+    - name: Validate bundled CI workflow
+      run: |
+        cd /tmp/scaffolded-project
+        if [ -d ".github/workflows" ]; then
+          for f in .github/workflows/*.yml; do
+            echo "Validating $f"
+            python3 -c "import yaml; yaml.safe_load(open('$f'))"
+          done
+        fi
 ```
 
 **Additionally, add a local validation script** for developers:
 
 **New file: `scripts/validate-scaffold.sh`**:
+
 ```bash
 #!/usr/bin/env bash
 set -euo pipefail
@@ -905,33 +952,28 @@ Small-medium. The CI job is mostly configuration. The tricky part is ensuring th
 
 ## Priority and sequencing
 
-| # | Item | Effort | Impact | Dependencies | Suggested order |
-|---|------|--------|--------|-------------|----------------|
-| 6 | Validate scaffolded project CI | Small | High | None | **Do first** — catches existing breakage |
-| 2 | Add Prettier | Small | Medium | None | **Do second** — baseline formatting before other changes |
-| 5 | Remove hardcoded credentials | Small-Med | High | None | **Do third** — security scanner noise blocks adoption |
-| 3 | Modularize and test the CLI | Med-Large | High | None | **Do fourth** — prerequisite for upgrade mechanism |
-| 1 | Extract shared config package | Medium | Medium | None (but easier after #3) | **Do fifth** — reduces maintenance, prevents further drift |
-| 4 | Build upgrade mechanism | Large | High | Requires #3 | **Do last** — highest effort, highest long-term value |
+| #   | Item                           | Effort    | Impact | Dependencies               | Suggested order           |
+| --- | ------------------------------ | --------- | ------ | -------------------------- | ------------------------- |
+| 6   | Validate scaffolded project CI | Small     | High   | None                       | **Done**                  |
+| 2   | Add Prettier                   | Small     | Medium | None                       | **Done**                  |
+| 5   | Remove hardcoded credentials   | Small-Med | High   | None                       | **Done**                  |
+| 3   | Modularize and test the CLI    | Med-Large | High   | None                       | **Done**                  |
+| 1   | Extract shared config package  | Medium    | Medium | None (but easier after #3) | **Done**                  |
+| 4   | Build upgrade mechanism        | Large     | High   | Requires #3                | **Done (safe update v1)** |
 
-### Recommended execution
+### Implementation outcome
 
-```
-Week 1:   #6 (scaffold validation) + #2 (prettier)
-Week 2:   #5 (credentials) + #3 start (CLI modularization)
-Week 3:   #3 finish (CLI tests) + #1 (shared config extraction)
-Week 4-5: #4 (upgrade mechanism)
-```
+All six items in this plan have now been implemented in the repository. The upgrade mechanism is intentionally conservative: it supports metadata-based `upgrade check` and `upgrade apply --safe` for managed framework files, while leaving user-owned tests and page objects untouched.
 
 ---
 
 ## Decision log
 
-| Decision | Rationale |
-|----------|-----------|
-| Core package copied into scaffold output (not an npm dependency) | Scaffolded projects must remain standalone with no external runtime dependencies |
-| Prettier over dprint/Biome | Prettier has the largest ecosystem adoption, ESLint integration is mature, team familiarity is highest |
-| Vitest for CLI tests over Jest/node:test | Already used in modern JS ecosystem, fast, ESM-friendly, good for both unit and integration |
-| Diff-based upgrade over runtime package (a la CRA) | Lower coupling, simpler mental model, no version lock-in. Users see exactly what changes before applying |
-| `.env` for credentials over config defaults | Security scanner compatibility, principle of least surprise, matches 12-factor app conventions |
-| Scaffold validation in CI over local-only | Must catch breakage automatically; local scripts are optional convenience |
+| Decision                                                         | Rationale                                                                                                |
+| ---------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| Core package copied into scaffold output (not an npm dependency) | Scaffolded projects must remain standalone with no external runtime dependencies                         |
+| Prettier over dprint/Biome                                       | Prettier has the largest ecosystem adoption, ESLint integration is mature, team familiarity is highest   |
+| Vitest for CLI tests over Jest/node:test                         | Already used in modern JS ecosystem, fast, ESM-friendly, good for both unit and integration              |
+| Diff-based upgrade over runtime package (a la CRA)               | Lower coupling, simpler mental model, no version lock-in. Users see exactly what changes before applying |
+| `.env` for credentials over config defaults                      | Security scanner compatibility, principle of least surprise, matches 12-factor app conventions           |
+| Scaffold validation in CI over local-only                        | Must catch breakage automatically; local scripts are optional convenience                                |

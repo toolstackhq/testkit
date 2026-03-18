@@ -89,8 +89,7 @@ Default local values:
 
 - UI base URL: `http://127.0.0.1:3000`
 - API base URL: `http://127.0.0.1:3001`
-- username: `tester`
-- password: `Password123!`
+- credentials: generated into local `.env` on first run
 
 ## Environment and secrets
 
@@ -110,7 +109,7 @@ The same pattern is used for credentials:
 
 1. `DEV_APP_USERNAME` or `DEV_APP_PASSWORD`
 2. `APP_USERNAME` or `APP_PASSWORD`
-3. built-in defaults for the selected environment
+3. built-in empty defaults for the selected environment
 
 For local overrides, copy:
 
@@ -128,6 +127,8 @@ The template loads:
 
 - `.env`
 - `.env.<TEST_ENV>`
+
+On the first local run, the template also creates a `.env` file with random demo credentials if one does not already exist.
 
 Example:
 
@@ -192,7 +193,7 @@ If you only want Playwright reporting, remove the `allure-playwright` reporter e
 Create tests under `tests/` and import the shared fixtures:
 
 ```ts
-import { expect, test } from "../fixtures/test-fixtures";
+import { expect, test } from '../fixtures/test-fixtures';
 ```
 
 Keep the pattern simple:
@@ -204,7 +205,7 @@ Keep the pattern simple:
 Example shape:
 
 ```ts
-test("do something @smoke", async ({ dataFactory, loginPage }) => {
+test('do something @smoke', async ({ dataFactory, loginPage }) => {
   const person = dataFactory.person();
   // use page objects here
 });

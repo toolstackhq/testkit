@@ -1,5 +1,5 @@
 export default {
-  name: "qa-patterns Playwright Template",
+  name: 'qa-patterns Playwright Template',
   plugins: {
     awesome: {
       options: {

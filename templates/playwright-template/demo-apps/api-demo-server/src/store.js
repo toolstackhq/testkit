@@ -7,7 +7,7 @@ const state = {
 
 function nextId() {
   state.counters.person += 1;
-  return `person-${String(state.counters.person).padStart(4, "0")}`;
+  return `person-${String(state.counters.person).padStart(4, '0')}`;
 }
 
 function getPerson(personId) {

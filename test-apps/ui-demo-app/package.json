@@ -4,7 +4,7 @@
   "private": true,
   "description": "Deterministic two-page UI demo app for Playwright reference tests.",
   "scripts": {
-    "dev": "node ./src/server.js",
-    "start": "node ./src/server.js"
+    "dev": "node ../../scripts/ensure-local-env.mjs && node ./src/server.js",
+    "start": "node ../../scripts/ensure-local-env.mjs && node ./src/server.js"
   }
 }

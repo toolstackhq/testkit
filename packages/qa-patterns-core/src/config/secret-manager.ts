@@ -1,5 +1,5 @@
 // Minimal secret abstraction so env-based secrets can later be replaced cleanly.
-import type { TestEnvironment } from "./test-env";
+import type { TestEnvironment } from './test-env';
 
 export interface SecretProvider {
   getSecret(key: string, testEnv: TestEnvironment): string | undefined;

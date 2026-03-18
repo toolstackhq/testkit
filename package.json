@@ -24,10 +24,15 @@
     "mcp:start": "npm run start --workspace @toolstackhq/mcp-server",
     "docs:dev": "npm run dev --workspace @toolstackhq/docs-site",
     "docs:build": "npm run build --workspace @toolstackhq/docs-site",
+    "format": "prettier --write . --ignore-unknown",
+    "format:check": "prettier --check . --ignore-unknown",
     "sync": "node scripts/sync-templates.mjs",
     "sync:check": "node scripts/sync-templates.mjs --check"
   },
   "engines": {
     "node": ">=18.18.0"
+  },
+  "devDependencies": {
+    "prettier": "^3.6.2"
   }
 }

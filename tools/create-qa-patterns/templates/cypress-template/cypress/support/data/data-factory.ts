@@ -1,6 +1,6 @@
 // Generic data builders that keep tests readable and deterministic.
-import { createSeededFaker } from "./seeded-faker";
-import { IdGenerator } from "./id-generator";
+import { createSeededFaker } from '../generators/seeded-faker';
+import { IdGenerator } from '../generators/id-generator';
 
 export type PersonRecord = {
   personId: string;
@@ -17,7 +17,7 @@ export class DataFactory {
   }
 
   person(overrides?: Partial<PersonRecord>): PersonRecord {
-    const personId = overrides?.personId ?? this.idGenerator.next("person");
+    const personId = overrides?.personId ?? this.idGenerator.next('person');
     const seededFaker = createSeededFaker(`${this.testRunId}:${personId}`);
     const firstName = seededFaker.person.firstName();
     const lastName = seededFaker.person.lastName();
@@ -27,7 +27,9 @@ export class DataFactory {
       personId,
       name,
       role: overrides?.role ?? seededFaker.person.jobTitle(),
-      email: overrides?.email ?? `${firstName}.${lastName}.${personId}@example.test`.toLowerCase(),
+      email:
+        overrides?.email ??
+        `${firstName}.${lastName}.${personId}@example.test`.toLowerCase(),
       ...overrides
     };
   }

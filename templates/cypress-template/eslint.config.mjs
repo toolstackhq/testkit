@@ -1,37 +1,43 @@
-import js from "@eslint/js";
-import tsParser from "@typescript-eslint/parser";
-import tsPlugin from "@typescript-eslint/eslint-plugin";
+import js from '@eslint/js';
+import tsParser from '@typescript-eslint/parser';
+import tsPlugin from '@typescript-eslint/eslint-plugin';
 
 const tsconfigRootDir = import.meta.dirname;
 
 const cypressGlobals = {
-  Cypress: "readonly",
-  cy: "readonly",
-  describe: "readonly",
-  it: "readonly",
-  before: "readonly",
-  beforeEach: "readonly",
-  after: "readonly",
-  afterEach: "readonly"
+  Cypress: 'readonly',
+  cy: 'readonly',
+  describe: 'readonly',
+  it: 'readonly',
+  before: 'readonly',
+  beforeEach: 'readonly',
+  after: 'readonly',
+  afterEach: 'readonly'
 };
 
 const nodeGlobals = {
-  process: "readonly",
-  console: "readonly"
+  process: 'readonly',
+  console: 'readonly'
 };
 
 export default [
   {
-    ignores: ["demo-apps/**", "node_modules/**", "reports/**", "allure-results/**", "allure-report/**"]
+    ignores: [
+      'demo-apps/**',
+      'node_modules/**',
+      'reports/**',
+      'allure-results/**',
+      'allure-report/**'
+    ]
   },
   js.configs.recommended,
   {
-    files: ["**/*.ts"],
-    ignores: ["**/*.d.ts"],
+    files: ['**/*.ts'],
+    ignores: ['**/*.d.ts'],
     languageOptions: {
       parser: tsParser,
       parserOptions: {
-        project: "./tsconfig.json",
+        project: './tsconfig.json',
         tsconfigRootDir
       },
       globals: {
@@ -40,22 +46,22 @@ export default [
       }
     },
     plugins: {
-      "@typescript-eslint": tsPlugin
+      '@typescript-eslint': tsPlugin
     },
     rules: {
       ...tsPlugin.configs.recommended.rules,
-      "no-undef": "off",
-      "@typescript-eslint/no-unused-vars": [
-        "error",
+      'no-undef': 'off',
+      '@typescript-eslint/no-unused-vars': [
+        'error',
         {
-          argsIgnorePattern: "^_",
-          varsIgnorePattern: "^_"
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_'
         }
       ]
     }
   },
   {
-    files: ["**/*.d.ts"],
+    files: ['**/*.d.ts'],
     languageOptions: {
       parser: tsParser,
       parserOptions: {
@@ -67,53 +73,55 @@ export default [
       }
     },
     rules: {
-      "no-undef": "off",
-      "no-unused-vars": "off",
-      "@typescript-eslint/no-unused-vars": "off"
+      'no-undef': 'off',
+      'no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-vars': 'off'
     }
   },
   {
-    files: ["scripts/**/*.mjs"],
+    files: ['scripts/**/*.mjs'],
     languageOptions: {
       globals: {
         ...nodeGlobals,
-        fetch: "readonly",
-        setTimeout: "readonly"
+        fetch: 'readonly',
+        setTimeout: 'readonly'
       }
     }
   },
   {
-    files: ["cypress/e2e/**/*.ts"],
+    files: ['cypress/e2e/**/*.ts'],
     rules: {
-      "no-restricted-properties": [
-        "error",
+      'no-restricted-properties': [
+        'error',
         {
-          object: "cy",
-          property: "get",
-          message: "Keep selectors in support/page modules or custom commands, not in spec files."
+          object: 'cy',
+          property: 'get',
+          message:
+            'Keep selectors in support/page modules or custom commands, not in spec files.'
         },
         {
-          object: "cy",
-          property: "contains",
-          message: "Keep selectors in support/page modules or custom commands, not in spec files."
+          object: 'cy',
+          property: 'contains',
+          message:
+            'Keep selectors in support/page modules or custom commands, not in spec files.'
         }
       ]
     }
   },
   {
-    files: ["cypress/support/commands.ts"],
+    files: ['cypress/support/commands.ts'],
     rules: {
-      "@typescript-eslint/no-namespace": "off"
+      '@typescript-eslint/no-namespace': 'off'
     }
   },
   {
-    files: ["cypress/support/pages/**/*.ts"],
+    files: ['cypress/support/pages/**/*.ts'],
     rules: {
-      "no-restricted-syntax": [
-        "error",
+      'no-restricted-syntax': [
+        'error',
         {
           selector: "CallExpression[callee.name='expect']",
-          message: "Keep assertions in Cypress spec files."
+          message: 'Keep assertions in Cypress spec files.'
         }
       ]
     }

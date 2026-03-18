@@ -1,4 +1,4 @@
-function layout({ title, body, flashMessage = "", username = "tester" }) {
+function layout({ title, body, flashMessage = '', username = 'Local user' }) {
   return `<!DOCTYPE html>
   <html lang="en">
     <head>
@@ -15,7 +15,7 @@ function layout({ title, body, flashMessage = "", username = "tester" }) {
             <a href="/people">People</a>
           </nav>
         </header>
-        ${flashMessage ? `<div class="flash-message" data-testid="flash-message" role="status">${flashMessage}</div>` : ""}
+        ${flashMessage ? `<div class="flash-message" data-testid="flash-message" role="status">${flashMessage}</div>` : ''}
         <p data-testid="welcome-message">Signed in as ${username}</p>
         ${body}
       </div>
@@ -23,7 +23,7 @@ function layout({ title, body, flashMessage = "", username = "tester" }) {
   </html>`;
 }
 
-function loginPage(errorMessage = "") {
+function loginPage(errorMessage = '') {
   return `<!DOCTYPE html>
   <html lang="en">
     <head>
@@ -37,7 +37,7 @@ function loginPage(errorMessage = "") {
         <section class="card login-card">
           <h1>Login</h1>
           <p>Keep the example intentionally small: sign in, add one person, assert the list.</p>
-          ${errorMessage ? `<div class="flash-message" role="status">${errorMessage}</div>` : ""}
+          ${errorMessage ? `<div class="flash-message" role="status">${errorMessage}</div>` : ''}
           <form action="/login" method="post">
             <label for="username">
               Username
@@ -64,7 +64,7 @@ function peoplePage(people) {
         <td>${person.email}</td>
       </tr>`;
     })
-    .join("");
+    .join('');
 
   return `
     <section class="panel-grid">

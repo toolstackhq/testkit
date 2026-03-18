@@ -1,7 +1,7 @@
 // Registers the custom Cypress commands that the starter specs rely on.
-import type { PersonRecord } from "./data/data-factory";
-import { loginPage } from "./pages/login-page";
-import { peoplePage } from "./pages/people-page";
+import type { PersonRecord } from './data/data-factory';
+import { loginPage } from './pages/login-page';
+import { peoplePage } from './pages/people-page';
 
 declare global {
   namespace Cypress {
@@ -13,17 +13,17 @@ declare global {
   }
 }
 
-Cypress.Commands.add("getByTestId", (testId: string) => {
+Cypress.Commands.add('getByTestId', (testId: string) => {
   return cy.get(`[data-testid='${testId}']`);
 });
 
-Cypress.Commands.add("signIn", (username: string, password: string) => {
+Cypress.Commands.add('signIn', (username: string, password: string) => {
   loginPage.visit();
   loginPage.login(username, password);
-  peoplePage.heading().should("be.visible");
+  peoplePage.heading().should('be.visible');
 });
 
-Cypress.Commands.add("addPerson", (person: PersonRecord) => {
+Cypress.Commands.add('addPerson', (person: PersonRecord) => {
   peoplePage.addPerson(person);
 });
 

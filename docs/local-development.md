@@ -120,14 +120,13 @@ The same pattern is used for credentials:
 
 1. `DEV_APP_USERNAME` or `DEV_APP_PASSWORD`
 2. `APP_USERNAME` or `APP_PASSWORD`
-3. built-in defaults for the selected environment
+3. built-in empty defaults for the selected environment
 
 For local `dev`, the built-in defaults are:
 
 - UI base URL: `http://127.0.0.1:3000`
 - API base URL: `http://127.0.0.1:3001`
-- username: `tester`
-- password: `Password123!`
+- credentials: generated into local `.env` on first run
 
 ## Run against another environment
 

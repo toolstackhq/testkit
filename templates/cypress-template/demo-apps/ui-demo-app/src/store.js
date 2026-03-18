@@ -1,7 +1,35 @@
+const fs = require('node:fs');
+const path = require('node:path');
+
+const dotenv = require('dotenv');
+
+function loadClosestEnv(startDirectory) {
+  let currentDirectory = startDirectory;
+
+  while (true) {
+    const candidate = path.join(currentDirectory, '.env');
+    if (fs.existsSync(candidate)) {
+      dotenv.config({ path: candidate });
+      return;
+    }
+
+    const parentDirectory = path.dirname(currentDirectory);
+    if (parentDirectory === currentDirectory) {
+      return;
+    }
+
+    currentDirectory = parentDirectory;
+  }
+}
+
+loadClosestEnv(process.cwd());
+loadClosestEnv(__dirname);
+
 const state = {
   credentials: {
-    username: process.env.UI_DEMO_USERNAME || "tester",
-    password: process.env.UI_DEMO_PASSWORD || "Password123!"
+    username:
+      process.env.UI_DEMO_USERNAME || process.env.DEV_APP_USERNAME || '',
+    password: process.env.UI_DEMO_PASSWORD || process.env.DEV_APP_PASSWORD || ''
   },
   people: []
 };
@@ -23,7 +51,7 @@ function createPerson(person) {
   });
 }
 
-function getPeople(search = "") {
+function getPeople(search = '') {
   const query = String(search).trim().toLowerCase();
   if (!query) {
     return state.people;

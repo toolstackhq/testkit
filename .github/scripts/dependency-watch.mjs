@@ -1,18 +1,18 @@
-import fs from "node:fs";
-import path from "node:path";
-import process from "node:process";
-import { spawnSync } from "node:child_process";
+import fs from 'node:fs';
+import path from 'node:path';
+import process from 'node:process';
+import { spawnSync } from 'node:child_process';
 
 const repoRoot = process.cwd();
 const templateDirectories = {
-  playwright: path.resolve(repoRoot, "templates/playwright-template"),
-  cypress: path.resolve(repoRoot, "templates/cypress-template")
+  playwright: path.resolve(repoRoot, 'templates/playwright-template'),
+  cypress: path.resolve(repoRoot, 'templates/cypress-template')
 };
 
 function runCommand(command, args) {
   return spawnSync(command, args, {
     cwd: repoRoot,
-    encoding: "utf8"
+    encoding: 'utf8'
   });
 }
 
@@ -21,20 +21,24 @@ function writeOutput(name, value) {
     return;
   }
 
-  fs.appendFileSync(process.env.GITHUB_OUTPUT, `${name}=${value}\n`, "utf8");
+  fs.appendFileSync(process.env.GITHUB_OUTPUT, `${name}=${value}\n`, 'utf8');
 }
 
 function readJson(filePath) {
-  return JSON.parse(fs.readFileSync(path.resolve(repoRoot, filePath), "utf8"));
+  return JSON.parse(fs.readFileSync(path.resolve(repoRoot, filePath), 'utf8'));
 }
 
 function normalizeVersion(range) {
-  return String(range).trim().replace(/^[~^]/, "");
+  return String(range).trim().replace(/^[~^]/, '');
 }
 
 function compareVersions(leftVersion, rightVersion) {
-  const leftParts = normalizeVersion(leftVersion).split(".").map((part) => Number.parseInt(part, 10) || 0);
-  const rightParts = normalizeVersion(rightVersion).split(".").map((part) => Number.parseInt(part, 10) || 0);
+  const leftParts = normalizeVersion(leftVersion)
+    .split('.')
+    .map((part) => Number.parseInt(part, 10) || 0);
+  const rightParts = normalizeVersion(rightVersion)
+    .split('.')
+    .map((part) => Number.parseInt(part, 10) || 0);
   const length = Math.max(leftParts.length, rightParts.length);
 
   for (let index = 0; index < length; index += 1) {
@@ -54,15 +58,22 @@ function compareVersions(leftVersion, rightVersion) {
 }
 
 function getPlaywrightVersionFromTemplate() {
-  const packageJson = readJson("templates/playwright-template/package.json");
-  return normalizeVersion(packageJson.devDependencies["@playwright/test"]);
+  const packageJson = readJson('templates/playwright-template/package.json');
+  return normalizeVersion(packageJson.devDependencies['@playwright/test']);
 }
 
 function getLatestPlaywrightVersion() {
-  const result = runCommand("npm", ["view", "@playwright/test", "version", "--json"]);
+  const result = runCommand('npm', [
+    'view',
+    '@playwright/test',
+    'version',
+    '--json'
+  ]);
 
   if (result.status !== 0) {
-    throw new Error(result.stderr || "Unable to resolve latest @playwright/test version.");
+    throw new Error(
+      result.stderr || 'Unable to resolve latest @playwright/test version.'
+    );
   }
 
   return JSON.parse(result.stdout.trim());
@@ -80,9 +91,9 @@ function emptyAuditSummary() {
 }
 
 function getAuditSummary(cwd) {
-  const result = spawnSync("npm", ["audit", "--json", "--package-lock-only"], {
+  const result = spawnSync('npm', ['audit', '--json', '--package-lock-only'], {
     cwd,
-    encoding: "utf8"
+    encoding: 'utf8'
   });
   const raw = result.stdout.trim();
 
@@ -110,8 +121,12 @@ function getAuditSummary(cwd) {
 
 const currentPlaywrightVersion = getPlaywrightVersionFromTemplate();
 const latestPlaywrightVersion = getLatestPlaywrightVersion();
-const playwrightTemplateVulnerabilities = getAuditSummary(templateDirectories.playwright);
-const cypressTemplateVulnerabilities = getAuditSummary(templateDirectories.cypress);
+const playwrightTemplateVulnerabilities = getAuditSummary(
+  templateDirectories.playwright
+);
+const cypressTemplateVulnerabilities = getAuditSummary(
+  templateDirectories.cypress
+);
 const vulnerabilities = {
   playwrightTemplate: playwrightTemplateVulnerabilities,
   cypressTemplate: cypressTemplateVulnerabilities,
@@ -128,13 +143,12 @@ const vulnerabilities = {
     playwrightTemplateVulnerabilities.moderate +
     cypressTemplateVulnerabilities.moderate,
   low:
-    playwrightTemplateVulnerabilities.low +
-    cypressTemplateVulnerabilities.low,
+    playwrightTemplateVulnerabilities.low + cypressTemplateVulnerabilities.low,
   info:
-    playwrightTemplateVulnerabilities.info +
-    cypressTemplateVulnerabilities.info
+    playwrightTemplateVulnerabilities.info + cypressTemplateVulnerabilities.info
 };
-const updateAvailable = compareVersions(latestPlaywrightVersion, currentPlaywrightVersion) > 0;
+const updateAvailable =
+  compareVersions(latestPlaywrightVersion, currentPlaywrightVersion) > 0;
 const shouldNotify =
   updateAvailable ||
   playwrightTemplateVulnerabilities.total > 0 ||
@@ -151,27 +165,63 @@ const report = {
   shouldNotify
 };
 
-writeOutput("playwright_current_version", currentPlaywrightVersion);
-writeOutput("playwright_latest_version", latestPlaywrightVersion);
-writeOutput("playwright_update_available", String(updateAvailable));
-writeOutput("vulnerabilities_total", String(vulnerabilities.total));
-writeOutput("vulnerabilities_info", String(vulnerabilities.info));
-writeOutput("vulnerabilities_low", String(vulnerabilities.low));
-writeOutput("vulnerabilities_moderate", String(vulnerabilities.moderate));
-writeOutput("vulnerabilities_high", String(vulnerabilities.high));
-writeOutput("vulnerabilities_critical", String(vulnerabilities.critical));
-writeOutput("playwright_template_vulnerabilities_total", String(playwrightTemplateVulnerabilities.total));
-writeOutput("playwright_template_vulnerabilities_critical", String(playwrightTemplateVulnerabilities.critical));
-writeOutput("playwright_template_vulnerabilities_high", String(playwrightTemplateVulnerabilities.high));
-writeOutput("playwright_template_vulnerabilities_moderate", String(playwrightTemplateVulnerabilities.moderate));
-writeOutput("playwright_template_vulnerabilities_low", String(playwrightTemplateVulnerabilities.low));
-writeOutput("playwright_template_vulnerabilities_info", String(playwrightTemplateVulnerabilities.info));
-writeOutput("cypress_template_vulnerabilities_total", String(cypressTemplateVulnerabilities.total));
-writeOutput("cypress_template_vulnerabilities_critical", String(cypressTemplateVulnerabilities.critical));
-writeOutput("cypress_template_vulnerabilities_high", String(cypressTemplateVulnerabilities.high));
-writeOutput("cypress_template_vulnerabilities_moderate", String(cypressTemplateVulnerabilities.moderate));
-writeOutput("cypress_template_vulnerabilities_low", String(cypressTemplateVulnerabilities.low));
-writeOutput("cypress_template_vulnerabilities_info", String(cypressTemplateVulnerabilities.info));
-writeOutput("should_notify", String(shouldNotify));
+writeOutput('playwright_current_version', currentPlaywrightVersion);
+writeOutput('playwright_latest_version', latestPlaywrightVersion);
+writeOutput('playwright_update_available', String(updateAvailable));
+writeOutput('vulnerabilities_total', String(vulnerabilities.total));
+writeOutput('vulnerabilities_info', String(vulnerabilities.info));
+writeOutput('vulnerabilities_low', String(vulnerabilities.low));
+writeOutput('vulnerabilities_moderate', String(vulnerabilities.moderate));
+writeOutput('vulnerabilities_high', String(vulnerabilities.high));
+writeOutput('vulnerabilities_critical', String(vulnerabilities.critical));
+writeOutput(
+  'playwright_template_vulnerabilities_total',
+  String(playwrightTemplateVulnerabilities.total)
+);
+writeOutput(
+  'playwright_template_vulnerabilities_critical',
+  String(playwrightTemplateVulnerabilities.critical)
+);
+writeOutput(
+  'playwright_template_vulnerabilities_high',
+  String(playwrightTemplateVulnerabilities.high)
+);
+writeOutput(
+  'playwright_template_vulnerabilities_moderate',
+  String(playwrightTemplateVulnerabilities.moderate)
+);
+writeOutput(
+  'playwright_template_vulnerabilities_low',
+  String(playwrightTemplateVulnerabilities.low)
+);
+writeOutput(
+  'playwright_template_vulnerabilities_info',
+  String(playwrightTemplateVulnerabilities.info)
+);
+writeOutput(
+  'cypress_template_vulnerabilities_total',
+  String(cypressTemplateVulnerabilities.total)
+);
+writeOutput(
+  'cypress_template_vulnerabilities_critical',
+  String(cypressTemplateVulnerabilities.critical)
+);
+writeOutput(
+  'cypress_template_vulnerabilities_high',
+  String(cypressTemplateVulnerabilities.high)
+);
+writeOutput(
+  'cypress_template_vulnerabilities_moderate',
+  String(cypressTemplateVulnerabilities.moderate)
+);
+writeOutput(
+  'cypress_template_vulnerabilities_low',
+  String(cypressTemplateVulnerabilities.low)
+);
+writeOutput(
+  'cypress_template_vulnerabilities_info',
+  String(cypressTemplateVulnerabilities.info)
+);
+writeOutput('should_notify', String(shouldNotify));
 
 process.stdout.write(`${JSON.stringify(report, null, 2)}\n`);

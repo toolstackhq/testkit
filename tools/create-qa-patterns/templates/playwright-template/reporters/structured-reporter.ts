@@ -1,6 +1,6 @@
 // Custom reporter that writes machine-readable test lifecycle events to disk.
-import fs from "node:fs";
-import path from "node:path";
+import fs from 'node:fs';
+import path from 'node:path';
 
 import type {
   FullConfig,
@@ -9,14 +9,17 @@ import type {
   Suite,
   TestCase,
   TestResult
-} from "@playwright/test/reporter";
+} from '@playwright/test/reporter';
 
 type ReporterOptions = {
   outputFile?: string;
 };
 
 class StructuredReporter implements Reporter {
-  private outputFile = path.resolve(process.cwd(), "reports/logs/playwright-events.jsonl");
+  private outputFile = path.resolve(
+    process.cwd(),
+    'reports/logs/playwright-events.jsonl'
+  );
 
   constructor(options?: ReporterOptions) {
     if (options?.outputFile) {
@@ -27,7 +30,7 @@ class StructuredReporter implements Reporter {
 
   onBegin(config: FullConfig, suite: Suite): void {
     this.write({
-      event: "run.started",
+      event: 'run.started',
       projectCount: config.projects.length,
       testCount: suite.allTests().length
     });
@@ -35,7 +38,7 @@ class StructuredReporter implements Reporter {
 
   onTestEnd(test: TestCase, result: TestResult): void {
     this.write({
-      event: "test.finished",
+      event: 'test.finished',
       title: test.title,
       tags: test.title.match(/@\w+/g) ?? [],
       status: result.status,
@@ -45,7 +48,7 @@ class StructuredReporter implements Reporter {
 
   onEnd(result: FullResult): void {
     this.write({
-      event: "run.finished",
+      event: 'run.finished',
       status: result.status
     });
   }
@@ -54,7 +57,7 @@ class StructuredReporter implements Reporter {
     fs.appendFileSync(
       this.outputFile,
       `${JSON.stringify({ timestamp: new Date().toISOString(), ...payload })}\n`,
-      "utf8"
+      'utf8'
     );
   }
 }

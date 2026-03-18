@@ -1,6 +1,6 @@
 body {
   margin: 0;
-  font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
+  font-family: 'IBM Plex Sans', 'Segoe UI', sans-serif;
   background: linear-gradient(180deg, #f5f7fb 0%, #eef2f7 100%);
   color: #102038;
 }

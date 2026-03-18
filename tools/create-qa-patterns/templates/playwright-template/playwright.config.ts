@@ -1,17 +1,17 @@
 // Central Playwright configuration for local runs, CI, reporters, and demo app startup.
-import { defineConfig, devices } from "@playwright/test";
+import { defineConfig, devices } from '@playwright/test';
 
-import { loadRuntimeConfig } from "./config/runtime-config";
+import { loadRuntimeConfig } from './config/runtime-config';
 
 const runtimeConfig = loadRuntimeConfig();
 const shouldAutoStartDemoApps =
-  runtimeConfig.testEnv === "dev" &&
-  runtimeConfig.uiBaseUrl === "http://127.0.0.1:3000" &&
-  runtimeConfig.apiBaseUrl === "http://127.0.0.1:3001" &&
-  process.env.PW_DISABLE_LOCAL_DEMO_APPS !== "true";
+  runtimeConfig.testEnv === 'dev' &&
+  runtimeConfig.uiBaseUrl === 'http://127.0.0.1:3000' &&
+  runtimeConfig.apiBaseUrl === 'http://127.0.0.1:3001' &&
+  process.env.PW_DISABLE_LOCAL_DEMO_APPS !== 'true';
 
 export default defineConfig({
-  testDir: "./tests",
+  testDir: './tests',
   fullyParallel: false,
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 1 : 0,
@@ -20,20 +20,23 @@ export default defineConfig({
   expect: {
     timeout: 10_000
   },
-  outputDir: "test-results",
+  outputDir: 'test-results',
   reporter: [
-    ["list"],
-    ["html", { open: "never", outputFolder: "reports/html" }],
+    ['list'],
+    ['html', { open: 'never', outputFolder: 'reports/html' }],
     // Keep the HTML reporter as the default path most users expect.
     // Remove the Allure line below if you prefer to stay with Playwright's built-in reporters only.
-    ["allure-playwright", { resultsDir: "allure-results" }],
-    ["./reporters/structured-reporter.ts", { outputFile: "reports/logs/playwright-events.jsonl" }]
+    ['allure-playwright', { resultsDir: 'allure-results' }],
+    [
+      './reporters/structured-reporter.ts',
+      { outputFile: 'reports/logs/playwright-events.jsonl' }
+    ]
   ],
   use: {
     baseURL: runtimeConfig.uiBaseUrl,
-    trace: "retain-on-failure",
-    screenshot: "only-on-failure",
-    video: "retain-on-failure",
+    trace: 'retain-on-failure',
+    screenshot: 'only-on-failure',
+    video: 'retain-on-failure',
     headless: !process.env.PWDEBUG
   },
   metadata: {
@@ -44,13 +47,13 @@ export default defineConfig({
   webServer: shouldAutoStartDemoApps
     ? [
         {
-          command: "npm run demo:ui",
+          command: 'npm run demo:ui',
           url: `${runtimeConfig.uiBaseUrl}/health`,
           reuseExistingServer: !process.env.CI,
           timeout: 30_000
         },
         {
-          command: "npm run demo:api",
+          command: 'npm run demo:api',
           url: `${runtimeConfig.apiBaseUrl}/health`,
           reuseExistingServer: !process.env.CI,
           timeout: 30_000
@@ -59,9 +62,9 @@ export default defineConfig({
     : undefined,
   projects: [
     {
-      name: "chromium",
+      name: 'chromium',
       use: {
-        ...devices["Desktop Chrome"]
+        ...devices['Desktop Chrome']
       }
     }
   ]

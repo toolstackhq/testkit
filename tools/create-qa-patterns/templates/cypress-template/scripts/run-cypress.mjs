@@ -1,25 +1,28 @@
 #!/usr/bin/env node
 
 // Starts the local demo app when needed, then launches Cypress in run or open mode.
-import process from "node:process";
-import path from "node:path";
-import { spawn } from "node:child_process";
+import process from 'node:process';
+import path from 'node:path';
+import { spawn } from 'node:child_process';
 
-import dotenv from "dotenv";
+import dotenv from 'dotenv';
 
-const mode = process.argv[2] ?? "run";
+const mode = process.argv[2] ?? 'run';
 const args = process.argv.slice(3);
 const cwd = process.cwd();
-const healthUrl = "http://127.0.0.1:3000/health";
-const environment = process.env.TEST_ENV ?? "dev";
+const healthUrl = 'http://127.0.0.1:3000/health';
+const environment = process.env.TEST_ENV ?? 'dev';
 const environmentDefaults = {
-  dev: "http://127.0.0.1:3000",
-  staging: "https://staging-ui.example.internal",
-  prod: "https://ui.example.internal"
+  dev: 'http://127.0.0.1:3000',
+  staging: 'https://staging-ui.example.internal',
+  prod: 'https://ui.example.internal'
 };
 
-dotenv.config({ path: path.resolve(cwd, ".env") });
-dotenv.config({ path: path.resolve(cwd, `.env.${environment}`), override: true });
+dotenv.config({ path: path.resolve(cwd, '.env') });
+dotenv.config({
+  path: path.resolve(cwd, `.env.${environment}`),
+  override: true
+});
 
 const uiBaseUrl =
   process.env[`${environment.toUpperCase()}_UI_BASE_URL`] ??
@@ -28,18 +31,18 @@ const uiBaseUrl =
   environmentDefaults.dev;
 
 const shouldAutoStartDemoApp =
-  environment === "dev" &&
+  environment === 'dev' &&
   uiBaseUrl === environmentDefaults.dev &&
-  process.env.CY_DISABLE_LOCAL_DEMO_APP !== "true";
+  process.env.CY_DISABLE_LOCAL_DEMO_APP !== 'true';
 
 function getCommandName(command) {
-  return process.platform === "win32" ? `${command}.cmd` : command;
+  return process.platform === 'win32' ? `${command}.cmd` : command;
 }
 
 function spawnCommand(command, commandArgs, options = {}) {
   return spawn(getCommandName(command), commandArgs, {
     cwd,
-    stdio: "inherit",
+    stdio: 'inherit',
     ...options
   });
 }
@@ -68,7 +71,7 @@ function killChild(child) {
     return;
   }
 
-  child.kill("SIGTERM");
+  child.kill('SIGTERM');
 }
 
 async function run() {
@@ -76,16 +79,20 @@ async function run() {
 
   try {
     if (shouldAutoStartDemoApp) {
-      demoAppProcess = spawnCommand("npm", ["run", "demo:ui"]);
+      demoAppProcess = spawnCommand('npm', ['run', 'demo:ui']);
       await waitForHealthcheck(healthUrl);
     }
 
-    const cypressCommand = mode === "open" ? "open" : "run";
-    const cypressProcess = spawnCommand("npx", ["cypress", cypressCommand, ...args]);
+    const cypressCommand = mode === 'open' ? 'open' : 'run';
+    const cypressProcess = spawnCommand('npx', [
+      'cypress',
+      cypressCommand,
+      ...args
+    ]);
 
     const exitCode = await new Promise((resolve) => {
-      cypressProcess.on("close", resolve);
-      cypressProcess.on("error", () => resolve(1));
+      cypressProcess.on('close', resolve);
+      cypressProcess.on('error', () => resolve(1));
     });
 
     if (exitCode !== 0) {
@@ -96,11 +103,13 @@ async function run() {
   }
 }
 
-for (const signal of ["SIGINT", "SIGTERM"]) {
+for (const signal of ['SIGINT', 'SIGTERM']) {
   process.on(signal, () => process.exit(1));
 }
 
 run().catch((error) => {
-  process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);
+  process.stderr.write(
+    `${error instanceof Error ? error.message : String(error)}\n`
+  );
   process.exit(1);
 });

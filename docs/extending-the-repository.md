@@ -17,7 +17,7 @@ templates/cypress-template/cypress/e2e
 Use the shared fixtures:
 
 ```ts
-import { expect, test } from "../fixtures/test-fixtures";
+import { expect, test } from '../fixtures/test-fixtures';
 ```
 
 Keep each test focused on a short workflow:
@@ -116,7 +116,7 @@ The template supports tags in test titles:
 Example:
 
 ```ts
-test("login and add one person @smoke @critical", async () => {
+test('login and add one person @smoke @critical', async () => {
   // ...
 });
 ```

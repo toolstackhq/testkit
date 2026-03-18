@@ -7,7 +7,7 @@ export class IdGenerator {
   next(prefix: string): string {
     const counter = (this.counters.get(prefix) ?? 0) + 1;
     this.counters.set(prefix, counter);
-    return `${prefix}-${this.runId}-${String(counter).padStart(4, "0")}`;
+    return `${prefix}-${this.runId}-${String(counter).padStart(4, '0')}`;
   }
 
   nextSequence(prefix: string): number {

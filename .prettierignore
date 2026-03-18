@@ -1,0 +1,13 @@
+allure-results
+coverage
+node_modules
+package-lock.json
+playwright-report
+reports
+templates/**/allure-results
+templates/**/reports
+templates/**/test-results
+test-results
+tools/create-qa-patterns/templates/**/allure-results
+tools/create-qa-patterns/templates/**/reports
+tools/create-qa-patterns/templates/**/test-results
