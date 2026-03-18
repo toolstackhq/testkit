@@ -37,8 +37,14 @@ function removeApiBaseUrl(content) {
 
 function rewriteDataImports(content) {
   return content
-    .replace(/from ['"]\.\.\/generators\/seeded-faker['"]/g, 'from \'./seeded-faker\'')
-    .replace(/from ['"]\.\.\/generators\/id-generator['"]/g, 'from \'./id-generator\'');
+    .replace(
+      /from ['"]\.\.\/generators\/seeded-faker['"]/g,
+      "from './seeded-faker'"
+    )
+    .replace(
+      /from ['"]\.\.\/generators\/id-generator['"]/g,
+      "from './id-generator'"
+    );
 }
 
 // ---------------------------------------------------------------------------
