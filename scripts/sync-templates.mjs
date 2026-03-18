@@ -27,7 +27,7 @@ function removeApiBaseUrl(content) {
   return content
     .replace(/^.*apiBaseUrl: z\.string\(\)\.url\(\),\n/m, '')
     .replace(/^.*apiBaseUrl: string;\n/m, '')
-    .replace(/^.*apiBaseUrl: "[^"]*",\n/gm, '')
+    .replace(/^.*apiBaseUrl: ['"][^'"]*['"],\n/gm, '')
     .replace(
       /^ *const apiBaseUrl =\n.*_API_BASE_URL.*\n.*API_BASE_URL.*\n.*defaults\.apiBaseUrl;\n/m,
       ''
@@ -37,8 +37,8 @@ function removeApiBaseUrl(content) {
 
 function rewriteDataImports(content) {
   return content
-    .replace(/from "\.\.\/generators\/seeded-faker"/g, 'from "./seeded-faker"')
-    .replace(/from "\.\.\/generators\/id-generator"/g, 'from "./id-generator"');
+    .replace(/from ['"]\.\.\/generators\/seeded-faker['"]/g, 'from \'./seeded-faker\'')
+    .replace(/from ['"]\.\.\/generators\/id-generator['"]/g, 'from \'./id-generator\'');
 }
 
 // ---------------------------------------------------------------------------

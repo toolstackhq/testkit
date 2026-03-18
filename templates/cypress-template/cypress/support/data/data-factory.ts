@@ -1,6 +1,6 @@
 // Generic data builders that keep tests readable and deterministic.
-import { createSeededFaker } from '../generators/seeded-faker';
-import { IdGenerator } from '../generators/id-generator';
+import { createSeededFaker } from './seeded-faker';
+import { IdGenerator } from './id-generator';
 
 export type PersonRecord = {
   personId: string;

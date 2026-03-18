@@ -12,7 +12,6 @@ type EnvironmentDefaults = {
 const DEFAULTS: Record<TestEnvironment, EnvironmentDefaults> = {
   dev: {
     uiBaseUrl: 'http://127.0.0.1:3000',
-    apiBaseUrl: 'http://127.0.0.1:3001',
     credentials: {
       username: '',
       password: ''
@@ -20,7 +19,6 @@ const DEFAULTS: Record<TestEnvironment, EnvironmentDefaults> = {
   },
   staging: {
     uiBaseUrl: 'https://staging-ui.example.internal',
-    apiBaseUrl: 'https://staging-api.example.internal',
     credentials: {
       username: '',
       password: ''
@@ -28,7 +26,6 @@ const DEFAULTS: Record<TestEnvironment, EnvironmentDefaults> = {
   },
   prod: {
     uiBaseUrl: 'https://ui.example.internal',
-    apiBaseUrl: 'https://api.example.internal',
     credentials: {
       username: '',
       password: ''
