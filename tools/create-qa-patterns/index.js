@@ -819,13 +819,18 @@ function initializeGitRepository(targetDirectory) {
   }
 }
 
+let lastProgressLineLength = 0;
+
 function renderProgress(completed, total, label) {
   const width = 24;
   const filled = Math.round((completed / total) * width);
   const empty = width - filled;
   const bar = `${"=".repeat(filled)}${" ".repeat(empty)}`;
   const percentage = `${Math.round((completed / total) * 100)}`.padStart(3, " ");
-  process.stdout.write(`\r[${bar}] ${percentage}% ${label}`);
+  const line = `[${bar}] ${percentage}% ${label}`;
+  const paddingLength = Math.max(0, lastProgressLineLength - line.length);
+  process.stdout.write(`\r${line}${" ".repeat(paddingLength)}`);
+  lastProgressLineLength = line.length;
 }
 
 async function scaffoldProject(template, targetDirectory, prerequisites) {
@@ -865,6 +870,7 @@ async function scaffoldProject(template, targetDirectory, prerequisites) {
   renderProgress(4, steps.length, steps[3]);
   await sleep(60);
   process.stdout.write("\n");
+  lastProgressLineLength = 0;
 }
 
 function getCommandName(base) {
