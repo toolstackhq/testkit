@@ -10,6 +10,7 @@
     "cy:run": "node ./scripts/ensure-local-env.mjs && cypress run",
     "cy:open": "node ./scripts/ensure-local-env.mjs && cypress open",
     "demo:ui": "node ./scripts/ensure-local-env.mjs && node ./demo-apps/ui-demo-app/src/server.js",
+    "demo:api": "node ./scripts/ensure-local-env.mjs && node ./demo-apps/api-demo-server/src/server.js",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "report:allure": "node ./scripts/generate-allure-report.mjs",
