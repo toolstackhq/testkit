@@ -44,6 +44,12 @@ Supported projects today:
 
 ## Use as npm CLI
 
+[![qa-patterns CLI walkthrough](./docs/assets/termynal-cli-preview.svg)](https://toolstackhq.github.io/qa-patterns/#cli)
+
+Open the docs site for the live animated terminal walkthrough built with a Termynal-style interaction:
+
+- [Animated CLI walkthrough](https://toolstackhq.github.io/qa-patterns/#cli)
+
 ```bash
 # Run the scaffolder
 npx @toolstackhq/create-qa-patterns
@@ -81,8 +87,6 @@ npx -y @toolstackhq/create-qa-patterns upgrade check .
 # Apply only safe managed-template updates
 npx -y @toolstackhq/create-qa-patterns upgrade apply --safe .
 ```
-
-<!-- TODO: add scaffolding GIF demo here -->
 
 ## Use as MCP server
 

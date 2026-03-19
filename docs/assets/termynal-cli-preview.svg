@@ -1,0 +1,36 @@
+<svg width="1200" height="780" viewBox="0 0 1200 780" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">qa-patterns CLI walkthrough preview</title>
+  <desc id="desc">Terminal-style preview of the qa-patterns scaffolding flow for Playwright.</desc>
+  <rect width="1200" height="780" fill="#F6EFE3"/>
+  <rect x="90" y="86" width="1020" height="608" rx="34" fill="#131110"/>
+  <rect x="90" y="86" width="1020" height="608" rx="34" stroke="rgba(255,255,255,0.08)" stroke-width="2"/>
+  <rect x="90" y="86" width="1020" height="62" rx="34" fill="#1B1816"/>
+  <circle cx="136" cy="117" r="9" fill="#EF6C5B"/>
+  <circle cx="166" cy="117" r="9" fill="#F4BF4F"/>
+  <circle cx="196" cy="117" r="9" fill="#61C554"/>
+  <text x="236" y="124" fill="#B8AEA2" font-family="IBM Plex Sans, Segoe UI, sans-serif" font-size="22">qa-patterns CLI walkthrough</text>
+
+  <text x="132" y="192" fill="#70E1D4" font-family="IBM Plex Mono, monospace" font-size="26">$</text>
+  <text x="160" y="192" fill="#FFFFFF" font-family="IBM Plex Mono, monospace" font-size="26">npx @toolstackhq/create-qa-patterns</text>
+
+  <text x="132" y="246" fill="#F8F2E8" font-family="IBM Plex Mono, monospace" font-size="24">? Select a template › Playwright Template</text>
+  <text x="132" y="290" fill="#F8F2E8" font-family="IBM Plex Mono, monospace" font-size="24">? Target directory (.) › my-framework</text>
+  <text x="132" y="334" fill="#F8F2E8" font-family="IBM Plex Mono, monospace" font-size="24">? Run npm install now? › Yes</text>
+  <text x="132" y="378" fill="#F8F2E8" font-family="IBM Plex Mono, monospace" font-size="24">? Run npx playwright install now? › Yes</text>
+  <text x="132" y="422" fill="#F8F2E8" font-family="IBM Plex Mono, monospace" font-size="24">? Run npm test now? › Yes</text>
+
+  <text x="132" y="476" fill="#B8AEA2" font-family="IBM Plex Mono, monospace" font-size="22">Finalizing scaffold files</text>
+  <rect x="132" y="494" width="936" height="14" rx="999" fill="#2A2623"/>
+  <rect x="132" y="494" width="936" height="14" rx="999" fill="url(#progress)"/>
+
+  <text x="132" y="562" fill="#9CF0C2" font-family="IBM Plex Mono, monospace" font-size="26">Success</text>
+  <text x="132" y="606" fill="#F8F2E8" font-family="IBM Plex Mono, monospace" font-size="24">Generated Playwright Template in /workspace/my-framework</text>
+  <text x="132" y="650" fill="#F8F2E8" font-family="IBM Plex Mono, monospace" font-size="24">Summary: install completed, browsers installed, tests passed.</text>
+
+  <defs>
+    <linearGradient id="progress" x1="132" y1="501" x2="1068" y2="501" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#70E1D4"/>
+      <stop offset="1" stop-color="#4ADFB2"/>
+    </linearGradient>
+  </defs>
+</svg>

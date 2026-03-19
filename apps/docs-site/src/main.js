@@ -1,4 +1,5 @@
 import './styles.css';
+import Termynal from './vendor/termynal.js';
 
 const featureRows = [
   ['TypeScript template', 'YES', 'YES', 'YES'],
@@ -107,6 +108,42 @@ document.querySelector('#app').innerHTML = `
         <div class="section__heading">
           <p class="eyebrow">CLI</p>
           <h2>Scaffold a project in one command</h2>
+          <p class="note">The animated terminal below is a Termynal-style walkthrough of the full scaffold flow.</p>
+        </div>
+        <div class="terminal-showcase">
+          <div class="terminal-card">
+            <div class="terminal-card__topbar" aria-hidden="true">
+              <span></span><span></span><span></span>
+            </div>
+            <div class="terminal-card__body" data-termynal>
+              <span data-ty="input">npx @toolstackhq/create-qa-patterns</span>
+              <span data-ty>? Select a template › Playwright Template</span>
+              <span data-ty>? Target directory (.) › my-framework</span>
+              <span data-ty>? Run npm install now? › Yes</span>
+              <span data-ty>? Run npx playwright install now? › Yes</span>
+              <span data-ty>? Run npm test now? › Yes</span>
+              <span data-ty="progress" data-ty-progress-label="Finalizing scaffold files"></span>
+              <span data-ty>Success</span>
+              <span data-ty>Generated Playwright Template in /workspace/my-framework</span>
+              <span data-ty>Summary</span>
+              <span data-ty>  Template: playwright-template</span>
+              <span data-ty>  Demo apps: bundled and auto-started in dev</span>
+              <span data-ty>  npm install: completed</span>
+              <span data-ty>  Playwright browser install: completed</span>
+              <span data-ty>  npm test: completed</span>
+              <span data-ty>Happy testing.</span>
+            </div>
+          </div>
+          <div class="terminal-notes">
+            <article class="card">
+              <h3>What this demo shows</h3>
+              <p>The full scaffold path: template selection, install/setup prompts, generated project summary, and the local success path a new user sees.</p>
+            </article>
+            <article class="card card--contrast">
+              <h3>Why it matters</h3>
+              <p>This keeps the CLI experience visible. It is the fastest way for a user to understand what the tool asks, what it creates, and what happens next.</p>
+            </article>
+          </div>
         </div>
         <div class="grid grid--two">
           <article class="code-block">
@@ -207,3 +244,9 @@ document.querySelector('#app').innerHTML = `
     </main>
   </div>
 `;
+
+const terminalElement = document.querySelector('[data-termynal]');
+if (terminalElement) {
+  const terminal = new Termynal(terminalElement);
+  terminal.start();
+}
