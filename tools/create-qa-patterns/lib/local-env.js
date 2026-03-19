@@ -18,14 +18,15 @@ function createLocalCredentials(targetDirectory) {
   };
 }
 
-function renderLocalEnv(templateId, credentials) {
+function renderLocalEnv(templateId, credentials, options) {
   const common = [
     'TEST_ENV=dev',
     'TEST_RUN_ID=local',
     'DEV_UI_BASE_URL=http://127.0.0.1:3000'
   ];
 
-  if (templateId === 'playwright-template') {
+  const withApi = options?.withApi !== false;
+  if (withApi) {
     common.push('DEV_API_BASE_URL=http://127.0.0.1:3001');
   }
 
@@ -39,7 +40,7 @@ function renderLocalEnv(templateId, credentials) {
   return `${common.join('\n')}\n`;
 }
 
-function writeGeneratedLocalEnv(targetDirectory, templateId, credentials) {
+function writeGeneratedLocalEnv(targetDirectory, templateId, credentials, options) {
   const envPath = path.join(targetDirectory, '.env');
 
   if (fs.existsSync(envPath)) {
@@ -50,7 +51,7 @@ function writeGeneratedLocalEnv(targetDirectory, templateId, credentials) {
     };
   }
 
-  fs.writeFileSync(envPath, renderLocalEnv(templateId, credentials), 'utf8');
+  fs.writeFileSync(envPath, renderLocalEnv(templateId, credentials, options), 'utf8');
   return {
     created: true,
     envPath,
