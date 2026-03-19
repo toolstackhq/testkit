@@ -15,6 +15,7 @@
     "cypress/**/*.ts",
     "cypress/**/*.d.ts",
     "config/**/*.ts",
+    "utils/**/*.ts",
     "cypress.config.ts",
     "allurerc.mjs"
   ]
