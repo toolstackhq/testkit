@@ -5,6 +5,7 @@ import { allureCypress } from 'allure-cypress/reporter';
 import { defineConfig } from 'cypress';
 
 import { loadRuntimeConfig } from './config/runtime-config';
+import { registerApiTasks } from './cypress/support/api-tasks';
 
 const runtimeConfig = loadRuntimeConfig();
 
@@ -26,10 +27,13 @@ export default defineConfig({
         }
       });
 
+      registerApiTasks(on);
+
       config.env = {
         ...config.env,
         testEnv: runtimeConfig.testEnv,
         testRunId: runtimeConfig.testRunId,
+        apiBaseUrl: runtimeConfig.apiBaseUrl,
         credentials: runtimeConfig.credentials
       };
 
