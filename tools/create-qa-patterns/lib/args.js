@@ -7,6 +7,7 @@ function parseCliOptions(args, { resolveTemplate, supportedTemplateIds }) {
     noSetup: false,
     noTest: false,
     safe: false,
+    withApi: null,
     templateName: null,
     positionalArgs: []
   };
@@ -29,6 +30,12 @@ function parseCliOptions(args, { resolveTemplate, supportedTemplateIds }) {
         break;
       case '--safe':
         options.safe = true;
+        break;
+      case '--with-api':
+        options.withApi = true;
+        break;
+      case '--no-api':
+        options.withApi = false;
         break;
       case '--template': {
         const templateValue = args[index + 1];
