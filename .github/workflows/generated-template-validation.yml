@@ -1,4 +1,4 @@
-name: Generated Template Validation
+name: Generated Template Validation (Blackbox)
 
 on:
   workflow_dispatch:

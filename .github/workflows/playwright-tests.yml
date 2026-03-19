@@ -1,4 +1,4 @@
-name: Repository Validation
+name: Repository Validation (Greybox)
 
 on:
   workflow_dispatch:

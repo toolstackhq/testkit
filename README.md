@@ -1,7 +1,7 @@
 # qa-patterns
 
-[![Repository Validation](https://github.com/toolstackhq/qa-patterns/actions/workflows/playwright-tests.yml/badge.svg?branch=main)](https://github.com/toolstackhq/qa-patterns/actions/workflows/playwright-tests.yml)
-[![Generated Template Validation](https://github.com/toolstackhq/qa-patterns/actions/workflows/generated-template-validation.yml/badge.svg?branch=main)](https://github.com/toolstackhq/qa-patterns/actions/workflows/generated-template-validation.yml)
+[![Repository Validation (Greybox)](https://github.com/toolstackhq/qa-patterns/actions/workflows/playwright-tests.yml/badge.svg?branch=main)](https://github.com/toolstackhq/qa-patterns/actions/workflows/playwright-tests.yml)
+[![Generated Template Validation (Blackbox)](https://github.com/toolstackhq/qa-patterns/actions/workflows/generated-template-validation.yml/badge.svg?branch=main)](https://github.com/toolstackhq/qa-patterns/actions/workflows/generated-template-validation.yml)
 [![MCP Server Validation](https://github.com/toolstackhq/qa-patterns/actions/workflows/mcp-server.yml/badge.svg?branch=main)](https://github.com/toolstackhq/qa-patterns/actions/workflows/mcp-server.yml)
 [![Dependency Watch](https://github.com/toolstackhq/qa-patterns/actions/workflows/dependency-watch.yml/badge.svg?branch=main)](https://github.com/toolstackhq/qa-patterns/actions/workflows/dependency-watch.yml)
 [![Docs Site](https://img.shields.io/badge/docs-live-0f766e)](https://toolstackhq.github.io/qa-patterns/)
