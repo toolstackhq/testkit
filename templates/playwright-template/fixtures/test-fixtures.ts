@@ -8,6 +8,7 @@ import {
 import { DataFactory } from '../data/factories/data-factory';
 import { LoginPage } from '../pages/login-page';
 import { PeoplePage } from '../pages/people-page';
+import { createRestClient, type RestClient } from '../utils/api-client';
 import { createLogger, type Logger } from '../utils/logger';
 import { StepLogger } from '../utils/test-step';
 
@@ -16,6 +17,7 @@ type FrameworkFixtures = {
   logger: Logger;
   stepLogger: StepLogger;
   dataFactory: DataFactory;
+  apiClient: RestClient;
   loginPage: LoginPage;
   peoplePage: PeoplePage;
 };
@@ -35,6 +37,9 @@ export const test = base.extend<FrameworkFixtures>({
   },
   dataFactory: async ({ appConfig }, use) => {
     await use(new DataFactory(appConfig.testRunId));
+  },
+  apiClient: async ({ appConfig }, use) => {
+    await use(createRestClient({ baseUrl: appConfig.apiBaseUrl }));
   },
   loginPage: async ({ page, appConfig, logger }, use) => {
     await use(
