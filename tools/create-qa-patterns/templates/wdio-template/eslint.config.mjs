@@ -41,11 +41,21 @@ export default [
         tsconfigRootDir: configDirectory
       },
       globals: {
+        AbortSignal: 'readonly',
+        Buffer: 'readonly',
+        DOMException: 'readonly',
+        Headers: 'readonly',
+        RequestInit: 'readonly',
+        Response: 'readonly',
         browser: 'readonly',
         console: 'readonly',
         describe: 'readonly',
+        expect: 'readonly',
+        fetch: 'readonly',
         it: 'readonly',
+        performance: 'readonly',
         process: 'readonly',
+        setTimeout: 'readonly',
         URL: 'readonly'
       }
     },
