@@ -2,11 +2,11 @@
 import type { Capabilities, Options, Reporters } from '@wdio/types';
 
 import { loadRuntimeConfig } from './config/runtime-config';
-import StructuredReporter from './reporters/structured-reporter';
+import structuredReporterImport from './reporters/structured-reporter';
 
 const runtimeConfig = loadRuntimeConfig();
 const structuredReporter =
-  StructuredReporter as unknown as Reporters.ReporterClass;
+  structuredReporterImport as unknown as Reporters.ReporterClass;
 
 export const config: Options.Testrunner &
   Capabilities.WithRequestedTestrunnerCapabilities = {
