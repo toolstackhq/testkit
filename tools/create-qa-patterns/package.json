@@ -1,6 +1,6 @@
 {
   "name": "@toolstackhq/create-qa-patterns",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "description": "CLI for generating QA framework templates.",
   "license": "MIT",
   "repository": {
