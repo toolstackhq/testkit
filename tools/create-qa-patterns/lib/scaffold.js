@@ -51,6 +51,29 @@ function removeApiBaseUrl(content) {
     .replace(/^.*apiBaseUrl,\n/m, '');
 }
 
+function stripNodeRunnerApiAutostart(content) {
+  return content
+    .replace(/^const apiHealthUrl = .*;\n/m, '')
+    .replace(
+      /const apiDefaults = \{\n[\s\S]*?\n\};\n\n/,
+      ''
+    )
+    .replace(
+      /const apiBaseUrl =\n(?:.*\n){0,4}/m,
+      ''
+    )
+    .replace(
+      /const shouldAutoStartApiServer =\n(?:.*\n){0,3}/m,
+      ''
+    )
+    .replace(/  let apiServerProcess;\n/m, '')
+    .replace(
+      /    if \(shouldAutoStartApiServer\) \{\n(?:.*\n){0,3}    \}\n\n/m,
+      ''
+    )
+    .replace(/    killChild\(apiServerProcess\);\n/m, '');
+}
+
 function stripApiFeature(targetDirectory, templateId) {
   // Remove API-specific directories
   for (const dir of API_STRIP_DIRS) {
@@ -145,6 +168,28 @@ function stripApiFeature(targetDirectory, templateId) {
       content = content.replace(/^ *registerApiTasks\(on\);\n\n/m, '');
       content = content.replace(/^ *apiBaseUrl:.*\n/m, '');
       fs.writeFileSync(cyConfigPath, content, 'utf8');
+    }
+
+    const runScriptPath = path.join(targetDirectory, 'scripts', 'run-cypress.mjs');
+    if (fs.existsSync(runScriptPath)) {
+      const content = fs.readFileSync(runScriptPath, 'utf8');
+      fs.writeFileSync(
+        runScriptPath,
+        stripNodeRunnerApiAutostart(content),
+        'utf8'
+      );
+    }
+  }
+
+  if (templateId === 'wdio-template') {
+    const runScriptPath = path.join(targetDirectory, 'scripts', 'run-wdio.mjs');
+    if (fs.existsSync(runScriptPath)) {
+      const content = fs.readFileSync(runScriptPath, 'utf8');
+      fs.writeFileSync(
+        runScriptPath,
+        stripNodeRunnerApiAutostart(content),
+        'utf8'
+      );
     }
   }
 }
