@@ -32,9 +32,7 @@ describe('API starter flow', () => {
     }).then((response) => {
       expect(response.ok).to.equal(true);
       const people = response.data as Record<string, unknown>[];
-      const found = people.find(
-        (p) => p.personId === person.personId
-      );
+      const found = people.find((p) => p.personId === person.personId);
       expect(found).to.not.equal(undefined);
     });
   });

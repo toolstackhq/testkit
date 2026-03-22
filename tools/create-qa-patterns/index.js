@@ -364,7 +364,8 @@ async function main() {
         supportedTemplateIds: SUPPORTED_TEMPLATE_IDS
       })
     : await resolveScaffoldArgs(args, options);
-  const { templateName, targetDirectory, generatedInCurrentDirectory } = resolved;
+  const { templateName, targetDirectory, generatedInCurrentDirectory } =
+    resolved;
   const withApi = resolved.withApi ?? options.withApi ?? true;
   const template = getTemplate(TEMPLATES, templateName);
 

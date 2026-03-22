@@ -3,10 +3,7 @@ const path = require('node:path');
 const { renderTemplateFile } = require('./metadata');
 
 // Files and directories removed when the user opts out of API testing.
-const API_STRIP_DIRS = [
-  'utils/api-client',
-  'demo-apps/api-demo-server'
-];
+const API_STRIP_DIRS = ['utils/api-client', 'demo-apps/api-demo-server'];
 
 const API_STRIP_FILES = {
   'playwright-template': ['tests/api-people.spec.ts'],
@@ -14,10 +11,7 @@ const API_STRIP_FILES = {
     'cypress/e2e/api-people.cy.ts',
     'cypress/support/api-tasks.ts'
   ],
-  'wdio-template': [
-    'tests/api-people.spec.ts',
-    'utils/api-helper.ts'
-  ]
+  'wdio-template': ['tests/api-people.spec.ts', 'utils/api-helper.ts']
 };
 
 function sleep(ms) {
@@ -54,18 +48,9 @@ function removeApiBaseUrl(content) {
 function stripNodeRunnerApiAutostart(content) {
   return content
     .replace(/^const apiHealthUrl = .*;\n/m, '')
-    .replace(
-      /const apiDefaults = \{\n[\s\S]*?\n\};\n\n/,
-      ''
-    )
-    .replace(
-      /const apiBaseUrl =\n(?:.*\n){0,4}/m,
-      ''
-    )
-    .replace(
-      /const shouldAutoStartApiServer =\n(?:.*\n){0,3}/m,
-      ''
-    )
+    .replace(/const apiDefaults = \{\n[\s\S]*?\n\};\n\n/, '')
+    .replace(/const apiBaseUrl =\n(?:.*\n){0,4}/m, '')
+    .replace(/const shouldAutoStartApiServer =\n(?:.*\n){0,3}/m, '')
     .replace(/  let apiServerProcess;\n/m, '')
     .replace(
       /    if \(shouldAutoStartApiServer\) \{\n(?:.*\n){0,3}    \}\n\n/m,
@@ -101,10 +86,7 @@ function stripApiFeature(targetDirectory, templateId) {
   }
 
   // Strip apiBaseUrl from config files
-  const configFiles = [
-    'config/runtime-config.ts',
-    'config/environments.ts'
-  ];
+  const configFiles = ['config/runtime-config.ts', 'config/environments.ts'];
   for (const configFile of configFiles) {
     const configPath = path.join(targetDirectory, configFile);
     if (fs.existsSync(configPath)) {
@@ -136,7 +118,11 @@ function stripApiFeature(targetDirectory, templateId) {
     }
 
     // Remove apiClient fixture and import
-    const fixturePath = path.join(targetDirectory, 'fixtures', 'test-fixtures.ts');
+    const fixturePath = path.join(
+      targetDirectory,
+      'fixtures',
+      'test-fixtures.ts'
+    );
     if (fs.existsSync(fixturePath)) {
       let content = fs.readFileSync(fixturePath, 'utf8');
       content = content.replace(
@@ -170,7 +156,11 @@ function stripApiFeature(targetDirectory, templateId) {
       fs.writeFileSync(cyConfigPath, content, 'utf8');
     }
 
-    const runScriptPath = path.join(targetDirectory, 'scripts', 'run-cypress.mjs');
+    const runScriptPath = path.join(
+      targetDirectory,
+      'scripts',
+      'run-cypress.mjs'
+    );
     if (fs.existsSync(runScriptPath)) {
       const content = fs.readFileSync(runScriptPath, 'utf8');
       fs.writeFileSync(

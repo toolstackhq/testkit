@@ -41,9 +41,7 @@ before(async () => {
       const userMatch = req.url?.match(/^\/users\/(.+?)(\?.*)?$/);
       if (userMatch && req.method === 'GET') {
         res.writeHead(200);
-        res.end(
-          JSON.stringify({ userId: userMatch[1], name: 'Test User' })
-        );
+        res.end(JSON.stringify({ userId: userMatch[1], name: 'Test User' }));
         return;
       }
 
@@ -115,10 +113,14 @@ describe('RestClient', () => {
   it('PUT / PATCH / DELETE return responses', async () => {
     const api = createRestClient({ baseUrl });
 
-    const put = await api.put<{ method: string }>('/echo', { body: { action: 'update' } });
+    const put = await api.put<{ method: string }>('/echo', {
+      body: { action: 'update' }
+    });
     assert.equal(put.data.method, 'PUT');
 
-    const patch = await api.patch<{ method: string }>('/echo', { body: { action: 'patch' } });
+    const patch = await api.patch<{ method: string }>('/echo', {
+      body: { action: 'patch' }
+    });
     assert.equal(patch.data.method, 'PATCH');
 
     const del = await api.delete<{ method: string }>('/echo');
@@ -211,7 +213,11 @@ describe('RestClient logging', () => {
     const api = createRestClient({
       baseUrl,
       logging: {
-        attacher: { attach(n, c) { attachments.push({ name: n, content: c }); } },
+        attacher: {
+          attach(n, c) {
+            attachments.push({ name: n, content: c });
+          }
+        },
         mask: 'testprofile'
       }
     });
@@ -227,7 +233,11 @@ describe('RestClient logging', () => {
     const api = createRestClient({
       baseUrl,
       logging: {
-        attacher: { attach(_, c) { attachments.push({ content: c }); } },
+        attacher: {
+          attach(_, c) {
+            attachments.push({ content: c });
+          }
+        },
         mask: { password: 'asterisk' }
       }
     });

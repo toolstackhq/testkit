@@ -19,9 +19,8 @@ test.describe('API starter flow', () => {
     });
 
     await stepLogger.run('List people and verify the new record', async () => {
-      const response = await apiClient.get<Record<string, unknown>[]>(
-        '/people'
-      );
+      const response =
+        await apiClient.get<Record<string, unknown>[]>('/people');
       expect(response.ok).toBeTruthy();
       expect(response.data).toContainEqual(
         expect.objectContaining({ personId: person.personId })

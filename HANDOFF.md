@@ -3,7 +3,9 @@
 ## What Was Built
 
 ### 1. REST Client Library (`packages/rest-client/`)
+
 A zero-dependency REST API automation library with 56 passing tests. Features:
+
 - **Simple API**: `api.get()`, `api.post()`, `api.put()`, `api.patch()`, `api.delete()` — all generic typed
 - **Postman-style interpolation**: `{variable}` in URLs, headers, and request bodies
 - **Zoro-inspired masking**: Named profiles (`default`, `healthcare`, `fintech`, `pii`) for auto-masking sensitive fields in logs. Deep recursive case-insensitive key matching
@@ -14,6 +16,7 @@ A zero-dependency REST API automation library with 56 passing tests. Features:
 - **Auto-logging**: Attaches masked request/response to Allure or any `ReportAttacher`
 
 ### 2. Sync Pipeline Changes (`scripts/sync-templates.mjs`)
+
 - **Removed `removeApiBaseUrl` transform** from Cypress and WDIO sync targets — all templates now receive full config with `apiBaseUrl`
 - **Added 10 SYNC_MAP entries** for REST client files — distributes `utils/api-client/` to all 3 templates from canonical source at `packages/qa-patterns-core/src/api/rest-client/`
 - The `removeApiBaseUrl` logic was **moved to CLI scaffold time** (`stripApiFeature()` in `tools/create-qa-patterns/lib/scaffold.js`) — only applied when user opts out
@@ -21,12 +24,14 @@ A zero-dependency REST API automation library with 56 passing tests. Features:
 ### 3. Template Integration
 
 #### Playwright Template
+
 - `fixtures/test-fixtures.ts` — added `apiClient` fixture (creates `RestClient` from `appConfig.apiBaseUrl`)
 - `tests/api-people.spec.ts` — rewrote to use `apiClient` fixture instead of Playwright's `request` context
 - `eslint.config.mjs` — added Node globals (Buffer, fetch, performance, etc.) for api-client files
 - Already had `demo-apps/api-demo-server/` and `demo:api` script — no changes needed
 
 #### Cypress Template
+
 - `cypress/support/api-tasks.ts` — **NEW** — registers `cy.task('apiRequest', { method, path, options })` so REST client runs in Node context (not browser)
 - `cypress.config.ts` — wired `registerApiTasks(on)` in `setupNodeEvents`, added `apiBaseUrl` to `config.env`
 - `cypress/e2e/api-people.cy.ts` — **NEW** — sample API test using `cy.task('apiRequest')`
@@ -37,6 +42,7 @@ A zero-dependency REST API automation library with 56 passing tests. Features:
 - `config/environments.ts` and `config/runtime-config.ts` — now include `apiBaseUrl` (sync no longer strips it)
 
 #### WDIO Template
+
 - `utils/api-helper.ts` — **NEW** — exports pre-configured `apiClient` instance from runtime config
 - `tests/api-people.spec.ts` — **NEW** — sample API test importing `apiClient` directly (WDIO runs in Node)
 - `demo-apps/api-demo-server/` — **NEW** — copied from Playwright template
@@ -48,15 +54,19 @@ A zero-dependency REST API automation library with 56 passing tests. Features:
 ### 4. CLI Changes (`tools/create-qa-patterns/`)
 
 #### New Flags
+
 - `--with-api` — include REST API testing (default)
 - `--no-api` — exclude REST API testing feature
 
 #### Interactive Prompt
+
 - After template selection, asks: `"Include REST API testing? [Y/n]"`
 - Only shown in interactive mode when `--with-api`/`--no-api` not specified
 
 #### Strip Function (`lib/scaffold.js` → `stripApiFeature()`)
+
 When user opts out, removes at scaffold time:
+
 - `utils/api-client/` directory
 - `demo-apps/api-demo-server/` directory
 - Template-specific API test files
@@ -65,12 +75,14 @@ When user opts out, removes at scaffold time:
 - Framework-specific wiring (Playwright fixture import, Cypress `registerApiTasks` import, etc.)
 
 #### Other CLI Files Changed
+
 - `lib/args.js` — parses `--with-api`/`--no-api`
 - `lib/local-env.js` — `DEV_API_BASE_URL` included for ALL templates (not just Playwright) when API enabled
 - `lib/output.js` — help text updated
 - `index.js` — wires `withApi` through `resolveScaffoldArgs` → `scaffoldProject`
 
 ### 5. Tests
+
 - **56 REST client tests** — all passing (`packages/rest-client/tests/`)
 - **13 CLI tests** — all passing (updated `renderLocalEnv` test + added `withApi: false` test)
 - **All 3 templates typecheck** (`tsc --noEmit` clean)
@@ -79,6 +91,7 @@ When user opts out, removes at scaffold time:
 - **E2E verified** — scaffolded Playwright project, ran API test against demo server, passed
 
 ## Commit History (25 commits on `main`)
+
 ```
 f6799bd test: update local-env tests for API feature toggle
 01016cc docs: document --with-api and --no-api in CLI help text

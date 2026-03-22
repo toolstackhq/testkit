@@ -36,10 +36,7 @@ export interface AuthConfig {
 
 // -- Transport ----------------------------------------------------------------
 
-export type Transport = (
-  url: string,
-  init: RequestInit
-) => Promise<Response>;
+export type Transport = (url: string, init: RequestInit) => Promise<Response>;
 
 export interface TlsOptions {
   cert?: string | Buffer;

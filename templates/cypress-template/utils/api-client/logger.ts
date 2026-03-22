@@ -42,23 +42,17 @@ export function formatLogEntry(
   ];
 
   if (reqBody !== undefined) {
-    lines.push(
-      `  Body: ${indent(JSON.stringify(reqBody, null, 2), '  ')}`
-    );
+    lines.push(`  Body: ${indent(JSON.stringify(reqBody, null, 2), '  ')}`);
   }
 
   lines.push('');
   lines.push(
     `Response: ${entry.status} ${entry.statusText} (${entry.elapsed}ms)`
   );
-  lines.push(
-    `  Headers: ${indent(JSON.stringify(resHeaders, null, 2), '  ')}`
-  );
+  lines.push(`  Headers: ${indent(JSON.stringify(resHeaders, null, 2), '  ')}`);
 
   if (resBody !== undefined) {
-    lines.push(
-      `  Body: ${indent(JSON.stringify(resBody, null, 2), '  ')}`
-    );
+    lines.push(`  Body: ${indent(JSON.stringify(resBody, null, 2), '  ')}`);
   }
 
   return lines.join('\n');

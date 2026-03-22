@@ -1,6 +1,7 @@
 Read [AI_CONTEXT.md](./AI_CONTEXT.md) first.
 
 Use it as the source of truth for:
+
 - spec authoring rules
 - command and page-module boundaries
 - selector placement

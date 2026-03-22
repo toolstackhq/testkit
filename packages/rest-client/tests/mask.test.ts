@@ -51,10 +51,7 @@ describe('maskDeep', () => {
   };
 
   it('masks top-level fields', () => {
-    const result = maskDeep(
-      { username: 'john', password: 'hunter2' },
-      rules
-    );
+    const result = maskDeep({ username: 'john', password: 'hunter2' }, rules);
     assert.deepEqual(result, { username: 'john', password: '***' });
   });
 
@@ -64,9 +61,7 @@ describe('maskDeep', () => {
         body: {
           account: {
             details: {
-              logins: [
-                { meta: { token: 'abc123', timestamp: '2026-01-01' } }
-              ]
+              logins: [{ meta: { token: 'abc123', timestamp: '2026-01-01' } }]
             }
           }
         }
@@ -78,9 +73,7 @@ describe('maskDeep', () => {
       body: {
         account: {
           details: {
-            logins: [
-              { meta: { token: '***', timestamp: '2026-01-01' } }
-            ]
+            logins: [{ meta: { token: '***', timestamp: '2026-01-01' } }]
           }
         }
       }

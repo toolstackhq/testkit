@@ -1,6 +1,7 @@
 Read [AI_CONTEXT.md](./AI_CONTEXT.md) first.
 
 Use it as the source of truth for:
+
 - where tests belong
 - where selectors belong
 - how to extend page objects

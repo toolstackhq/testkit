@@ -10,19 +10,16 @@ describe('API starter flow', () => {
       email: 'jane@example.com'
     };
 
-    const createRes = await apiClient.post<Record<string, unknown>>(
-      '/people',
-      { body: person }
-    );
+    const createRes = await apiClient.post<Record<string, unknown>>('/people', {
+      body: person
+    });
     expect(createRes.ok).toBe(true);
     expect(createRes.status).toBe(201);
     expect(createRes.data).toMatchObject({ name: person.name });
 
     const listRes = await apiClient.get<Record<string, unknown>[]>('/people');
     expect(listRes.ok).toBe(true);
-    const found = listRes.data.find(
-      (p: any) => p.personId === person.personId
-    );
+    const found = listRes.data.find((p: any) => p.personId === person.personId);
     expect(found).toBeDefined();
     expect((found as any).name).toBe(person.name);
   });

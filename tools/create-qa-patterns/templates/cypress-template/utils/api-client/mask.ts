@@ -12,7 +12,9 @@ export function registerMaskProfiles(
   registeredProfiles = { ...profiles };
 }
 
-export function resolveMaskConfig(mask: MaskConfig | undefined): MaskRules | false {
+export function resolveMaskConfig(
+  mask: MaskConfig | undefined
+): MaskRules | false {
   if (mask === undefined || mask === false) return false;
 
   if (typeof mask === 'string') {
@@ -52,10 +54,7 @@ export function applyMaskRule(value: string, rule: MaskStrategy): string {
   return ASTERISK;
 }
 
-function findRule(
-  rules: MaskRules,
-  key: string
-): MaskStrategy | undefined {
+function findRule(rules: MaskRules, key: string): MaskStrategy | undefined {
   const lowerKey = key.toLowerCase();
   for (const [ruleKey, strategy] of Object.entries(rules)) {
     if (ruleKey.toLowerCase() === lowerKey) return strategy;
@@ -63,9 +62,7 @@ function findRule(
   return undefined;
 }
 
-function isPrimitive(
-  value: unknown
-): value is string | number | boolean {
+function isPrimitive(value: unknown): value is string | number | boolean {
   return (
     typeof value === 'string' ||
     typeof value === 'number' ||

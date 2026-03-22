@@ -27,10 +27,7 @@ describe('interpolatePath', () => {
   });
 
   it('leaves unmatched placeholders intact', () => {
-    assert.equal(
-      interpolatePath('/users/{userId}', {}),
-      '/users/{userId}'
-    );
+    assert.equal(interpolatePath('/users/{userId}', {}), '/users/{userId}');
   });
 
   it('returns path unchanged when no params provided', () => {

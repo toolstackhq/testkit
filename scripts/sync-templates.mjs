@@ -125,16 +125,25 @@ const SYNC_MAP = [
     ]
   },
   // --- REST client files ---
-  ...['client', 'types', 'interpolate', 'mask', 'mask-rules', 'transport', 'retry', 'logger', 'response', 'index'].map(
-    (name) => ({
-      source: `api/rest-client/${name}.ts`,
-      targets: [
-        { dest: `templates/playwright-template/utils/api-client/${name}.ts` },
-        { dest: `templates/cypress-template/utils/api-client/${name}.ts` },
-        { dest: `templates/wdio-template/utils/api-client/${name}.ts` }
-      ]
-    })
-  )
+  ...[
+    'client',
+    'types',
+    'interpolate',
+    'mask',
+    'mask-rules',
+    'transport',
+    'retry',
+    'logger',
+    'response',
+    'index'
+  ].map((name) => ({
+    source: `api/rest-client/${name}.ts`,
+    targets: [
+      { dest: `templates/playwright-template/utils/api-client/${name}.ts` },
+      { dest: `templates/cypress-template/utils/api-client/${name}.ts` },
+      { dest: `templates/wdio-template/utils/api-client/${name}.ts` }
+    ]
+  }))
 ];
 
 // Files and directories to exclude when syncing templates to the CLI tool

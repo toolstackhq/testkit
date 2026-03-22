@@ -7,6 +7,7 @@ Use this file when an LLM is asked to add tests, update support code, or maintai
 This is a generated `Cypress` + `TypeScript` automation framework.
 
 It is intentionally small and readable:
+
 - specs describe workflows and assertions
 - support commands and page modules own selectors and reusable actions
 - `DataFactory` creates repeatable test data

@@ -28,9 +28,7 @@ after(() => {
 });
 
 // A minimal schema that matches the SchemaLike<T> interface (like Zod's .parse)
-function createSchema<T>(
-  validator: (data: unknown) => T
-): SchemaLike<T> {
+function createSchema<T>(validator: (data: unknown) => T): SchemaLike<T> {
   return {
     parse(data: unknown): T {
       return validator(data);

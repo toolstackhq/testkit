@@ -40,7 +40,12 @@ function renderLocalEnv(templateId, credentials, options) {
   return `${common.join('\n')}\n`;
 }
 
-function writeGeneratedLocalEnv(targetDirectory, templateId, credentials, options) {
+function writeGeneratedLocalEnv(
+  targetDirectory,
+  templateId,
+  credentials,
+  options
+) {
   const envPath = path.join(targetDirectory, '.env');
 
   if (fs.existsSync(envPath)) {
@@ -51,7 +56,11 @@ function writeGeneratedLocalEnv(targetDirectory, templateId, credentials, option
     };
   }
 
-  fs.writeFileSync(envPath, renderLocalEnv(templateId, credentials, options), 'utf8');
+  fs.writeFileSync(
+    envPath,
+    renderLocalEnv(templateId, credentials, options),
+    'utf8'
+  );
   return {
     created: true,
     envPath,

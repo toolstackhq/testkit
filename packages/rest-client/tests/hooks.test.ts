@@ -132,10 +132,7 @@ describe('hooks', () => {
           order.push('before');
           return ctx;
         },
-        afterResponse: <T>(
-          response: RestResponse<T>,
-          _ctx: RequestContext
-        ) => {
+        afterResponse: <T>(response: RestResponse<T>, _ctx: RequestContext) => {
           order.push('after');
           return response;
         }

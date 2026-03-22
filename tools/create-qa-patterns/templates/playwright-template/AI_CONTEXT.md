@@ -7,6 +7,7 @@ Use this file when an LLM is asked to add tests, update page objects, or maintai
 This is a generated `Playwright` + `TypeScript` automation framework.
 
 It is designed as a maintainable starter:
+
 - tests describe workflows and assertions
 - page objects own selectors and UI actions
 - fixtures provide shared runtime objects

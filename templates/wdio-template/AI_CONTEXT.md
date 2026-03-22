@@ -7,6 +7,7 @@ Use this file when an LLM is asked to add specs, update page objects, or maintai
 This is a generated `WebdriverIO` + `TypeScript` automation framework.
 
 It is designed to stay understandable:
+
 - specs describe the workflow and assertions
 - page objects own selectors and browser actions
 - `DataFactory` creates repeatable sample data

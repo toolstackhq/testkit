@@ -41,7 +41,9 @@ test('renderLocalEnv excludes api base url when withApi is false', () => {
     password: 'local-password'
   };
 
-  const env = renderLocalEnv('cypress-template', credentials, { withApi: false });
+  const env = renderLocalEnv('cypress-template', credentials, {
+    withApi: false
+  });
   assert.doesNotMatch(env, /DEV_API_BASE_URL/);
   assert.match(env, /DEV_UI_BASE_URL/);
 });

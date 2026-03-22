@@ -99,9 +99,7 @@ export class RestClient {
       headers['Authorization'] = `Bearer ${this.auth.bearer}`;
     } else if (this.auth?.basic) {
       const { username, password } = this.auth.basic;
-      const encoded = Buffer.from(`${username}:${password}`).toString(
-        'base64'
-      );
+      const encoded = Buffer.from(`${username}:${password}`).toString('base64');
       headers['Authorization'] = `Basic ${encoded}`;
     }
 
@@ -134,9 +132,7 @@ export class RestClient {
       method: context.method,
       headers: context.headers,
       body:
-        context.body !== undefined
-          ? JSON.stringify(context.body)
-          : fetchBody
+        context.body !== undefined ? JSON.stringify(context.body) : fetchBody
     };
     const timeout = options?.timeout ?? this.timeout;
     if (timeout) {

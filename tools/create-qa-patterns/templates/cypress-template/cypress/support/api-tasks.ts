@@ -23,9 +23,7 @@ interface ApiRequestPayload {
   };
 }
 
-export function registerApiTasks(
-  on: Cypress.PluginEvents
-): void {
+export function registerApiTasks(on: Cypress.PluginEvents): void {
   on('task', {
     async apiRequest(payload: ApiRequestPayload) {
       const api = getClient();

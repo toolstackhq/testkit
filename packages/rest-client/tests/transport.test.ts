@@ -79,9 +79,7 @@ describe('custom transport', () => {
 
     const addr = echoServer.address();
     const echoUrl =
-      typeof addr === 'object' && addr
-        ? `http://127.0.0.1:${addr.port}`
-        : '';
+      typeof addr === 'object' && addr ? `http://127.0.0.1:${addr.port}` : '';
 
     const transport = createTlsTransport({ rejectUnauthorized: false });
     const api = createRestClient({ baseUrl: echoUrl, transport });

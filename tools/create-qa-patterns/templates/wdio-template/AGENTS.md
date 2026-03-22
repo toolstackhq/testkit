@@ -1,6 +1,7 @@
 Read [AI_CONTEXT.md](./AI_CONTEXT.md) first.
 
 Use it as the source of truth for:
+
 - spec and page-object boundaries
 - selector placement
 - safe WDIO authoring patterns
