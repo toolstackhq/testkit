@@ -133,8 +133,32 @@ a {
   padding: 24px;
 }
 
+.hero__subheading {
+  margin: 18px 0 8px;
+  color: var(--ink);
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.hero__panel .panel__label + .hero__subheading {
+  margin-top: 20px;
+}
+
+.hero__panel pre {
+  margin: 0 0 6px;
+  padding: 16px 18px;
+  border-radius: 18px;
+  background: #0f1724;
+  color: #eef4ff;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-size: 0.93rem;
+  line-height: 1.6;
+}
+
 .hero__meta {
-  margin: 14px 0 0;
+  margin: 22px 0 0;
   padding-left: 18px;
   color: var(--muted);
   line-height: 1.8;
@@ -299,7 +323,6 @@ a {
 }
 
 .quickstart__pane pre,
-.hero__panel pre,
 .agent-prompt pre,
 .code-card pre {
   margin: 0;

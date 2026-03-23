@@ -125,6 +125,9 @@ document.querySelector('#app').innerHTML = `
         </div>
         <aside class="hero__panel">
           <p class="panel__label">Quick start</p>
+          <p class="hero__subheading">Install</p>
+          <pre><code>npm install -g @toolstackhq/create-qa-patterns@latest</code></pre>
+          <p class="hero__subheading">Run</p>
           <pre><code>npx @toolstackhq/create-qa-patterns</code></pre>
           <ul class="hero__meta">
             <li>3 tested templates</li>
