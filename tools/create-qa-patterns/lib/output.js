@@ -265,6 +265,9 @@ function printSummary(summary, colors) {
     process.stdout.write(
       `  Local credentials: ${summary.localCredentials.username} / ${summary.localCredentials.password}\n`
     );
+    process.stdout.write(
+      `  Local credentials file: ${summary.targetDirectory}/.env\n`
+    );
   }
   process.stdout.write(
     `  npm install: ${formatStatus(summary.npmInstall, colors)}\n`

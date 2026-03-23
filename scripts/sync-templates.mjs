@@ -18,6 +18,7 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const CORE = path.join(ROOT, 'packages', 'qa-patterns-core', 'src');
+const TEST_APPS = path.join(ROOT, 'test-apps');
 const CHECK_MODE = process.argv.includes('--check');
 
 // ---------------------------------------------------------------------------
@@ -157,6 +158,12 @@ const CLI_SYNC_EXCLUDE = new Set([
   '.env'
 ]);
 
+const TEMPLATE_NAMES = [
+  'playwright-template',
+  'cypress-template',
+  'wdio-template'
+];
+
 // ---------------------------------------------------------------------------
 // Sync logic
 // ---------------------------------------------------------------------------
@@ -201,13 +208,7 @@ function syncFile(source, target) {
 }
 
 function syncCliTemplates() {
-  const templateNames = [
-    'playwright-template',
-    'cypress-template',
-    'wdio-template'
-  ];
-
-  for (const name of templateNames) {
+  for (const name of TEMPLATE_NAMES) {
     const src = path.join(ROOT, 'templates', name);
     const dest = path.join(
       ROOT,
@@ -229,6 +230,113 @@ function syncCliTemplates() {
       copyDirFiltered(src, dest);
       console.log(`synced CLI template: ${name}`);
     }
+  }
+}
+
+function syncDemoApps() {
+  const sharedDemoPaths = [
+    { source: 'README.md', destination: 'README.md' },
+    { source: 'ui-demo-app', destination: 'ui-demo-app' },
+    { source: 'api-demo-server', destination: 'api-demo-server' }
+  ];
+
+  for (const templateName of TEMPLATE_NAMES) {
+    const demoAppsDirectory = path.join(
+      ROOT,
+      'templates',
+      templateName,
+      'demo-apps'
+    );
+
+    for (const item of sharedDemoPaths) {
+      const sourcePath = path.join(TEST_APPS, item.source);
+      const destinationPath = path.join(demoAppsDirectory, item.destination);
+
+      if (CHECK_MODE) {
+        checkPathSync(sourcePath, destinationPath, destinationPath);
+        continue;
+      }
+
+      fs.rmSync(destinationPath, { recursive: true, force: true });
+      copyPath(sourcePath, destinationPath);
+      console.log(
+        `synced demo app content: templates/${templateName}/demo-apps/${item.destination}`
+      );
+    }
+  }
+}
+
+function copyPath(sourcePath, destinationPath) {
+  const stat = fs.statSync(sourcePath);
+
+  if (stat.isDirectory()) {
+    copyDirFiltered(sourcePath, destinationPath);
+    return;
+  }
+
+  fs.mkdirSync(path.dirname(destinationPath), { recursive: true });
+  fs.copyFileSync(sourcePath, destinationPath);
+}
+
+function checkPathSync(sourcePath, destinationPath, labelPath) {
+  if (!fs.existsSync(sourcePath) || !fs.existsSync(destinationPath)) {
+    driftCount += 1;
+    console.error(`DRIFT: ${path.relative(ROOT, destinationPath)}`);
+    return;
+  }
+
+  const sourceStat = fs.statSync(sourcePath);
+  const destinationStat = fs.statSync(destinationPath);
+
+  if (sourceStat.isDirectory() !== destinationStat.isDirectory()) {
+    driftCount += 1;
+    console.error(`DRIFT: ${path.relative(ROOT, destinationPath)}`);
+    return;
+  }
+
+  if (sourceStat.isDirectory()) {
+    const sourceFiles = collectFiles(sourcePath);
+    const destinationFiles = collectFiles(destinationPath);
+    const sourceSet = new Set(sourceFiles);
+    const destinationSet = new Set(destinationFiles);
+
+    for (const file of sourceFiles) {
+      if (!destinationSet.has(file)) {
+        driftCount += 1;
+        console.error(`DRIFT: ${path.relative(ROOT, destinationPath)}/${file}`);
+        continue;
+      }
+
+      const sourceContent = fs.readFileSync(
+        path.join(sourcePath, file),
+        'utf8'
+      );
+      const destinationContent = fs.readFileSync(
+        path.join(destinationPath, file),
+        'utf8'
+      );
+
+      if (sourceContent !== destinationContent) {
+        driftCount += 1;
+        console.error(`DRIFT: ${path.relative(ROOT, destinationPath)}/${file}`);
+      }
+    }
+
+    for (const file of destinationFiles) {
+      if (!sourceSet.has(file)) {
+        driftCount += 1;
+        console.error(`DRIFT: ${path.relative(ROOT, destinationPath)}/${file}`);
+      }
+    }
+
+    return;
+  }
+
+  const sourceContent = fs.readFileSync(sourcePath, 'utf8');
+  const destinationContent = fs.readFileSync(destinationPath, 'utf8');
+  if (sourceContent !== destinationContent) {
+    driftCount += 1;
+    console.error(`DRIFT: ${path.relative(ROOT, destinationPath)}`);
   }
 }
 
@@ -332,6 +440,9 @@ console.log('');
 for (const mapping of SYNC_MAP) {
   syncFile(mapping);
 }
+
+console.log('');
+syncDemoApps();
 
 console.log('');
 syncCliTemplates();
