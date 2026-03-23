@@ -316,6 +316,43 @@ a {
   justify-items: start;
 }
 
+.command-tabs {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 8px;
+  margin-top: 6px;
+  background: var(--surface-muted);
+  border-radius: 999px;
+}
+
+.command-tab {
+  padding: 9px 14px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.command-tab.is-active {
+  color: var(--ink);
+  background: var(--surface);
+  box-shadow: 0 4px 18px rgba(16, 32, 51, 0.08);
+}
+
+.command-panels {
+  display: grid;
+  width: 100%;
+}
+
+.command-pane {
+  display: grid;
+  justify-items: start;
+}
+
 .quickstart__subheading {
   margin: 12px 0 2px;
   color: var(--ink);
@@ -472,6 +509,12 @@ a {
 
 .agent-prompt {
   padding: 22px;
+}
+
+.agent-prompt .panel__label,
+.code-card .panel__label {
+  display: block;
+  margin-bottom: 10px;
 }
 
 .doc-link {
