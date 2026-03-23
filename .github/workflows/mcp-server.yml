@@ -46,19 +46,28 @@ jobs:
       - name: Install workspace dependencies
         run: npm ci
 
+      - name: Pack CLI
+        id: pack-cli
+        run: |
+          TARBALL="$(npm pack --workspace @toolstackhq/create-testkit | tail -n 1)"
+          echo "tarball=$TARBALL" >> "$GITHUB_OUTPUT"
+
       - name: Pack MCP server
         id: pack
         run: |
           TARBALL="$(npm pack --workspace @toolstackhq/testkit-mcp | tail -n 1)"
           echo "tarball=$TARBALL" >> "$GITHUB_OUTPUT"
 
-      - name: Install packed MCP server
-        run: npm install --prefix /tmp/testkit-mcp-install "./${{ steps.pack.outputs.tarball }}"
+      - name: Install packed CLI and MCP server
+        run: |
+          npm install --prefix /tmp/testkit-mcp-install \
+            "./${{ steps.pack-cli.outputs.tarball }}" \
+            "./${{ steps.pack.outputs.tarball }}"
 
       - name: Validate packed MCP handshake
         working-directory: packages/mcp-server
         env:
-          QA_PATTERNS_MCP_COMMAND: /tmp/testkit-mcp-install/node_modules/.bin/testkit-mcp
-          QA_PATTERNS_MCP_ARGS: '[]'
-          QA_PATTERNS_MCP_CWD: /tmp
+          TESTKIT_MCP_COMMAND: /tmp/testkit-mcp-install/node_modules/.bin/testkit-mcp
+          TESTKIT_MCP_ARGS: '[]'
+          TESTKIT_MCP_CWD: /tmp
         run: npm run validate
