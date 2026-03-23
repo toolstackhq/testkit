@@ -1,3 +1,4 @@
+const fs = require('node:fs');
 const path = require('node:path');
 
 function createTemplateAliases(templates) {
@@ -28,7 +29,17 @@ function toPackageName(targetDirectory, template) {
 }
 
 function getTemplateDirectory(rootDirectory, templateId) {
-  return path.resolve(rootDirectory, 'templates', templateId);
+  const bundledTemplateDirectory = path.resolve(
+    rootDirectory,
+    'templates',
+    templateId
+  );
+
+  if (fs.existsSync(bundledTemplateDirectory)) {
+    return bundledTemplateDirectory;
+  }
+
+  return path.resolve(rootDirectory, '..', '..', 'templates', templateId);
 }
 
 module.exports = {

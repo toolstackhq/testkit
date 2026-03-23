@@ -24,3 +24,4 @@ templates/playwright-template/test-results/
 templates/playwright-template/playwright-report/
 templates/playwright-template/allure-results/
 templates/playwright-template/allure-report/
+tools/create-testkit/templates/

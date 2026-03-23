@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 /**
- * Copies canonical source files from packages/testkit-core into both
- * framework templates and the CLI tool's bundled template copies.
+ * Copies canonical source files from packages/testkit-core into the
+ * framework templates.
  *
  * Playwright receives files as-is. Cypress receives files with targeted
  * transforms (remove apiBaseUrl, adjust import paths). WebdriverIO uses the
@@ -207,26 +207,6 @@ function syncFile(source, target) {
   }
 }
 
-function syncCliTemplates() {
-  for (const name of TEMPLATE_NAMES) {
-    const src = path.join(ROOT, 'templates', name);
-    const dest = path.join(ROOT, 'tools', 'create-testkit', 'templates', name);
-
-    if (!fs.existsSync(src)) {
-      console.error(`WARNING: template source not found: ${src}`);
-      continue;
-    }
-
-    if (CHECK_MODE) {
-      checkCliTemplateSync(src, dest, name);
-    } else {
-      fs.rmSync(dest, { recursive: true, force: true });
-      copyDirFiltered(src, dest);
-      console.log(`synced CLI template: ${name}`);
-    }
-  }
-}
-
 function syncDemoApps() {
   const sharedDemoPaths = [
     { source: 'README.md', destination: 'README.md' },
@@ -354,52 +334,6 @@ function copyDirFiltered(src, dest) {
   }
 }
 
-function checkCliTemplateSync(src, dest, name) {
-  if (!fs.existsSync(dest)) {
-    driftCount += 1;
-    console.error(
-      `DRIFT: CLI template missing: tools/create-testkit/templates/${name}`
-    );
-    return;
-  }
-
-  const srcFiles = collectFiles(src).filter(
-    (f) => !CLI_SYNC_EXCLUDE.has(f.split(path.sep)[0])
-  );
-  const destFiles = collectFiles(dest);
-
-  const srcSet = new Set(srcFiles);
-  const destSet = new Set(destFiles);
-
-  for (const file of srcFiles) {
-    if (!destSet.has(file)) {
-      driftCount += 1;
-      console.error(
-        `DRIFT: CLI template missing file: tools/create-testkit/templates/${name}/${file}`
-      );
-      continue;
-    }
-
-    const srcContent = fs.readFileSync(path.join(src, file), 'utf8');
-    const destContent = fs.readFileSync(path.join(dest, file), 'utf8');
-    if (srcContent !== destContent) {
-      driftCount += 1;
-      console.error(
-        `DRIFT: CLI template differs: tools/create-testkit/templates/${name}/${file}`
-      );
-    }
-  }
-
-  for (const file of destFiles) {
-    if (!srcSet.has(file)) {
-      driftCount += 1;
-      console.error(
-        `DRIFT: CLI template has extra file: tools/create-testkit/templates/${name}/${file}`
-      );
-    }
-  }
-}
-
 function collectFiles(dir, prefix = '') {
   const results = [];
   const entries = fs.readdirSync(dir, { withFileTypes: true });
@@ -437,9 +371,6 @@ for (const mapping of SYNC_MAP) {
 
 console.log('');
 syncDemoApps();
-
-console.log('');
-syncCliTemplates();
 
 if (CHECK_MODE) {
   console.log('');

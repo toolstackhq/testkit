@@ -11,3 +11,4 @@ test-results
 tools/create-testkit/templates/**/allure-results
 tools/create-testkit/templates/**/reports
 tools/create-testkit/templates/**/test-results
+tools/create-testkit/templates
