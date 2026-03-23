@@ -202,8 +202,12 @@ document.querySelector('#app').innerHTML = `
 
       <section class="section terminal-section">
         <div class="section__heading">
-          <p class="eyebrow">CLI walkthrough</p>
-          <h2>See the full scaffold flow</h2>
+          <p class="eyebrow">Animated CLI walkthrough</p>
+          <h2>See the full scaffold flow in motion</h2>
+          <p class="note">
+            This is the live Termynal-style demo of the questions, selections,
+            progress state, and final project summary a user sees.
+          </p>
         </div>
         <div class="terminal-card">
           <div class="terminal-card__topbar" aria-hidden="true">
