@@ -177,8 +177,8 @@ document.querySelector('#app').innerHTML = `
         </div>
         <div class="quickstart">
           <div class="quickstart__tabs" role="tablist" aria-label="Quick start options">
-            <button class="quickstart__tab is-active" data-tab="cli" role="tab" aria-selected="true">CLI</button>
-            <button class="quickstart__tab" data-tab="mcp" role="tab" aria-selected="false">MCP</button>
+            <button type="button" class="quickstart__tab is-active" data-tab="cli" role="tab" aria-selected="true">CLI</button>
+            <button type="button" class="quickstart__tab" data-tab="mcp" role="tab" aria-selected="false">MCP</button>
           </div>
           <div class="quickstart__panel">
             <div class="quickstart__pane is-active" data-pane="cli">
@@ -189,9 +189,9 @@ document.querySelector('#app').innerHTML = `
               <p class="quickstart__subheading">Run</p>
               <pre class="code-pill"><code>${quickStartPanes.cli.interactive}</code></pre>
               <div class="command-tabs" role="tablist" aria-label="Template commands">
-                <button class="command-tab is-active" data-command-tab="playwright" role="tab" aria-selected="true">Playwright</button>
-                <button class="command-tab" data-command-tab="cypress" role="tab" aria-selected="false">Cypress</button>
-                <button class="command-tab" data-command-tab="wdio" role="tab" aria-selected="false">WebdriverIO</button>
+                <button type="button" class="command-tab is-active" data-command-tab="playwright" role="tab" aria-selected="true">Playwright</button>
+                <button type="button" class="command-tab" data-command-tab="cypress" role="tab" aria-selected="false">Cypress</button>
+                <button type="button" class="command-tab" data-command-tab="wdio" role="tab" aria-selected="false">WebdriverIO</button>
               </div>
               <div class="command-panels">
                 <div class="command-pane is-active" data-command-pane="playwright">
@@ -372,14 +372,12 @@ if (terminalElement && terminalSection) {
   observer.observe(terminalSection);
 }
 
-const tabs = document.querySelectorAll('[data-tab]');
-const panes = document.querySelectorAll('[data-pane]');
-const commandTabs = document.querySelectorAll('[data-command-tab]');
-const commandPanes = document.querySelectorAll('[data-command-pane]');
-
-for (const tab of tabs) {
-  tab.addEventListener('click', () => {
+document.addEventListener('click', (event) => {
+  const tab = event.target.closest('[data-tab]');
+  if (tab) {
     const target = tab.getAttribute('data-tab');
+    const tabs = document.querySelectorAll('[data-tab]');
+    const panes = document.querySelectorAll('[data-pane]');
 
     for (const item of tabs) {
       const active = item === tab;
@@ -392,15 +390,17 @@ for (const tab of tabs) {
       pane.classList.toggle('is-active', active);
       pane.hidden = !active;
     }
-  });
-}
+    return;
+  }
 
-for (const tab of commandTabs) {
-  tab.addEventListener('click', () => {
-    const target = tab.getAttribute('data-command-tab');
+  const commandTab = event.target.closest('[data-command-tab]');
+  if (commandTab) {
+    const target = commandTab.getAttribute('data-command-tab');
+    const commandTabs = document.querySelectorAll('[data-command-tab]');
+    const commandPanes = document.querySelectorAll('[data-command-pane]');
 
     for (const item of commandTabs) {
-      const active = item === tab;
+      const active = item === commandTab;
       item.classList.toggle('is-active', active);
       item.setAttribute('aria-selected', String(active));
     }
@@ -410,5 +410,5 @@ for (const tab of commandTabs) {
       pane.classList.toggle('is-active', active);
       pane.hidden = !active;
     }
-  });
-}
+  }
+});
