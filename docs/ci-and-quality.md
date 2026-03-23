@@ -78,6 +78,6 @@ The CLI release workflow is:
 
 It publishes:
 
-- `@toolstackhq/create-qa-patterns`
+- `@toolstackhq/create-testkit`
 
 when a matching `v*.*.*` tag is pushed.

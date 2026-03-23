@@ -1,23 +1,23 @@
-# @toolstackhq/create-qa-patterns
+# @toolstackhq/create-testkit
 
-CLI for generating QA framework templates from `qa-patterns`.
+CLI for generating QA framework templates from `testkit`.
 
 ## Install
 
 ```bash
-npm install -g @toolstackhq/create-qa-patterns
+npm install -g @toolstackhq/create-testkit
 ```
 
 ## Usage
 
 ```bash
-create-qa-patterns
+create-testkit
 ```
 
 Generate into a new directory:
 
 ```bash
-create-qa-patterns my-project
+create-testkit my-project
 ```
 
 The generated project is initialized with `git init` automatically and includes a default `.gitignore` for common local artifacts.
@@ -25,39 +25,39 @@ The generated project is initialized with `git init` automatically and includes 
 Generate the Playwright template explicitly:
 
 ```bash
-create-qa-patterns playwright-template my-project
+create-testkit playwright-template my-project
 ```
 
 Generate the Cypress template explicitly:
 
 ```bash
-create-qa-patterns cypress-template my-project
+create-testkit cypress-template my-project
 ```
 
 ```bash
-create-qa-patterns wdio-template my-project
+create-testkit wdio-template my-project
 ```
 
 Generate without post-create prompts, which is useful for CI or scripted setup:
 
 ```bash
-create-qa-patterns playwright-template my-project --yes --no-install --no-setup --no-test
+create-testkit playwright-template my-project --yes --no-install --no-setup --no-test
 ```
 
 ## Upgrade a generated project
 
-Generated projects now include a `.qa-patterns.json` metadata file. It tracks the last applied managed template baseline so the CLI can update infrastructure files conservatively later.
+Generated projects now include a `.testkit.json` metadata file. It tracks the last applied managed template baseline so the CLI can update infrastructure files conservatively later.
 
 Check for safe updates:
 
 ```bash
-create-qa-patterns upgrade check my-project
+create-testkit upgrade check my-project
 ```
 
 Apply only safe managed-file updates:
 
 ```bash
-create-qa-patterns upgrade apply --safe my-project
+create-testkit upgrade apply --safe my-project
 ```
 
 The upgrade flow intentionally avoids overwriting user-owned test and page code. It only manages framework infrastructure such as config, scripts, workflows, and package metadata when those files are still unchanged from the generated baseline.

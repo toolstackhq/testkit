@@ -258,7 +258,7 @@ async function runPostGenerateActions(template, targetDirectory, summary) {
 function resolveUpgradeTarget(args) {
   if (args.length > 1) {
     throw new Error(
-      'Too many arguments for upgrade. Use `create-qa-patterns upgrade check [target-directory]`.'
+      'Too many arguments for upgrade. Use `create-testkit upgrade check [target-directory]`.'
     );
   }
 

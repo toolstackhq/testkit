@@ -1,15 +1,15 @@
 {
-  "name": "@toolstackhq/create-qa-patterns",
+  "name": "@toolstackhq/create-testkit",
   "version": "1.0.18",
   "description": "CLI for generating QA framework templates.",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/toolstackhq/qa-patterns.git"
+    "url": "git+https://github.com/toolstackhq/testkit.git"
   },
-  "homepage": "https://github.com/toolstackhq/qa-patterns",
+  "homepage": "https://github.com/toolstackhq/testkit",
   "bugs": {
-    "url": "https://github.com/toolstackhq/qa-patterns/issues"
+    "url": "https://github.com/toolstackhq/testkit/issues"
   },
   "publishConfig": {
     "access": "public"
@@ -23,7 +23,7 @@
     "tests"
   ],
   "bin": {
-    "create-qa-patterns": "./index.js"
+    "create-testkit": "./index.js"
   },
   "scripts": {
     "start": "node ./index.js",

@@ -1,14 +1,14 @@
-# qa-patterns
+# testkit
 
-[![Repository Validation (Greybox)](https://github.com/toolstackhq/qa-patterns/actions/workflows/playwright-tests.yml/badge.svg?branch=main)](https://github.com/toolstackhq/qa-patterns/actions/workflows/playwright-tests.yml)
-[![Generated Template Validation (Blackbox)](https://github.com/toolstackhq/qa-patterns/actions/workflows/generated-template-validation.yml/badge.svg?branch=main)](https://github.com/toolstackhq/qa-patterns/actions/workflows/generated-template-validation.yml)
-[![MCP Server Validation](https://github.com/toolstackhq/qa-patterns/actions/workflows/mcp-server.yml/badge.svg?branch=main)](https://github.com/toolstackhq/qa-patterns/actions/workflows/mcp-server.yml)
-[![Dependency Watch](https://github.com/toolstackhq/qa-patterns/actions/workflows/dependency-watch.yml/badge.svg?branch=main)](https://github.com/toolstackhq/qa-patterns/actions/workflows/dependency-watch.yml)
-[![Docs Site](https://img.shields.io/badge/docs-live-0f766e)](https://toolstackhq.github.io/qa-patterns/)
-[![npm version](https://img.shields.io/npm/v/%40toolstackhq%2Fcreate-qa-patterns)](https://www.npmjs.com/package/@toolstackhq/create-qa-patterns)
+[![Repository Validation (Greybox)](https://github.com/toolstackhq/testkit/actions/workflows/playwright-tests.yml/badge.svg?branch=main)](https://github.com/toolstackhq/testkit/actions/workflows/playwright-tests.yml)
+[![Generated Template Validation (Blackbox)](https://github.com/toolstackhq/testkit/actions/workflows/generated-template-validation.yml/badge.svg?branch=main)](https://github.com/toolstackhq/testkit/actions/workflows/generated-template-validation.yml)
+[![MCP Server Validation](https://github.com/toolstackhq/testkit/actions/workflows/mcp-server.yml/badge.svg?branch=main)](https://github.com/toolstackhq/testkit/actions/workflows/mcp-server.yml)
+[![Dependency Watch](https://github.com/toolstackhq/testkit/actions/workflows/dependency-watch.yml/badge.svg?branch=main)](https://github.com/toolstackhq/testkit/actions/workflows/dependency-watch.yml)
+[![Docs Site](https://img.shields.io/badge/docs-live-0f766e)](https://toolstackhq.github.io/testkit/)
+[![npm version](https://img.shields.io/npm/v/%40toolstackhq%2Fcreate-testkit)](https://www.npmjs.com/package/@toolstackhq/create-testkit)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D18.18.0-339933?logo=node.js&logoColor=white)](./package.json)
 
-`qa-patterns` is a project scaffolding tool for modern test automation frameworks.
+`testkit` is a project scaffolding tool for modern test automation frameworks.
 
 Supported projects today:
 
@@ -45,15 +45,15 @@ Supported projects today:
 
 ## Use as npm CLI
 
-[![qa-patterns CLI walkthrough](./docs/assets/termynal-cli-preview.svg)](https://toolstackhq.github.io/qa-patterns/#cli)
+[![testkit CLI walkthrough](./docs/assets/termynal-cli-preview.svg)](https://toolstackhq.github.io/testkit/#cli)
 
 Open the docs site for the live animated terminal walkthrough built with a Termynal-style interaction:
 
-- [Animated CLI walkthrough](https://toolstackhq.github.io/qa-patterns/#cli)
+- [Animated CLI walkthrough](https://toolstackhq.github.io/testkit/#cli)
 
 ```bash
 # Run the scaffolder
-npx @toolstackhq/create-qa-patterns
+npx @toolstackhq/create-testkit
 ```
 
 ```text
@@ -66,27 +66,27 @@ npx @toolstackhq/create-qa-patterns
 
 ```bash
 # Scaffold Playwright directly
-npx @toolstackhq/create-qa-patterns playwright-template my-project
+npx @toolstackhq/create-testkit playwright-template my-project
 ```
 
 ```bash
 # Scaffold Cypress directly
-npx @toolstackhq/create-qa-patterns cypress-template my-project
+npx @toolstackhq/create-testkit cypress-template my-project
 ```
 
 ```bash
 # Scaffold WebdriverIO directly
-npx @toolstackhq/create-qa-patterns wdio-template my-project
+npx @toolstackhq/create-testkit wdio-template my-project
 ```
 
 ```bash
 # Check for safe managed-template updates later
-npx -y @toolstackhq/create-qa-patterns upgrade check .
+npx -y @toolstackhq/create-testkit upgrade check .
 ```
 
 ```bash
 # Apply only safe managed-template updates
-npx -y @toolstackhq/create-qa-patterns upgrade apply --safe .
+npx -y @toolstackhq/create-testkit upgrade apply --safe .
 ```
 
 ## Use as MCP server
@@ -108,9 +108,9 @@ Add this to your Codex MCP config:
 ```json
 {
   "mcpServers": {
-    "qa-patterns": {
+    "testkit": {
       "command": "npx",
-      "args": ["-y", "@toolstackhq/qa-patterns-mcp"]
+      "args": ["-y", "@toolstackhq/testkit-mcp"]
     }
   }
 }
@@ -132,9 +132,9 @@ Anthropic documents Claude Code MCP servers in a project `.mcp.json` file. Refer
 ```json
 {
   "mcpServers": {
-    "qa-patterns": {
+    "testkit": {
       "command": "npx",
-      "args": ["-y", "@toolstackhq/qa-patterns-mcp"]
+      "args": ["-y", "@toolstackhq/testkit-mcp"]
     }
   }
 }
@@ -151,7 +151,7 @@ Describe the playwright-template and scaffold it in ./my-framework.
 ## Detailed documentation
 
 - [Docs index](./docs/README.md)
-- [MCP docs site](https://toolstackhq.github.io/qa-patterns/)
+- [MCP docs site](https://toolstackhq.github.io/testkit/)
 - [Run locally](./docs/local-development.md)
 - [Framework architecture](./docs/architecture.md)
 - [Agent layer](./docs/agent-layer.md)

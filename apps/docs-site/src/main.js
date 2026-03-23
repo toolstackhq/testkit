@@ -43,24 +43,24 @@ const docsLinks = [
   {
     title: 'Run locally',
     description: 'Install, start the demo apps, and run the generated project.',
-    href: 'https://github.com/toolstackhq/qa-patterns/blob/main/docs/local-development.md'
+    href: 'https://github.com/toolstackhq/testkit/blob/main/docs/local-development.md'
   },
   {
     title: 'Architecture',
     description:
       'See how templates, demo apps, MCP, and shared logic fit together.',
-    href: 'https://github.com/toolstackhq/qa-patterns/blob/main/docs/architecture.md'
+    href: 'https://github.com/toolstackhq/testkit/blob/main/docs/architecture.md'
   },
   {
     title: 'Agent layer',
     description:
       'Understand where AI context files help and where orchestration starts.',
-    href: 'https://github.com/toolstackhq/qa-patterns/blob/main/docs/agent-layer.md'
+    href: 'https://github.com/toolstackhq/testkit/blob/main/docs/agent-layer.md'
   },
   {
     title: 'Extend the repo',
     description: 'Add templates, evolve config, and keep scaffolds consistent.',
-    href: 'https://github.com/toolstackhq/qa-patterns/blob/main/docs/extending-the-repository.md'
+    href: 'https://github.com/toolstackhq/testkit/blob/main/docs/extending-the-repository.md'
   }
 ];
 
@@ -68,14 +68,13 @@ const quickStartPanes = {
   cli: {
     title: 'Use the npm CLI',
     lead: 'Generate a project, install dependencies, run tests, then start customizing.',
-    install: 'npm install -g @toolstackhq/create-qa-patterns@latest',
-    interactive: 'npx @toolstackhq/create-qa-patterns',
+    install: 'npm install -g @toolstackhq/create-testkit@latest',
+    interactive: 'npx @toolstackhq/create-testkit',
     templates: {
       playwright:
-        'npx @toolstackhq/create-qa-patterns playwright-template my-project',
-      cypress:
-        'npx @toolstackhq/create-qa-patterns cypress-template my-project',
-      wdio: 'npx @toolstackhq/create-qa-patterns wdio-template my-project'
+        'npx @toolstackhq/create-testkit playwright-template my-project',
+      cypress: 'npx @toolstackhq/create-testkit cypress-template my-project',
+      wdio: 'npx @toolstackhq/create-testkit wdio-template my-project'
     }
   },
   mcp: {
@@ -84,9 +83,9 @@ const quickStartPanes = {
     commands: [
       '{',
       '  "mcpServers": {',
-      '    "qa-patterns": {',
+      '    "testkit": {',
       '      "command": "npx",',
-      '      "args": ["-y", "@toolstackhq/qa-patterns-mcp"]',
+      '      "args": ["-y", "@toolstackhq/testkit-mcp"]',
       '    }',
       '  }',
       '}'
@@ -97,13 +96,13 @@ const quickStartPanes = {
 document.querySelector('#app').innerHTML = `
   <div class="page">
     <header class="topbar">
-      <a href="#" class="brand">qa-patterns</a>
+      <a href="#" class="brand">testkit</a>
       <nav class="topnav">
         <a href="#templates">Templates</a>
         <a href="#start">Get started</a>
         <a href="#agents">Agents</a>
         <a href="#docs">Docs</a>
-        <a href="https://github.com/toolstackhq/qa-patterns" target="_blank" rel="noreferrer">GitHub</a>
+        <a href="https://github.com/toolstackhq/testkit" target="_blank" rel="noreferrer">GitHub</a>
       </nav>
     </header>
 
@@ -113,7 +112,7 @@ document.querySelector('#app').innerHTML = `
           <p class="eyebrow">Project scaffolding for QA frameworks</p>
           <h1>Generate a clean test framework. Keep the AI help without the chaos.</h1>
           <p class="lede">
-            <code>qa-patterns</code> scaffolds ready-to-run <code>Playwright</code>, <code>Cypress</code>, and
+            <code>testkit</code> scaffolds ready-to-run <code>Playwright</code>, <code>Cypress</code>, and
             <code>WebdriverIO</code> projects with demo apps, reports, safe upgrades, and AI context files that teach
             coding agents how to work inside the framework.
           </p>
@@ -125,9 +124,9 @@ document.querySelector('#app').innerHTML = `
         <aside class="hero__panel">
           <p class="panel__label">Quick start</p>
           <p class="hero__subheading">Install</p>
-          <pre class="code-pill"><code>npm install -g @toolstackhq/create-qa-patterns@latest</code></pre>
+          <pre class="code-pill"><code>npm install -g @toolstackhq/create-testkit@latest</code></pre>
           <p class="hero__subheading">Run</p>
-          <pre class="code-pill"><code>npx @toolstackhq/create-qa-patterns</code></pre>
+          <pre class="code-pill"><code>npx @toolstackhq/create-testkit</code></pre>
           <ul class="hero__meta">
             <li>3 tested templates</li>
             <li>Bundled local demo apps</li>
@@ -232,7 +231,7 @@ document.querySelector('#app').innerHTML = `
             <span></span><span></span><span></span>
           </div>
           <div class="terminal-card__body" data-termynal>
-            <span data-ty="input">npx @toolstackhq/create-qa-patterns</span>
+            <span data-ty="input">npx @toolstackhq/create-testkit</span>
             <span data-ty>? Select a template › Playwright Template</span>
             <span data-ty>? Target directory (.) › my-framework</span>
             <span data-ty>? Run npm install now? › Yes</span>
@@ -305,11 +304,11 @@ Run lint, typecheck, and tests after the change.</code></pre>
         <div class="upgrade-grid">
           <article class="code-card">
             <p class="panel__label">Check</p>
-            <pre><code>npx -y @toolstackhq/create-qa-patterns upgrade check .</code></pre>
+            <pre><code>npx -y @toolstackhq/create-testkit upgrade check .</code></pre>
           </article>
           <article class="code-card">
             <p class="panel__label">Apply safe updates</p>
-            <pre><code>npx -y @toolstackhq/create-qa-patterns upgrade apply --safe .</code></pre>
+            <pre><code>npx -y @toolstackhq/create-testkit upgrade apply --safe .</code></pre>
           </article>
         </div>
       </section>

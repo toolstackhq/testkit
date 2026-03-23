@@ -23,7 +23,7 @@ function initializeGitRepository(targetDirectory) {
 function scaffoldNoApiProject(templateId) {
   const template = TEMPLATE_CATALOG.find((entry) => entry.id === templateId);
   const targetDirectory = fs.mkdtempSync(
-    path.join(os.tmpdir(), `qa-patterns-${templateId}-`)
+    path.join(os.tmpdir(), `testkit-${templateId}-`)
   );
 
   return scaffoldProject(

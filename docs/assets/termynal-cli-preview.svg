@@ -1,6 +1,6 @@
 <svg width="1200" height="780" viewBox="0 0 1200 780" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
-  <title id="title">qa-patterns CLI walkthrough preview</title>
-  <desc id="desc">Terminal-style preview of the qa-patterns scaffolding flow for Playwright.</desc>
+  <title id="title">testkit CLI walkthrough preview</title>
+  <desc id="desc">Terminal-style preview of the testkit scaffolding flow for Playwright.</desc>
   <rect width="1200" height="780" fill="#F6EFE3"/>
   <rect x="90" y="86" width="1020" height="608" rx="34" fill="#131110"/>
   <rect x="90" y="86" width="1020" height="608" rx="34" stroke="rgba(255,255,255,0.08)" stroke-width="2"/>
@@ -8,10 +8,10 @@
   <circle cx="136" cy="117" r="9" fill="#EF6C5B"/>
   <circle cx="166" cy="117" r="9" fill="#F4BF4F"/>
   <circle cx="196" cy="117" r="9" fill="#61C554"/>
-  <text x="236" y="124" fill="#B8AEA2" font-family="IBM Plex Sans, Segoe UI, sans-serif" font-size="22">qa-patterns CLI walkthrough</text>
+  <text x="236" y="124" fill="#B8AEA2" font-family="IBM Plex Sans, Segoe UI, sans-serif" font-size="22">testkit CLI walkthrough</text>
 
   <text x="132" y="192" fill="#70E1D4" font-family="IBM Plex Mono, monospace" font-size="26">$</text>
-  <text x="160" y="192" fill="#FFFFFF" font-family="IBM Plex Mono, monospace" font-size="26">npx @toolstackhq/create-qa-patterns</text>
+  <text x="160" y="192" fill="#FFFFFF" font-family="IBM Plex Mono, monospace" font-size="26">npx @toolstackhq/create-testkit</text>
 
   <text x="132" y="246" fill="#F8F2E8" font-family="IBM Plex Mono, monospace" font-size="24">? Select a template › Playwright Template</text>
   <text x="132" y="290" fill="#F8F2E8" font-family="IBM Plex Mono, monospace" font-size="24">? Target directory (.) › my-framework</text>

@@ -1,5 +1,5 @@
 export default {
-  name: 'qa-patterns Cypress Template',
+  name: 'testkit Cypress Template',
   plugins: {
     awesome: {
       options: {

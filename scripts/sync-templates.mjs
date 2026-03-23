@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Copies canonical source files from packages/qa-patterns-core into both
+ * Copies canonical source files from packages/testkit-core into both
  * framework templates and the CLI tool's bundled template copies.
  *
  * Playwright receives files as-is. Cypress receives files with targeted
@@ -17,7 +17,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const CORE = path.join(ROOT, 'packages', 'qa-patterns-core', 'src');
+const CORE = path.join(ROOT, 'packages', 'testkit-core', 'src');
 const TEST_APPS = path.join(ROOT, 'test-apps');
 const CHECK_MODE = process.argv.includes('--check');
 
@@ -210,13 +210,7 @@ function syncFile(source, target) {
 function syncCliTemplates() {
   for (const name of TEMPLATE_NAMES) {
     const src = path.join(ROOT, 'templates', name);
-    const dest = path.join(
-      ROOT,
-      'tools',
-      'create-qa-patterns',
-      'templates',
-      name
-    );
+    const dest = path.join(ROOT, 'tools', 'create-testkit', 'templates', name);
 
     if (!fs.existsSync(src)) {
       console.error(`WARNING: template source not found: ${src}`);
@@ -364,7 +358,7 @@ function checkCliTemplateSync(src, dest, name) {
   if (!fs.existsSync(dest)) {
     driftCount += 1;
     console.error(
-      `DRIFT: CLI template missing: tools/create-qa-patterns/templates/${name}`
+      `DRIFT: CLI template missing: tools/create-testkit/templates/${name}`
     );
     return;
   }
@@ -381,7 +375,7 @@ function checkCliTemplateSync(src, dest, name) {
     if (!destSet.has(file)) {
       driftCount += 1;
       console.error(
-        `DRIFT: CLI template missing file: tools/create-qa-patterns/templates/${name}/${file}`
+        `DRIFT: CLI template missing file: tools/create-testkit/templates/${name}/${file}`
       );
       continue;
     }
@@ -391,7 +385,7 @@ function checkCliTemplateSync(src, dest, name) {
     if (srcContent !== destContent) {
       driftCount += 1;
       console.error(
-        `DRIFT: CLI template differs: tools/create-qa-patterns/templates/${name}/${file}`
+        `DRIFT: CLI template differs: tools/create-testkit/templates/${name}/${file}`
       );
     }
   }
@@ -400,7 +394,7 @@ function checkCliTemplateSync(src, dest, name) {
     if (!srcSet.has(file)) {
       driftCount += 1;
       console.error(
-        `DRIFT: CLI template has extra file: tools/create-qa-patterns/templates/${name}/${file}`
+        `DRIFT: CLI template has extra file: tools/create-testkit/templates/${name}/${file}`
       );
     }
   }
@@ -433,7 +427,7 @@ function collectFiles(dir, prefix = '') {
 console.log(
   CHECK_MODE
     ? 'Checking template sync...'
-    : 'Syncing templates from qa-patterns-core...'
+    : 'Syncing templates from testkit-core...'
 );
 console.log('');
 

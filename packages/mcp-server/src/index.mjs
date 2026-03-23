@@ -13,16 +13,16 @@ import * as z from 'zod/v4';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = path.resolve(__dirname, '../../..');
-const DEBUG = process.env.QA_PATTERNS_MCP_DEBUG === 'true';
+const DEBUG = process.env.TESTKIT_MCP_DEBUG === 'true';
 const require = createRequire(import.meta.url);
 
 function resolveCliEntry() {
   try {
     const cliPackageJson =
-      require.resolve('@toolstackhq/create-qa-patterns/package.json');
+      require.resolve('@toolstackhq/create-testkit/package.json');
     return path.join(path.dirname(cliPackageJson), 'index.js');
   } catch {
-    return path.join(REPO_ROOT, 'tools/create-qa-patterns/index.js');
+    return path.join(REPO_ROOT, 'tools/create-testkit/index.js');
   }
 }
 
@@ -266,39 +266,39 @@ function getNextSteps({ template, target_directory: targetDirectoryInput }) {
 }
 
 const server = new McpServer({
-  name: 'qa-patterns-mcp',
+  name: 'testkit-mcp',
   version: '1.0.0'
 });
 
 if (DEBUG) {
-  console.error('[qa-patterns-mcp] debug enabled');
+  console.error('[testkit-mcp] debug enabled');
   process.stdin.on('data', (chunk) => {
-    console.error('[qa-patterns-mcp] stdin', chunk.toString().trim());
+    console.error('[testkit-mcp] stdin', chunk.toString().trim());
   });
   process.on('beforeExit', (code) => {
-    console.error('[qa-patterns-mcp] beforeExit', code);
+    console.error('[testkit-mcp] beforeExit', code);
   });
   process.on('exit', (code) => {
-    console.error('[qa-patterns-mcp] exit', code);
+    console.error('[testkit-mcp] exit', code);
   });
   process.on('uncaughtException', (error) => {
-    console.error('[qa-patterns-mcp] uncaughtException', error);
+    console.error('[testkit-mcp] uncaughtException', error);
   });
   process.on('unhandledRejection', (error) => {
-    console.error('[qa-patterns-mcp] unhandledRejection', error);
+    console.error('[testkit-mcp] unhandledRejection', error);
   });
   server.server.onerror = (error) => {
-    console.error('[qa-patterns-mcp] protocol error', error);
+    console.error('[testkit-mcp] protocol error', error);
   };
   server.server.oninitialized = () => {
-    console.error('[qa-patterns-mcp] initialized');
+    console.error('[testkit-mcp] initialized');
   };
 }
 
 server.registerTool(
   'list_templates',
   {
-    description: 'List the scaffold templates exposed by qa-patterns.',
+    description: 'List the scaffold templates exposed by testkit.',
     outputSchema: {
       templates: z.array(
         z.object({
@@ -356,7 +356,7 @@ server.registerTool(
   'scaffold_template',
   {
     description:
-      'Scaffold a qa-patterns template into a target directory using the existing CLI.',
+      'Scaffold a testkit template into a target directory using the existing CLI.',
     inputSchema: {
       template: z.enum([
         'playwright-template',
@@ -445,7 +445,7 @@ async function main() {
   const transport = new StdioServerTransport();
   await server.connect(transport);
   if (DEBUG) {
-    console.error('[qa-patterns-mcp] connected');
+    console.error('[testkit-mcp] connected');
   }
   process.stdin.resume();
   const keepAlive = globalThis.setInterval(() => {}, 1 << 30);
@@ -456,6 +456,6 @@ async function main() {
 }
 
 main().catch((error) => {
-  console.error('qa-patterns MCP server failed to start:', error);
+  console.error('testkit MCP server failed to start:', error);
   process.exit(1);
 });

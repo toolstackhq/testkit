@@ -18,8 +18,8 @@ A zero-dependency REST API automation library with 56 passing tests. Features:
 ### 2. Sync Pipeline Changes (`scripts/sync-templates.mjs`)
 
 - **Removed `removeApiBaseUrl` transform** from Cypress and WDIO sync targets — all templates now receive full config with `apiBaseUrl`
-- **Added 10 SYNC_MAP entries** for REST client files — distributes `utils/api-client/` to all 3 templates from canonical source at `packages/qa-patterns-core/src/api/rest-client/`
-- The `removeApiBaseUrl` logic was **moved to CLI scaffold time** (`stripApiFeature()` in `tools/create-qa-patterns/lib/scaffold.js`) — only applied when user opts out
+- **Added 10 SYNC_MAP entries** for REST client files — distributes `utils/api-client/` to all 3 templates from canonical source at `packages/testkit-core/src/api/rest-client/`
+- The `removeApiBaseUrl` logic was **moved to CLI scaffold time** (`stripApiFeature()` in `tools/create-testkit/lib/scaffold.js`) — only applied when user opts out
 
 ### 3. Template Integration
 
@@ -51,7 +51,7 @@ A zero-dependency REST API automation library with 56 passing tests. Features:
 - `eslint.config.mjs` — added Node globals + `expect` for api-client and test files
 - `config/environments.ts` and `config/runtime-config.ts` — now include `apiBaseUrl`
 
-### 4. CLI Changes (`tools/create-qa-patterns/`)
+### 4. CLI Changes (`tools/create-testkit/`)
 
 #### New Flags
 
@@ -114,7 +114,7 @@ b4d24a9 feat: add cy.task API integration to Cypress template
 3601313 feat: add API demo server to WDIO template
 4e69191 feat: add API demo server to Cypress template
 84042b2 feat: sync REST client and apiBaseUrl to all templates
-e2bb96e feat: add REST client to qa-patterns-core canonical source
+e2bb96e feat: add REST client to testkit-core canonical source
 8f6b0eb chore: register rest-client as npm workspace
 5e99fa5 test: add 56 tests for REST client library
 a31aca6 feat: add zero-dependency REST client library
@@ -122,7 +122,7 @@ a31aca6 feat: add zero-dependency REST client library
 
 ## What's NOT Done Yet (Potential Follow-ups)
 
-1. **Metadata tracking** — `.qa-patterns.json` doesn't yet track `features: { api: true/false }`. This would help the upgrade command know whether API was included.
+1. **Metadata tracking** — `.testkit.json` doesn't yet track `features: { api: true/false }`. This would help the upgrade command know whether API was included.
 2. **CI workflow updates** — The `.github/` CI workflows may need updating to run REST client tests and handle the API demo server.
 3. **Allure integration in sample tests** — The sample API tests don't configure `logging.attacher` for Allure. Could be added as a follow-up to show masked auto-logging in action.
 4. **REST client docs** — No README or usage docs for the REST client library yet.

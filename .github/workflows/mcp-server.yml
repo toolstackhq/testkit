@@ -49,16 +49,16 @@ jobs:
       - name: Pack MCP server
         id: pack
         run: |
-          TARBALL="$(npm pack --workspace @toolstackhq/qa-patterns-mcp | tail -n 1)"
+          TARBALL="$(npm pack --workspace @toolstackhq/testkit-mcp | tail -n 1)"
           echo "tarball=$TARBALL" >> "$GITHUB_OUTPUT"
 
       - name: Install packed MCP server
-        run: npm install --prefix /tmp/qa-patterns-mcp-install "./${{ steps.pack.outputs.tarball }}"
+        run: npm install --prefix /tmp/testkit-mcp-install "./${{ steps.pack.outputs.tarball }}"
 
       - name: Validate packed MCP handshake
         working-directory: packages/mcp-server
         env:
-          QA_PATTERNS_MCP_COMMAND: /tmp/qa-patterns-mcp-install/node_modules/.bin/qa-patterns-mcp
+          QA_PATTERNS_MCP_COMMAND: /tmp/testkit-mcp-install/node_modules/.bin/testkit-mcp
           QA_PATTERNS_MCP_ARGS: '[]'
           QA_PATTERNS_MCP_CWD: /tmp
         run: npm run validate

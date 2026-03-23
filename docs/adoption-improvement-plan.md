@@ -1,4 +1,4 @@
-# Adoption Improvement Plan: qa-patterns
+# Adoption Improvement Plan: testkit
 
 **Author**: Senior Engineer Review
 **Date**: 2026-03-17
@@ -50,13 +50,13 @@ data/
 
 ### Plan
 
-**Phase 1: Create `packages/qa-patterns-core/`**
+**Phase 1: Create `packages/testkit-core/`**
 
 Add a new workspace package to the monorepo:
 
 ```
 packages/
-  qa-patterns-core/
+  testkit-core/
     src/
       config/
         runtime-config-base.ts   ← shared schema builder + loader
@@ -73,11 +73,11 @@ packages/
 
 **Phase 2: Templates consume the shared package**
 
-Each template imports from `@toolstackhq/qa-patterns-core` and extends only what's framework-specific.
+Each template imports from `@toolstackhq/testkit-core` and extends only what's framework-specific.
 
 **Phase 3: CLI bundles the core package into scaffolded output**
 
-The scaffolding tool resolves `@toolstackhq/qa-patterns-core` at generation time and copies it into the output, so scaffolded projects remain standalone with no runtime dependency on the monorepo.
+The scaffolding tool resolves `@toolstackhq/testkit-core` at generation time and copies it into the output, so scaffolded projects remain standalone with no runtime dependency on the monorepo.
 
 ### Before
 
@@ -152,7 +152,7 @@ export class SecretManager {
 
 ### After
 
-**`packages/qa-patterns-core/src/config/secret-manager.ts`** (single source of truth):
+**`packages/testkit-core/src/config/secret-manager.ts`** (single source of truth):
 
 ```ts
 export type TestEnvironment = 'dev' | 'staging' | 'prod';
@@ -192,7 +192,7 @@ export {
   SecretProvider,
   EnvSecretProvider,
   SecretManager
-} from '@toolstackhq/qa-patterns-core/config/secret-manager';
+} from '@toolstackhq/testkit-core/config/secret-manager';
 ```
 
 ### Effort estimate
@@ -341,7 +341,7 @@ Small. 1-2 hours. Add dependencies, config files, scripts, and run `prettier --w
 
 ### Problem
 
-`tools/create-qa-patterns/index.js` is a single 772-line file containing all CLI logic: argument parsing, terminal UI, prerequisite checks, filesystem operations, git initialization, post-install actions, and error recovery. There are zero tests for any of it.
+`tools/create-testkit/index.js` is a single 772-line file containing all CLI logic: argument parsing, terminal UI, prerequisite checks, filesystem operations, git initialization, post-install actions, and error recovery. There are zero tests for any of it.
 
 This is the infrastructure code that every scaffolded project depends on. A bug here means every new project starts broken.
 
@@ -372,9 +372,9 @@ index.js (772 lines)
 **Phase 1: Extract into modules**
 
 ```
-tools/create-qa-patterns/
+tools/create-testkit/
   bin/
-    create-qa-patterns.js       ← entrypoint (just calls main)
+    create-testkit.js       ← entrypoint (just calls main)
   src/
     cli.js                      ← main() orchestrator
     args.js                     ← argument parsing & resolution
@@ -435,7 +435,7 @@ test('scaffold creates a valid playwright project', () => {
   const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'qa-scaffold-'));
   const targetDir = path.join(tmpDir, 'my-project');
 
-  execSync(`node bin/create-qa-patterns.js playwright-template ${targetDir}`, {
+  execSync(`node bin/create-testkit.js playwright-template ${targetDir}`, {
     cwd: path.resolve(__dirname, '..'),
     stdio: 'pipe'
   });
@@ -466,7 +466,7 @@ test('scaffold creates a valid playwright project', () => {
 ### Before
 
 ```
-tools/create-qa-patterns/
+tools/create-testkit/
   index.js           ← 772 lines, everything in one file
   package.json
   templates/         ← bundled template copies
@@ -476,9 +476,9 @@ tools/create-qa-patterns/
 ### After
 
 ```
-tools/create-qa-patterns/
+tools/create-testkit/
   bin/
-    create-qa-patterns.js    ← 5 lines (entrypoint)
+    create-testkit.js    ← 5 lines (entrypoint)
   src/
     cli.js                   ← ~60 lines (orchestrator)
     args.js                  ← ~70 lines
@@ -506,7 +506,7 @@ Medium-large. The extraction is mechanical but the integration test needs care (
 
 ### Risks
 
-- The `bin` field in `package.json` must be updated to point to `bin/create-qa-patterns.js`
+- The `bin` field in `package.json` must be updated to point to `bin/create-testkit.js`
 - The `templates/` directory path resolution changes — must use `__dirname` relative to new file locations
 - Interactive prompts (`selectTemplateInteractively`) are hard to unit test — keep them in `prompt.js` and integration-test them via process spawning with piped stdin
 
@@ -521,7 +521,7 @@ Once a project is scaffolded, it's a fork. There's no way to pull improvements f
 ### Current flow
 
 ```
-create-qa-patterns → fs.cpSync(template, target) → done forever
+create-testkit → fs.cpSync(template, target) → done forever
                                                     ↑
                                                     no way back
 ```
@@ -532,7 +532,7 @@ Implement a lightweight `upgrade` command that shows a diff between the user's p
 
 **Phase 1: Track template origin metadata**
 
-During scaffolding, write a `.qa-patterns.json` file into the generated project:
+During scaffolding, write a `.testkit.json` file into the generated project:
 
 ```json
 {
@@ -543,28 +543,28 @@ During scaffolding, write a `.qa-patterns.json` file into the generated project:
 }
 ```
 
-**Phase 2: Add `create-qa-patterns upgrade` command**
+**Phase 2: Add `create-testkit upgrade` command**
 
 ```
-create-qa-patterns upgrade [--dry-run]
+create-testkit upgrade [--dry-run]
 ```
 
 Logic:
 
-1. Read `.qa-patterns.json` from current directory
+1. Read `.testkit.json` from current directory
 2. Resolve the matching template from the installed CLI version
 3. Generate a unified diff between the template and the current project, excluding:
    - `node_modules/`, test artifacts, `.env` files, `.git/`
-   - Files the user has explicitly marked as custom (via `.qa-patterns.json` ignore list)
+   - Files the user has explicitly marked as custom (via `.testkit.json` ignore list)
 4. Display the diff in a pager (or write to file with `--output`)
 5. With `--apply`, copy new/changed template files into the project (with backup)
 
-**Phase 3: Support `.qa-patterns-ignore`**
+**Phase 3: Support `.testkit-ignore`**
 
 Users mark files they've intentionally customized:
 
 ```
-# .qa-patterns-ignore
+# .testkit-ignore
 # These files have been customized and should not be overwritten during upgrade
 config/environments.ts
 playwright.config.ts
@@ -583,7 +583,7 @@ playwright.config.ts
 
 ```bash
 # Check what changed since you scaffolded
-create-qa-patterns upgrade --dry-run
+create-testkit upgrade --dry-run
 
 # Output:
 # Comparing playwright-template v1.0.0 (your project) → v1.2.0 (latest)
@@ -596,17 +596,17 @@ create-qa-patterns upgrade --dry-run
 #   ~ lint/architecture-plugin.cjs (new rule: no-force-click)
 #   ~ .github/workflows/playwright-tests.yml (updated Node version)
 #
-# Ignored (in .qa-patterns-ignore):
+# Ignored (in .testkit-ignore):
 #   - config/environments.ts
 #   - playwright.config.ts
 #
-# Run `create-qa-patterns upgrade --apply` to apply changes.
+# Run `create-testkit upgrade --apply` to apply changes.
 
-# Apply the upgrade (backs up changed files to .qa-patterns-backup/)
-create-qa-patterns upgrade --apply
+# Apply the upgrade (backs up changed files to .testkit-backup/)
+create-testkit upgrade --apply
 ```
 
-**New file: `.qa-patterns.json`** (written during scaffold):
+**New file: `.testkit.json`** (written during scaffold):
 
 ```json
 {
@@ -617,7 +617,7 @@ create-qa-patterns upgrade --apply
 }
 ```
 
-**New file: `.qa-patterns-ignore`** (user-maintained):
+**New file: `.testkit-ignore`** (user-maintained):
 
 ```
 # Files customized for this project — skip during upgrade
@@ -633,7 +633,7 @@ Large. This is the most complex item on the list. The diff engine, ignore handli
 
 - Users may expect full merge conflict resolution (like git) — scope this as "show diff + copy" not "three-way merge"
 - Version tracking requires the CLI version to be meaningful — must align with semver and release discipline
-- The `.qa-patterns.json` must be added retroactively to existing scaffolded projects (migration guide needed)
+- The `.testkit.json` must be added retroactively to existing scaffolded projects (migration guide needed)
 
 ---
 
@@ -844,7 +844,7 @@ scaffold-validation:
     # Scaffold a fresh project using the CLI (no monorepo context)
     - name: Scaffold project
       run: |
-        node tools/create-qa-patterns/index.js ${{ matrix.template }} /tmp/scaffolded-project
+        node tools/create-testkit/index.js ${{ matrix.template }} /tmp/scaffolded-project
 
     # Verify file structure
     - name: Verify generated files
@@ -913,7 +913,7 @@ TEMPLATE="${1:-playwright-template}"
 TARGET_DIR=$(mktemp -d)
 
 echo "Scaffolding ${TEMPLATE} into ${TARGET_DIR}..."
-node tools/create-qa-patterns/index.js "${TEMPLATE}" "${TARGET_DIR}"
+node tools/create-testkit/index.js "${TEMPLATE}" "${TARGET_DIR}"
 
 echo "Installing dependencies..."
 cd "${TARGET_DIR}"

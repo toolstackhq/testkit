@@ -57,7 +57,7 @@ function prepareScaffoldBaseline(targetDirectory) {
 
 test('analyzeUpgrade reports up-to-date state for a fresh scaffold baseline', () => {
   const targetDirectory = fs.mkdtempSync(
-    path.join(os.tmpdir(), 'qa-patterns-meta-')
+    path.join(os.tmpdir(), 'testkit-meta-')
   );
   prepareScaffoldBaseline(targetDirectory);
   writeProjectMetadata(template, targetDirectory, undefined, metadataOptions);
@@ -78,7 +78,7 @@ test('analyzeUpgrade reports up-to-date state for a fresh scaffold baseline', ()
 
 test('analyzeUpgrade reports conflicts for user-edited managed files', () => {
   const targetDirectory = fs.mkdtempSync(
-    path.join(os.tmpdir(), 'qa-patterns-meta-')
+    path.join(os.tmpdir(), 'testkit-meta-')
   );
   prepareScaffoldBaseline(targetDirectory);
   writeProjectMetadata(template, targetDirectory, undefined, metadataOptions);
@@ -108,7 +108,7 @@ test('analyzeUpgrade reports conflicts for user-edited managed files', () => {
 
 test('applySafeUpdates adopts a missing managed baseline entry', () => {
   const targetDirectory = fs.mkdtempSync(
-    path.join(os.tmpdir(), 'qa-patterns-meta-')
+    path.join(os.tmpdir(), 'testkit-meta-')
   );
   prepareScaffoldBaseline(targetDirectory);
   writeProjectMetadata(template, targetDirectory, undefined, metadataOptions);

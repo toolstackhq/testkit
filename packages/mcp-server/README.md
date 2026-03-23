@@ -1,13 +1,13 @@
 # MCP Server
 
-This package exposes `qa-patterns` as a small MCP server.
+This package exposes `testkit` as a small MCP server.
 
 It is designed for LLM clients that should scaffold and validate projects
 without regenerating boilerplate in the prompt.
 
 Package:
 
-- `@toolstackhq/qa-patterns-mcp`
+- `@toolstackhq/testkit-mcp`
 
 Supported templates:
 
@@ -22,9 +22,9 @@ Recommended MCP config:
 ```json
 {
   "mcpServers": {
-    "qa-patterns": {
+    "testkit": {
       "command": "npx",
-      "args": ["-y", "@toolstackhq/qa-patterns-mcp"]
+      "args": ["-y", "@toolstackhq/testkit-mcp"]
     }
   }
 }

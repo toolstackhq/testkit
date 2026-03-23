@@ -30,13 +30,13 @@ jobs:
       - name: Pack CLI
         id: pack
         run: |
-          tarball_name="$(npm pack --workspace @toolstackhq/create-qa-patterns | tail -n 1)"
+          tarball_name="$(npm pack --workspace @toolstackhq/create-testkit | tail -n 1)"
           echo "tarball-name=${tarball_name}" >> "$GITHUB_OUTPUT"
 
       - name: Upload packed CLI
         uses: actions/upload-artifact@v4
         with:
-          name: packed-create-qa-patterns
+          name: packed-create-testkit
           path: ${{ steps.pack.outputs.tarball-name }}
 
   validate-generated-playwright:
@@ -51,17 +51,17 @@ jobs:
       - name: Download packed CLI
         uses: actions/download-artifact@v4
         with:
-          name: packed-create-qa-patterns
-          path: /tmp/packed-create-qa-patterns
+          name: packed-create-testkit
+          path: /tmp/packed-create-testkit
 
       - name: Install packed CLI
-        run: npm install -g /tmp/packed-create-qa-patterns/${{ needs.pack-cli.outputs.tarball-name }}
+        run: npm install -g /tmp/packed-create-testkit/${{ needs.pack-cli.outputs.tarball-name }}
 
       - name: Scaffold generated Playwright project
         run: |
           target_dir="/tmp/generated-playwright-template"
           rm -rf "$target_dir"
-          create-qa-patterns playwright-template "$target_dir" --yes --no-install --no-setup --no-test
+          create-testkit playwright-template "$target_dir" --yes --no-install --no-setup --no-test
 
       - name: Verify scaffolded Playwright files
         run: |
@@ -119,17 +119,17 @@ jobs:
       - name: Download packed CLI
         uses: actions/download-artifact@v4
         with:
-          name: packed-create-qa-patterns
-          path: /tmp/packed-create-qa-patterns
+          name: packed-create-testkit
+          path: /tmp/packed-create-testkit
 
       - name: Install packed CLI
-        run: npm install -g /tmp/packed-create-qa-patterns/${{ needs.pack-cli.outputs.tarball-name }}
+        run: npm install -g /tmp/packed-create-testkit/${{ needs.pack-cli.outputs.tarball-name }}
 
       - name: Scaffold generated Cypress project
         run: |
           target_dir="/tmp/generated-cypress-template"
           rm -rf "$target_dir"
-          create-qa-patterns cypress-template "$target_dir" --yes --no-install --no-setup --no-test
+          create-testkit cypress-template "$target_dir" --yes --no-install --no-setup --no-test
 
       - name: Verify scaffolded Cypress files
         run: |
@@ -187,17 +187,17 @@ jobs:
       - name: Download packed CLI
         uses: actions/download-artifact@v4
         with:
-          name: packed-create-qa-patterns
-          path: /tmp/packed-create-qa-patterns
+          name: packed-create-testkit
+          path: /tmp/packed-create-testkit
 
       - name: Install packed CLI
-        run: npm install -g /tmp/packed-create-qa-patterns/${{ needs.pack-cli.outputs.tarball-name }}
+        run: npm install -g /tmp/packed-create-testkit/${{ needs.pack-cli.outputs.tarball-name }}
 
       - name: Scaffold generated WebdriverIO project
         run: |
           target_dir="/tmp/generated-wdio-template"
           rm -rf "$target_dir"
-          create-qa-patterns wdio-template "$target_dir" --yes --no-install --no-setup --no-test
+          create-testkit wdio-template "$target_dir" --yes --no-install --no-setup --no-test
 
       - name: Verify scaffolded WebdriverIO files
         run: |
@@ -252,17 +252,17 @@ jobs:
       - name: Download packed CLI
         uses: actions/download-artifact@v4
         with:
-          name: packed-create-qa-patterns
-          path: /tmp/packed-create-qa-patterns
+          name: packed-create-testkit
+          path: /tmp/packed-create-testkit
 
       - name: Install packed CLI
-        run: npm install -g /tmp/packed-create-qa-patterns/${{ needs.pack-cli.outputs.tarball-name }}
+        run: npm install -g /tmp/packed-create-testkit/${{ needs.pack-cli.outputs.tarball-name }}
 
       - name: Scaffold generated Cypress project with default yes flow
         run: |
           target_dir="/tmp/generated-cypress-template-happy-path"
           rm -rf "$target_dir"
-          create-qa-patterns cypress-template "$target_dir" --yes
+          create-testkit cypress-template "$target_dir" --yes
 
       - name: Verify happy-path generated Cypress project
         run: |

@@ -31,12 +31,12 @@ jobs:
         run: npm ci
 
       - name: Run CLI package verification
-        run: npm run test --workspace @toolstackhq/create-qa-patterns
+        run: npm run test --workspace @toolstackhq/create-testkit
 
       - name: Validate tag version matches CLI package.json
         if: startsWith(github.ref, 'refs/tags/v')
         run: |
-          PACKAGE_VERSION=$(node -p "require('./tools/create-qa-patterns/package.json').version")
+          PACKAGE_VERSION=$(node -p "require('./tools/create-testkit/package.json').version")
           TAG_VERSION="${GITHUB_REF_NAME#v}"
           if [ "$PACKAGE_VERSION" != "$TAG_VERSION" ]; then
             echo "Tag version ($TAG_VERSION) does not match CLI package.json ($PACKAGE_VERSION)"
@@ -44,11 +44,11 @@ jobs:
           fi
 
       - name: Pack npm artifact
-        run: npm pack --workspace @toolstackhq/create-qa-patterns
+        run: npm pack --workspace @toolstackhq/create-testkit
 
       - name: Publish to npm
         if: startsWith(github.ref, 'refs/tags/v')
-        run: npm publish --workspace @toolstackhq/create-qa-patterns --access public --provenance
+        run: npm publish --workspace @toolstackhq/create-testkit --access public --provenance
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
@@ -58,7 +58,7 @@ jobs:
         with:
           tag_name: ${{ github.ref_name }}
           body: |
-            qa-patterns CLI release ${{ github.ref_name }}.
+            testkit CLI release ${{ github.ref_name }}.
           files: |
             *.tgz
 
@@ -96,10 +96,10 @@ jobs:
           fi
 
       - name: Pack MCP npm artifact
-        run: npm pack --workspace @toolstackhq/qa-patterns-mcp
+        run: npm pack --workspace @toolstackhq/testkit-mcp
 
       - name: Publish MCP to npm
         if: startsWith(github.ref, 'refs/tags/v')
-        run: npm publish --workspace @toolstackhq/qa-patterns-mcp --access public --provenance
+        run: npm publish --workspace @toolstackhq/testkit-mcp --access public --provenance
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

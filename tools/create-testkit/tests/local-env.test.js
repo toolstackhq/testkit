@@ -50,7 +50,7 @@ test('renderLocalEnv excludes api base url when withApi is false', () => {
 
 test('writeGeneratedLocalEnv creates .env only once', () => {
   const targetDirectory = fs.mkdtempSync(
-    path.join(os.tmpdir(), 'qa-patterns-env-')
+    path.join(os.tmpdir(), 'testkit-env-')
   );
   const credentials = {
     username: 'first-user',

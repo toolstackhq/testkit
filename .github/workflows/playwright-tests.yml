@@ -108,7 +108,7 @@ jobs:
           mkdir -p templates/playwright-template/reports templates/playwright-template/test-results templates/playwright-template/allure-results
 
       - name: Build Playwright template Docker image
-        run: docker build -t qa-patterns-playwright-template:ci -f templates/playwright-template/docker/Dockerfile templates/playwright-template
+        run: docker build -t testkit-playwright-template:ci -f templates/playwright-template/docker/Dockerfile templates/playwright-template
 
       - name: Run Playwright template inside Docker
         run: |
@@ -125,7 +125,7 @@ jobs:
             -v "${GITHUB_WORKSPACE}/templates/playwright-template/reports:/workspace/reports" \
             -v "${GITHUB_WORKSPACE}/templates/playwright-template/allure-results:/workspace/allure-results" \
             -v "${GITHUB_WORKSPACE}/templates/playwright-template/test-results:/workspace/test-results" \
-            qa-patterns-playwright-template:ci
+            testkit-playwright-template:ci
 
       - name: Generate Allure report
         if: always()

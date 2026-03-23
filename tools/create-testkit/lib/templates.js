@@ -24,7 +24,7 @@ function toPackageName(targetDirectory, template) {
     .replace(/^-+|-+$/g, '')
     .replace(/-{2,}/g, '-');
 
-  return normalized || template.defaultPackageName || 'qa-patterns-template';
+  return normalized || template.defaultPackageName || 'testkit-template';
 }
 
 function getTemplateDirectory(rootDirectory, templateId) {

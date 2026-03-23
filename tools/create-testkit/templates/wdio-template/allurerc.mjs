@@ -1,5 +1,5 @@
 export default {
-  name: 'qa-patterns Playwright Template',
+  name: 'testkit WebdriverIO Template',
   plugins: {
     awesome: {
       options: {

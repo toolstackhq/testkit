@@ -74,7 +74,7 @@ function resolveNonInteractiveArgs(args, options) {
   if (templateName) {
     if (args.length > 1) {
       throw new Error(
-        'Too many arguments. Run `create-qa-patterns --help` for usage.'
+        'Too many arguments. Run `create-testkit --help` for usage.'
       );
     }
 
@@ -135,9 +135,7 @@ function resolveNonInteractiveArgs(args, options) {
     };
   }
 
-  throw new Error(
-    'Too many arguments. Run `create-qa-patterns --help` for usage.'
-  );
+  throw new Error('Too many arguments. Run `create-testkit --help` for usage.');
 }
 
 module.exports = {

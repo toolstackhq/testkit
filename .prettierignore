@@ -8,6 +8,6 @@ templates/**/allure-results
 templates/**/reports
 templates/**/test-results
 test-results
-tools/create-qa-patterns/templates/**/allure-results
-tools/create-qa-patterns/templates/**/reports
-tools/create-qa-patterns/templates/**/test-results
+tools/create-testkit/templates/**/allure-results
+tools/create-testkit/templates/**/reports
+tools/create-testkit/templates/**/test-results

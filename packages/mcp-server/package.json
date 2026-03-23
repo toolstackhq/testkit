@@ -1,16 +1,16 @@
 {
-  "name": "@toolstackhq/qa-patterns-mcp",
+  "name": "@toolstackhq/testkit-mcp",
   "version": "1.0.18",
   "type": "module",
-  "description": "MCP server for scaffolding and validating qa-patterns templates.",
+  "description": "MCP server for scaffolding and validating testkit templates.",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/toolstackhq/qa-patterns.git"
+    "url": "git+https://github.com/toolstackhq/testkit.git"
   },
-  "homepage": "https://github.com/toolstackhq/qa-patterns",
+  "homepage": "https://github.com/toolstackhq/testkit",
   "bugs": {
-    "url": "https://github.com/toolstackhq/qa-patterns/issues"
+    "url": "https://github.com/toolstackhq/testkit/issues"
   },
   "publishConfig": {
     "access": "public"
@@ -22,14 +22,14 @@
     "LICENSE"
   ],
   "bin": {
-    "qa-patterns-mcp": "./src/index.mjs"
+    "testkit-mcp": "./src/index.mjs"
   },
   "scripts": {
     "start": "node ./src/index.mjs",
     "validate": "node ./scripts/validate-mcp-server.mjs"
   },
   "dependencies": {
-    "@toolstackhq/create-qa-patterns": "1.0.18",
+    "@toolstackhq/create-testkit": "1.0.18",
     "@modelcontextprotocol/sdk": "^1.27.1",
     "zod": "^3.25.76"
   }

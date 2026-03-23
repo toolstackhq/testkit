@@ -1,6 +1,6 @@
 # Agent Layer
 
-`qa-patterns` already gives generated projects two things that matter for LLMs:
+`testkit` already gives generated projects two things that matter for LLMs:
 
 - `AI_CONTEXT.md`: the framework rules in plain markdown
 - `AGENTS.md`: a thin pointer for tools that look for agent instructions
@@ -25,7 +25,7 @@ Example:
 
 That is more useful than vague "multi-agent" talk.
 
-## Where an agent layer fits in qa-patterns
+## Where an agent layer fits in testkit
 
 The generated templates should stay simple. They should not ship with a heavy agent runtime by default.
 
@@ -140,7 +140,7 @@ Example:
 
 The files and rules the agent needs before it can make good changes.
 
-For `qa-patterns`, a context pack should usually include:
+For `testkit`, a context pack should usually include:
 
 - `AI_CONTEXT.md`
 - `AGENTS.md`
@@ -194,7 +194,7 @@ For test automation, this is important because an LLM can make a test pass in th
 
 The review gate is what keeps the agent useful instead of dangerous.
 
-## What qa-patterns should do next
+## What testkit should do next
 
 The practical next step is not a big multi-agent runtime. It is a small, disciplined agent workflow.
 
@@ -242,7 +242,7 @@ Those things look impressive in demos and age badly in real teams.
 
 ## Bottom line
 
-For `qa-patterns`, the right agent strategy is:
+For `testkit`, the right agent strategy is:
 
 - deterministic scaffolding through the CLI or MCP
 - framework rules shipped inside generated projects

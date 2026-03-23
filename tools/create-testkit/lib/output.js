@@ -75,15 +75,15 @@ function printHelp(templates, colors, defaultTemplate) {
     )
     .join('\n');
 
-  process.stdout.write(`${colors.bold('create-qa-patterns')}
+  process.stdout.write(`${colors.bold('create-testkit')}
 
 Usage:
-  create-qa-patterns
-  create-qa-patterns <target-directory>
-  create-qa-patterns <template> [target-directory]
-  create-qa-patterns --template <template> [target-directory]
-  create-qa-patterns upgrade check [target-directory]
-  create-qa-patterns upgrade apply --safe [target-directory]
+  create-testkit
+  create-testkit <target-directory>
+  create-testkit <template> [target-directory]
+  create-testkit --template <template> [target-directory]
+  create-testkit upgrade check [target-directory]
+  create-testkit upgrade apply --safe [target-directory]
 
 Options:
   --yes          Accept all post-generate prompts

@@ -1,6 +1,6 @@
 const DEFAULT_TEMPLATE = 'playwright-template';
 const CLI_PACKAGE_VERSION = require('../package.json').version;
-const METADATA_FILENAME = '.qa-patterns.json';
+const METADATA_FILENAME = '.testkit.json';
 const MIN_NODE_VERSION = {
   major: 18,
   minor: 18,

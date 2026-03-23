@@ -11,29 +11,32 @@ const EXPECTED_TOOLS = [
   'validate_project',
   'get_next_steps'
 ];
+let capturedStderr = '';
 
 async function main() {
   const client = new Client({
-    name: 'qa-patterns-mcp-validator',
+    name: 'testkit-mcp-validator',
     version: '1.0.0'
   });
 
-  const command = process.env.QA_PATTERNS_MCP_COMMAND || process.execPath;
-  const args = process.env.QA_PATTERNS_MCP_ARGS
-    ? JSON.parse(process.env.QA_PATTERNS_MCP_ARGS)
+  const command = process.env.TESTKIT_MCP_COMMAND || process.execPath;
+  const args = process.env.TESTKIT_MCP_ARGS
+    ? JSON.parse(process.env.TESTKIT_MCP_ARGS)
     : [path.resolve('src/index.mjs')];
-  const cwd = process.env.QA_PATTERNS_MCP_CWD || process.cwd();
+  const cwd = process.env.TESTKIT_MCP_CWD || process.cwd();
 
   const transport = new StdioClientTransport({
     command,
     args,
     cwd,
+    env: process.env.TESTKIT_MCP_DEBUG
+      ? { TESTKIT_MCP_DEBUG: process.env.TESTKIT_MCP_DEBUG }
+      : undefined,
     stderr: 'pipe'
   });
 
-  let stderr = '';
   transport.stderr?.on('data', (chunk) => {
-    stderr += chunk.toString();
+    capturedStderr += chunk.toString();
   });
 
   try {
@@ -53,7 +56,7 @@ async function main() {
         {
           success: true,
           tools: toolNames,
-          stderr: stderr.trim()
+          stderr: capturedStderr.trim()
         },
         null,
         2
@@ -69,7 +72,8 @@ main().catch((error) => {
     JSON.stringify(
       {
         success: false,
-        error: error instanceof Error ? error.message : String(error)
+        error: error instanceof Error ? error.message : String(error),
+        stderr: capturedStderr.trim()
       },
       null,
       2

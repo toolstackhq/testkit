@@ -220,18 +220,18 @@ Recommended rules:
 
 ## Template upgrades
 
-This project includes a `.qa-patterns.json` metadata file so future CLI versions can compare the current project against the managed template baseline.
+This project includes a `.testkit.json` metadata file so future CLI versions can compare the current project against the managed template baseline.
 
 Check for available safe updates:
 
 ```bash
-npx -y @toolstackhq/create-qa-patterns upgrade check .
+npx -y @toolstackhq/create-testkit upgrade check .
 ```
 
 Apply only safe managed-file updates:
 
 ```bash
-npx -y @toolstackhq/create-qa-patterns upgrade apply --safe .
+npx -y @toolstackhq/create-testkit upgrade apply --safe .
 ```
 
 The upgrade flow is conservative. It updates framework infrastructure such as config, scripts, workflows, and package metadata when those files are still unchanged from the generated baseline. If you changed a managed file yourself, the CLI reports a conflict instead of overwriting it.
