@@ -32,3 +32,33 @@ jobs:
       - name: Validate MCP stdio handshake
         working-directory: packages/mcp-server
         run: npm run validate
+
+  mcp-server-packed:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install workspace dependencies
+        run: npm ci
+
+      - name: Pack MCP server
+        id: pack
+        run: |
+          TARBALL="$(npm pack --workspace @toolstackhq/qa-patterns-mcp | tail -n 1)"
+          echo "tarball=$TARBALL" >> "$GITHUB_OUTPUT"
+
+      - name: Install packed MCP server
+        run: npm install --prefix /tmp/qa-patterns-mcp-install "./${{ steps.pack.outputs.tarball }}"
+
+      - name: Validate packed MCP handshake
+        working-directory: packages/mcp-server
+        env:
+          QA_PATTERNS_MCP_COMMAND: /tmp/qa-patterns-mcp-install/node_modules/.bin/qa-patterns-mcp
+          QA_PATTERNS_MCP_ARGS: '[]'
+          QA_PATTERNS_MCP_CWD: /tmp
+        run: npm run validate

@@ -11,6 +11,6 @@ Use these docs in this order:
 - [Reporting](./reporting.md): Playwright HTML, Allure, logs, traces, screenshots, and videos
 - [CI and quality checks](./ci-and-quality.md): GitHub Actions, Docker validation, linting, type checking, and the scheduled dependency watcher
 - [Security and secrets](./security.md): `.env`, `TEST_ENV`, secret resolution, and what is not built in
-- [MCP server package](../packages/mcp-server/README.md): local package usage and the available tools
+- [MCP server package](../packages/mcp-server/README.md): published MCP package usage, local development, and available tools
 
 If you only want to get running quickly, start with [Run locally](./local-development.md).

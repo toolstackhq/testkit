@@ -22,7 +22,7 @@
     "lint": "npm run lint --workspace @toolstackhq/playwright-template",
     "typecheck": "npm run typecheck --workspace @toolstackhq/playwright-template",
     "cli": "npm run start --workspace @toolstackhq/create-qa-patterns",
-    "mcp:start": "npm run start --workspace @toolstackhq/mcp-server",
+    "mcp:start": "npm run start --workspace @toolstackhq/qa-patterns-mcp",
     "docs:dev": "npm run dev --workspace @toolstackhq/docs-site",
     "docs:build": "npm run build --workspace @toolstackhq/docs-site",
     "format": "prettier --write . --ignore-unknown",

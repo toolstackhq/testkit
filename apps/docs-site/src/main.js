@@ -85,11 +85,8 @@ const quickStartPanes = {
       '{',
       '  "mcpServers": {',
       '    "qa-patterns": {',
-      '      "command": "/absolute/path/to/node",',
-      '      "args": [',
-      '        "/absolute/path/to/qa-patterns/packages/mcp-server/src/index.mjs"',
-      '      ],',
-      '      "cwd": "/absolute/path/to/qa-patterns"',
+      '      "command": "npx",',
+      '      "args": ["-y", "@toolstackhq/qa-patterns-mcp"]',
       '    }',
       '  }',
       '}'

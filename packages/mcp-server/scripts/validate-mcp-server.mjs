@@ -18,10 +18,16 @@ async function main() {
     version: '1.0.0'
   });
 
+  const command = process.env.QA_PATTERNS_MCP_COMMAND || process.execPath;
+  const args = process.env.QA_PATTERNS_MCP_ARGS
+    ? JSON.parse(process.env.QA_PATTERNS_MCP_ARGS)
+    : [path.resolve('src/index.mjs')];
+  const cwd = process.env.QA_PATTERNS_MCP_CWD || process.cwd();
+
   const transport = new StdioClientTransport({
-    command: process.execPath,
-    args: [path.resolve('src/index.mjs')],
-    cwd: process.cwd(),
+    command,
+    args,
+    cwd,
     stderr: 'pipe'
   });
 

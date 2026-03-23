@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
 import { spawn } from 'node:child_process';
+import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
@@ -12,8 +13,20 @@ import * as z from 'zod/v4';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = path.resolve(__dirname, '../../..');
-const CLI_ENTRY = path.join(REPO_ROOT, 'tools/create-qa-patterns/index.js');
 const DEBUG = process.env.QA_PATTERNS_MCP_DEBUG === 'true';
+const require = createRequire(import.meta.url);
+
+function resolveCliEntry() {
+  try {
+    const cliPackageJson =
+      require.resolve('@toolstackhq/create-qa-patterns/package.json');
+    return path.join(path.dirname(cliPackageJson), 'index.js');
+  } catch {
+    return path.join(REPO_ROOT, 'tools/create-qa-patterns/index.js');
+  }
+}
+
+const CLI_ENTRY = resolveCliEntry();
 
 const TEMPLATE_DEFINITIONS = {
   'playwright-template': {
@@ -435,6 +448,11 @@ async function main() {
     console.error('[qa-patterns-mcp] connected');
   }
   process.stdin.resume();
+  const keepAlive = globalThis.setInterval(() => {}, 1 << 30);
+  await new Promise((resolve) => {
+    process.stdin.once('end', resolve);
+  });
+  globalThis.clearInterval(keepAlive);
 }
 
 main().catch((error) => {

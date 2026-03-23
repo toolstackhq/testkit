@@ -109,17 +109,12 @@ Add this to your Codex MCP config:
 {
   "mcpServers": {
     "qa-patterns": {
-      "command": "/absolute/path/to/node",
-      "args": [
-        "/absolute/path/to/qa-patterns/packages/mcp-server/src/index.mjs"
-      ],
-      "cwd": "/absolute/path/to/qa-patterns"
+      "command": "npx",
+      "args": ["-y", "@toolstackhq/qa-patterns-mcp"]
     }
   }
 }
 ```
-
-If you use `nvm`, get the Node binary path with `nvm which 24`.
 
 Prompt example:
 
@@ -138,17 +133,12 @@ Anthropic documents Claude Code MCP servers in a project `.mcp.json` file. Refer
 {
   "mcpServers": {
     "qa-patterns": {
-      "command": "/absolute/path/to/node",
-      "args": [
-        "/absolute/path/to/qa-patterns/packages/mcp-server/src/index.mjs"
-      ],
-      "cwd": "/absolute/path/to/qa-patterns"
+      "command": "npx",
+      "args": ["-y", "@toolstackhq/qa-patterns-mcp"]
     }
   }
 }
 ```
-
-If you use `nvm`, get the Node binary path with `nvm which 24`.
 
 Prompt example:
 

@@ -1,9 +1,26 @@
 {
-  "name": "@toolstackhq/mcp-server",
-  "version": "1.0.0",
-  "private": true,
+  "name": "@toolstackhq/qa-patterns-mcp",
+  "version": "1.0.17",
   "type": "module",
   "description": "MCP server for scaffolding and validating qa-patterns templates.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/toolstackhq/qa-patterns.git"
+  },
+  "homepage": "https://github.com/toolstackhq/qa-patterns",
+  "bugs": {
+    "url": "https://github.com/toolstackhq/qa-patterns/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "src",
+    "scripts",
+    "README.md",
+    "LICENSE"
+  ],
   "bin": {
     "qa-patterns-mcp": "./src/index.mjs"
   },
@@ -12,6 +29,7 @@
     "validate": "node ./scripts/validate-mcp-server.mjs"
   },
   "dependencies": {
+    "@toolstackhq/create-qa-patterns": "1.0.17",
     "@modelcontextprotocol/sdk": "^1.27.1",
     "zod": "^3.25.76"
   }
