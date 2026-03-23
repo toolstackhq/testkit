@@ -211,6 +211,63 @@ document.querySelector('#app').innerHTML = `
 
       <section class="section">
         <div class="section__heading">
+          <p class="eyebrow">Agent workflow</p>
+          <h2>Use an LLM after the project is generated</h2>
+          <p class="note">
+            MCP is for deterministic scaffolding. After that, the generated project already carries the framework context an agent needs.
+          </p>
+        </div>
+        <div class="grid grid--two">
+          <article class="card">
+            <h3>What the generated project includes</h3>
+            <p>Every generated template ships with two AI-facing files:</p>
+            <ul class="panel-list">
+              <li><code>AGENTS.md</code> to tell agent tools where to start</li>
+              <li><code>AI_CONTEXT.md</code> to explain framework rules, folder ownership, and safe commands</li>
+            </ul>
+            <p class="note">That means the LLM does not have to invent where selectors, assertions, data, and config belong.</p>
+          </article>
+          <article class="code-block">
+            <p class="panel__label">Typical agent prompt</p>
+            <pre><code>Read AGENTS.md and AI_CONTEXT.md first.
+
+Add a new regression test for this scenario:
+- sign in
+- add two people
+- verify both names appear in the list
+
+Use existing page objects and the data factory.
+Do not put selectors in the test.
+Run lint, typecheck, and tests after the change.</code></pre>
+          </article>
+        </div>
+        <div class="grid grid--three">
+          <article class="card">
+            <h3>1. Scaffold</h3>
+            <p>Use the CLI or MCP server to generate a tested framework starter.</p>
+          </article>
+          <article class="card">
+            <h3>2. Load context</h3>
+            <p>Point your coding agent at <code>AGENTS.md</code> and <code>AI_CONTEXT.md</code> before it edits code.</p>
+          </article>
+          <article class="card">
+            <h3>3. Validate</h3>
+            <p>Have the agent run the project’s normal <code>lint</code>, <code>typecheck</code>, and <code>test</code> commands.</p>
+          </article>
+        </div>
+        <div class="code-block code-block--wide">
+          <p class="panel__label">Post-generate validation</p>
+          <pre><code>npm run lint
+npm run typecheck
+npm test</code></pre>
+        </div>
+        <p class="note">
+          This is intentionally lightweight. <code>qa-patterns</code> gives teams framework-aware AI guidance without forcing a heavy multi-agent runtime into every generated project.
+        </p>
+      </section>
+
+      <section class="section">
+        <div class="section__heading">
           <p class="eyebrow">Upgrade flow</p>
           <h2>Bring managed template files forward later</h2>
         </div>
