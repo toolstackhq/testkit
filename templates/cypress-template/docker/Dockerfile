@@ -32,6 +32,7 @@ RUN apt-get update \
     libxfixes3 \
     libxkbcommon0 \
     libxrandr2 \
+    xvfb \
     xdg-utils \
   && rm -rf /var/lib/apt/lists/*
 
