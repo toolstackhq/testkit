@@ -46,6 +46,14 @@ function normalizeBrowserLogChunk(chunk) {
 function createHtml({ packageName, templates, defaultTemplateId }) {
   const serializedTemplates = JSON.stringify(templates);
   const escapedPackageName = escapeHtml(packageName);
+  const optionsHtml = templates
+    .map((template) => {
+      const selected = template.id === defaultTemplateId ? ' selected' : '';
+      return `<option value="${escapeHtml(template.id)}"${selected}>${escapeHtml(
+        template.label
+      )}</option>`;
+    })
+    .join('');
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -363,7 +371,7 @@ function createHtml({ packageName, templates, defaultTemplateId }) {
         <form id="scaffold-form" class="form-stack">
           <div class="field">
             <label for="templateSelect">Framework</label>
-            <select id="templateSelect" class="select-input" name="templateSelect"></select>
+            <select id="templateSelect" class="select-input" name="templateSelect">${optionsHtml}</select>
           </div>
 
           <div class="inline-grid">
@@ -548,18 +556,6 @@ function createHtml({ packageName, templates, defaultTemplateId }) {
         renderCommandPreview();
       }
 
-      function renderTemplateOptions() {
-        templateSelect.innerHTML = '';
-
-        for (const template of templates) {
-          const option = document.createElement('option');
-          option.value = template.id;
-          option.textContent = template.label;
-          option.selected = template.id === state.templateId;
-          templateSelect.appendChild(option);
-        }
-      }
-
       function renderFeatureSummary() {
         const template = findTemplate(state.templateId);
         const apiNote = withApi.checked
@@ -647,7 +643,6 @@ function createHtml({ packageName, templates, defaultTemplateId }) {
         runTests.checked = false;
         updateSetupControl();
         updateTargetControl();
-        renderTemplateOptions();
         templateSelect.value = state.templateId;
         renderFeatureSummary();
         renderCommandPreview();
@@ -743,7 +738,6 @@ function createHtml({ packageName, templates, defaultTemplateId }) {
 
       updateSetupControl();
       updateTargetControl();
-      renderTemplateOptions();
       templateSelect.value = state.templateId;
       renderFeatureSummary();
       renderCommandPreview();
