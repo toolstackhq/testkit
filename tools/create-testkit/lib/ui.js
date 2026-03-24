@@ -68,8 +68,8 @@ function createHtml({ packageName, templates, defaultTemplateId }) {
         --accent-soft: rgba(37, 99, 235, 0.06);
         --success: #0f766e;
         --danger: #b91c1c;
-        --shadow: 0 20px 48px rgba(15, 23, 42, 0.08);
-        --radius: 20px;
+        --shadow: 0 18px 42px rgba(15, 23, 42, 0.08);
+        --radius: 18px;
       }
 
       * {
@@ -85,7 +85,7 @@ function createHtml({ packageName, templates, defaultTemplateId }) {
 
       .shell {
         min-height: 100vh;
-        padding: 28px 20px 40px;
+        padding: 18px 14px 24px;
       }
 
       .frame {
@@ -97,25 +97,25 @@ function createHtml({ packageName, templates, defaultTemplateId }) {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 16px;
-        margin-bottom: 18px;
+        gap: 12px;
+        margin-bottom: 10px;
       }
 
       .brand {
-        font-size: 1.2rem;
+        font-size: 1.12rem;
         font-weight: 700;
         letter-spacing: -0.03em;
       }
 
       .topbar span {
         color: var(--muted);
-        font-size: 0.92rem;
+        font-size: 0.88rem;
       }
 
       .layout {
         display: grid;
-        grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
-        gap: 20px;
+        grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+        gap: 14px;
       }
 
       .panel {
@@ -123,157 +123,125 @@ function createHtml({ packageName, templates, defaultTemplateId }) {
         border: 1px solid var(--border);
         border-radius: var(--radius);
         box-shadow: var(--shadow);
-        padding: 24px;
+        padding: 16px;
       }
 
-      .panel h1,
-      .panel h2 {
+      h1,
+      h2,
+      p {
         margin: 0;
+      }
+
+      h1,
+      h2 {
         letter-spacing: -0.03em;
       }
 
-      .panel h1 {
-        font-size: 1.55rem;
+      h1 {
+        font-size: 1.24rem;
       }
 
-      .panel h2 {
-        font-size: 1.08rem;
+      h2 {
+        font-size: 0.98rem;
       }
 
-      .panel > p,
-      .section-note {
-        margin: 0;
+      .note,
+      .hint,
+      .summary-copy {
         color: var(--muted);
-        line-height: 1.65;
+        line-height: 1.45;
       }
 
-      .question-stack {
-        margin-top: 24px;
-        display: grid;
-        gap: 20px;
-      }
-
-      .question {
-        display: grid;
-        gap: 12px;
-      }
-
-      .question-label {
+      .note {
         font-size: 0.9rem;
-        font-weight: 700;
-        color: var(--text);
+        margin-top: 6px;
       }
 
-      .template-grid,
+      .question-stack,
+      .stack,
       .choice-list {
         display: grid;
         gap: 12px;
       }
 
-      .template-card {
-        display: block;
-        width: 100%;
-        text-align: left;
-        padding: 16px 18px;
-        border-radius: 18px;
-        border: 1px solid var(--border);
-        background: var(--panel-soft);
-        cursor: pointer;
-        transition: border-color 0.2s ease, box-shadow 0.2s ease,
-          transform 0.2s ease;
+      .question-stack,
+      .stack {
+        margin-top: 14px;
       }
 
-      .template-card:hover {
-        transform: translateY(-1px);
-        border-color: rgba(37, 99, 235, 0.18);
-        box-shadow: 0 10px 22px rgba(37, 99, 235, 0.08);
-      }
-
-      .template-card.is-active {
-        border-color: rgba(37, 99, 235, 0.34);
-        box-shadow: 0 12px 24px rgba(37, 99, 235, 0.12);
-        background: linear-gradient(
-          180deg,
-          rgba(37, 99, 235, 0.08),
-          #ffffff 100%
-        );
-      }
-
-      .template-card strong {
-        display: block;
-        font-size: 1rem;
-        letter-spacing: -0.02em;
-      }
-
-      .template-card span {
-        display: block;
-        margin-top: 6px;
-        color: var(--muted);
-        line-height: 1.55;
-        font-size: 0.92rem;
-      }
-
-      .choice {
+      .question {
         display: grid;
-        grid-template-columns: auto 1fr;
-        gap: 14px;
-        align-items: start;
-        padding: 14px 16px;
-        border-radius: 16px;
-        border: 1px solid var(--border);
-        background: var(--panel-soft);
+        gap: 8px;
       }
 
-      .choice input {
-        margin-top: 3px;
-      }
-
-      .choice strong {
-        display: block;
-        margin-bottom: 4px;
-        font-size: 0.95rem;
-      }
-
-      .choice span {
-        color: var(--muted);
+      .question-label {
         font-size: 0.9rem;
-        line-height: 1.55;
+        font-weight: 700;
       }
 
-      .choice.is-disabled {
-        opacity: 0.58;
-      }
-
+      .select-input,
       .text-input {
         width: 100%;
-        padding: 14px 16px;
-        border-radius: 14px;
+        padding: 11px 12px;
+        border-radius: 12px;
         border: 1px solid var(--border-strong);
         background: #fff;
         color: var(--text);
         font: inherit;
       }
 
+      .select-input:focus,
       .text-input:focus {
         outline: 2px solid rgba(37, 99, 235, 0.16);
         border-color: rgba(37, 99, 235, 0.4);
       }
 
+      .choice {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 12px;
+        align-items: start;
+        padding: 11px 12px;
+        border-radius: 14px;
+        border: 1px solid var(--border);
+        background: var(--panel-soft);
+      }
+
+      .choice input {
+        margin-top: 2px;
+      }
+
+      .choice strong {
+        display: block;
+        margin-bottom: 4px;
+        font-size: 0.9rem;
+      }
+
+      .choice span {
+        color: var(--muted);
+        font-size: 0.84rem;
+        line-height: 1.4;
+      }
+
+      .choice.is-disabled {
+        opacity: 0.6;
+      }
+
       .actions {
         display: flex;
         align-items: center;
-        gap: 12px;
+        gap: 10px;
       }
 
       .button {
         appearance: none;
         border: 0;
-        border-radius: 14px;
-        padding: 13px 18px;
+        border-radius: 12px;
+        padding: 10px 14px;
         font: inherit;
         font-weight: 700;
         cursor: pointer;
-        transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+        transition: transform 0.2s ease, opacity 0.2s ease;
       }
 
       .button:hover {
@@ -289,7 +257,6 @@ function createHtml({ packageName, templates, defaultTemplateId }) {
       .button-primary {
         background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
         color: #ffffff;
-        box-shadow: 0 14px 30px rgba(37, 99, 235, 0.22);
       }
 
       .button-secondary {
@@ -298,52 +265,47 @@ function createHtml({ packageName, templates, defaultTemplateId }) {
       }
 
       .hint {
-        color: var(--subtle);
-        font-size: 0.88rem;
-      }
-
-      .stack {
-        display: grid;
-        gap: 18px;
+        font-size: 0.84rem;
       }
 
       .feature-grid {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 12px;
+        gap: 10px;
       }
 
       .feature-card {
-        padding: 14px 15px;
-        border-radius: 16px;
+        padding: 11px 12px;
+        border-radius: 14px;
         border: 1px solid var(--border);
         background: var(--panel-soft);
       }
 
       .feature-card strong {
         display: block;
-        font-size: 0.92rem;
-        margin-bottom: 4px;
+        font-size: 0.88rem;
+        margin-bottom: 3px;
       }
 
       .feature-card span {
         display: block;
         color: var(--muted);
-        font-size: 0.87rem;
-        line-height: 1.5;
+        font-size: 0.8rem;
+        line-height: 1.35;
       }
 
       .inline-note {
-        padding: 14px 16px;
-        border-radius: 16px;
+        padding: 11px 12px;
+        border-radius: 14px;
         border: 1px solid var(--border);
         background: rgba(37, 99, 235, 0.04);
         color: var(--muted);
-        line-height: 1.6;
+        line-height: 1.45;
+        font-size: 0.84rem;
       }
 
       .preview-card {
-        border-radius: 18px;
+        border-radius: 16px;
         border: 1px solid var(--border);
         background: rgba(15, 23, 42, 0.96);
         overflow: hidden;
@@ -353,35 +315,35 @@ function createHtml({ packageName, templates, defaultTemplateId }) {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 12px;
-        padding: 14px 16px;
+        gap: 10px;
+        padding: 11px 12px;
         border-bottom: 1px solid rgba(226, 232, 240, 0.08);
       }
 
       .preview-header strong {
         color: #f8fafc;
-        font-size: 0.92rem;
+        font-size: 0.88rem;
       }
 
       .preview-header span {
         color: #94a3b8;
-        font-size: 0.8rem;
+        font-size: 0.76rem;
       }
 
       .code-block {
         margin: 0;
-        padding: 18px 18px 20px;
+        padding: 12px 14px 14px;
         color: #cbd5e1;
         font-family: "SFMono-Regular", ui-monospace, Menlo, Consolas, monospace;
-        font-size: 0.89rem;
-        line-height: 1.8;
+        font-size: 0.84rem;
+        line-height: 1.55;
         overflow-x: auto;
         white-space: pre-wrap;
       }
 
       .log-block {
-        min-height: 320px;
-        max-height: 500px;
+        min-height: 220px;
+        max-height: 300px;
       }
 
       .log-empty {
@@ -396,11 +358,11 @@ function createHtml({ packageName, templates, defaultTemplateId }) {
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        padding: 8px 12px;
+        padding: 7px 11px;
         border-radius: 999px;
         background: rgba(15, 23, 42, 0.06);
         color: var(--text);
-        font-size: 0.84rem;
+        font-size: 0.82rem;
         font-weight: 700;
       }
 
@@ -435,11 +397,11 @@ function createHtml({ packageName, templates, defaultTemplateId }) {
         }
 
         .shell {
-          padding: 20px 14px 32px;
+          padding: 14px 10px 20px;
         }
 
         .panel {
-          padding: 18px;
+          padding: 14px;
         }
 
         .topbar {
@@ -460,14 +422,14 @@ function createHtml({ packageName, templates, defaultTemplateId }) {
         <section class="layout">
           <section class="panel">
             <h1>Setup</h1>
-            <p class="section-note">
+            <p class="note">
               Answer the questions, start scaffolding, then go back to the terminal for the full output.
             </p>
 
             <form id="scaffold-form" class="question-stack">
               <fieldset class="question">
                 <legend class="question-label">1. Select the framework</legend>
-                <div id="template-grid" class="template-grid"></div>
+                <select id="templateSelect" class="select-input" name="templateSelect"></select>
               </fieldset>
 
               <fieldset class="question">
@@ -494,7 +456,7 @@ function createHtml({ packageName, templates, defaultTemplateId }) {
                     </span>
                   </label>
                 </div>
-                <div id="targetDirectoryWrap">
+                <div id="targetDirectoryWrap" class="question">
                   <label class="question-label" for="targetDirectory">New directory name</label>
                   <input
                     id="targetDirectory"
@@ -551,8 +513,8 @@ function createHtml({ packageName, templates, defaultTemplateId }) {
           <section class="panel">
             <div class="stack">
               <div>
-                <h2>Selected template</h2>
-                <p class="section-note" id="templateSummary">
+                <h2>Your template will include</h2>
+                <p class="summary-copy" id="templateSummary">
                   The selected template summary appears here.
                 </p>
               </div>
@@ -560,7 +522,7 @@ function createHtml({ packageName, templates, defaultTemplateId }) {
               <div id="featureGrid" class="feature-grid"></div>
 
               <div class="inline-note">
-                After the run starts, return to the terminal you launched
+                When the run begins, go back to the terminal you launched
                 <code>${escapedPackageName} --ui</code> from. This page mirrors progress, but the terminal stays in charge.
               </div>
 
@@ -622,10 +584,11 @@ function createHtml({ packageName, templates, defaultTemplateId }) {
       const state = {
         templateId: defaultTemplateId,
         busy: false,
-        logs: ''
+        logs: '',
+        successMessageShown: false
       };
 
-      const templateGrid = document.getElementById('template-grid');
+      const templateSelect = document.getElementById('templateSelect');
       const useCurrentDirectory = document.getElementById('useCurrentDirectory');
       const targetDirectoryWrap = document.getElementById('targetDirectoryWrap');
       const targetDirectory = document.getElementById('targetDirectory');
@@ -671,28 +634,15 @@ function createHtml({ packageName, templates, defaultTemplateId }) {
         renderCommandPreview();
       }
 
-      function renderTemplates() {
-        templateGrid.innerHTML = '';
+      function renderTemplateOptions() {
+        templateSelect.innerHTML = '';
 
         for (const template of templates) {
-          const button = document.createElement('button');
-          button.type = 'button';
-          button.className = 'template-card' + (template.id === state.templateId ? ' is-active' : '');
-          button.innerHTML =
-            '<strong>' +
-            template.label +
-            '</strong><span>' +
-            template.description +
-            '</span>';
-          button.addEventListener('click', () => {
-            if (state.busy) return;
-            state.templateId = template.id;
-            updateSetupControl();
-            renderTemplates();
-            renderFeatureSummary();
-            renderCommandPreview();
-          });
-          templateGrid.appendChild(button);
+          const option = document.createElement('option');
+          option.value = template.id;
+          option.textContent = template.label;
+          option.selected = template.id === state.templateId;
+          templateSelect.appendChild(option);
         }
       }
 
@@ -761,6 +711,17 @@ function createHtml({ packageName, templates, defaultTemplateId }) {
         activityLog.scrollTop = activityLog.scrollHeight;
       }
 
+      function appendSuccessMessage() {
+        if (state.successMessageShown) {
+          return;
+        }
+
+        state.successMessageShown = true;
+        appendLog(
+          '\nTemplate generated successfully. Go back to the terminal for next steps and full output details.\n'
+        );
+      }
+
       function resetForm() {
         if (state.busy) return;
 
@@ -772,11 +733,19 @@ function createHtml({ packageName, templates, defaultTemplateId }) {
         runTests.checked = false;
         updateSetupControl();
         updateTargetControl();
-        renderTemplates();
+        renderTemplateOptions();
+        templateSelect.value = state.templateId;
         renderFeatureSummary();
         renderCommandPreview();
       }
 
+      templateSelect.addEventListener('change', () => {
+        if (state.busy) return;
+        state.templateId = templateSelect.value;
+        updateSetupControl();
+        renderFeatureSummary();
+        renderCommandPreview();
+      });
       targetDirectory.addEventListener('input', renderCommandPreview);
       useCurrentDirectory.addEventListener('change', updateTargetControl);
       withApi.addEventListener('change', renderCommandPreview);
@@ -792,6 +761,7 @@ function createHtml({ packageName, templates, defaultTemplateId }) {
 
         state.busy = true;
         state.logs = '';
+        state.successMessageShown = false;
         appendLog('');
         setRunState('running', 'Running');
         startButton.disabled = true;
@@ -836,6 +806,9 @@ function createHtml({ packageName, templates, defaultTemplateId }) {
         setRunState(payload.state || 'idle', payload.label || 'Idle');
         startButton.disabled = payload.busy;
         resetButton.disabled = payload.busy;
+        if (payload.state === 'completed') {
+          appendSuccessMessage();
+        }
       });
 
       eventSource.addEventListener('log', (event) => {
@@ -849,11 +822,15 @@ function createHtml({ packageName, templates, defaultTemplateId }) {
         setRunState(payload.state || 'idle', payload.label || 'Idle');
         startButton.disabled = state.busy;
         resetButton.disabled = state.busy;
+        if (payload.state === 'completed') {
+          appendSuccessMessage();
+        }
       });
 
       updateSetupControl();
       updateTargetControl();
-      renderTemplates();
+      renderTemplateOptions();
+      templateSelect.value = state.templateId;
       renderFeatureSummary();
       renderCommandPreview();
     </script>
@@ -940,9 +917,6 @@ function startUiServer(options) {
     try {
       await runScaffold(selection);
       setState('completed', 'Completed', false);
-      appendLog(
-        '\nUI session complete. Return to the terminal for next steps or another run.\n'
-      );
     } catch (error) {
       setState('failed', 'Failed', false);
       const message = error instanceof Error ? error.message : String(error);
