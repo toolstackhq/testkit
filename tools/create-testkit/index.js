@@ -46,6 +46,7 @@ const {
   runCommand
 } = require('./lib/prereqs');
 const { scaffoldProject } = require('./lib/scaffold');
+const { startUiServer } = require('./lib/ui');
 const {
   createTemplateAliases,
   getTemplate,
@@ -169,17 +170,26 @@ function renderProgress(completed, total, label) {
 async function runPostGenerateActions(template, targetDirectory, summary) {
   const prerequisites = collectPrerequisites();
   const options = summary.options;
-  const canPrompt = process.stdin.isTTY && process.stdout.isTTY;
+  const canPrompt =
+    !options.nonInteractive && process.stdin.isTTY && process.stdout.isTTY;
 
   if (prerequisites.npm) {
     if (options.noInstall) {
       summary.npmInstall = 'skipped';
     } else {
-      const shouldInstallDependencies = options.yes
-        ? true
-        : canPrompt
-          ? await askYesNo('Run npm install now?', true)
-          : false;
+      let shouldInstallDependencies;
+      if (typeof options.runInstall === 'boolean') {
+        shouldInstallDependencies = options.runInstall;
+      } else if (options.yes) {
+        shouldInstallDependencies = true;
+      } else if (canPrompt) {
+        shouldInstallDependencies = await askYesNo(
+          'Run npm install now?',
+          true
+        );
+      } else {
+        shouldInstallDependencies = false;
+      }
 
       if (shouldInstallDependencies) {
         await runCommand('npm', ['install'], targetDirectory);
@@ -199,11 +209,16 @@ async function runPostGenerateActions(template, targetDirectory, summary) {
     if (options.noSetup) {
       summary.extraSetup = 'skipped';
     } else if (prerequisites[template.setup.availability]) {
-      const shouldRunExtraSetup = options.yes
-        ? true
-        : canPrompt
-          ? await askYesNo(template.setup.prompt, true)
-          : false;
+      let shouldRunExtraSetup;
+      if (typeof options.runSetup === 'boolean') {
+        shouldRunExtraSetup = options.runSetup;
+      } else if (options.yes) {
+        shouldRunExtraSetup = true;
+      } else if (canPrompt) {
+        shouldRunExtraSetup = await askYesNo(template.setup.prompt, true);
+      } else {
+        shouldRunExtraSetup = false;
+      }
 
       if (shouldRunExtraSetup) {
         try {
@@ -239,11 +254,16 @@ async function runPostGenerateActions(template, targetDirectory, summary) {
     if (options.noTest) {
       summary.testRun = 'skipped';
     } else {
-      const shouldRunTests = options.yes
-        ? true
-        : canPrompt
-          ? await askYesNo('Run npm test now?', false)
-          : false;
+      let shouldRunTests;
+      if (typeof options.runTest === 'boolean') {
+        shouldRunTests = options.runTest;
+      } else if (options.yes) {
+        shouldRunTests = true;
+      } else if (canPrompt) {
+        shouldRunTests = await askYesNo('Run npm test now?', false);
+      } else {
+        shouldRunTests = false;
+      }
 
       if (shouldRunTests) {
         await runCommand('npm', ['test'], targetDirectory);
@@ -340,27 +360,17 @@ function runUpgradeCommand(rawArgs) {
   );
 }
 
-async function main() {
-  const rawArgs = process.argv.slice(2);
-
-  assertSupportedNodeVersion();
-
-  if (rawArgs[0] === 'upgrade') {
-    runUpgradeCommand(rawArgs.slice(1));
-    return;
-  }
-
-  if (rawArgs.includes('--help') || rawArgs.includes('-h')) {
-    printHelp(TEMPLATES, colors, DEFAULT_TEMPLATE);
-    return;
-  }
-
+async function runScaffoldWorkflow(rawArgs, overrideOptions = {}) {
   const metadataOptions = createMetadataOptions();
-  const options = parseCliOptions(rawArgs, {
+  const parsedOptions = parseCliOptions(rawArgs, {
     resolveTemplate: (value) => resolveTemplate(TEMPLATE_ALIASES, value),
     supportedTemplateIds: SUPPORTED_TEMPLATE_IDS
   });
-  const args = options.positionalArgs;
+  const options = {
+    ...parsedOptions,
+    ...overrideOptions
+  };
+  const args = options.positionalArgs || parsedOptions.positionalArgs;
   const resolved = options.templateName
     ? resolveNonInteractiveArgs(args, {
         ...options,
@@ -418,6 +428,57 @@ async function main() {
   );
   printSummary(summary, colors);
   printNextSteps(summary, colors);
+}
+
+async function main() {
+  const rawArgs = process.argv.slice(2);
+
+  assertSupportedNodeVersion();
+
+  if (rawArgs[0] === 'upgrade') {
+    runUpgradeCommand(rawArgs.slice(1));
+    return;
+  }
+
+  if (rawArgs.includes('--help') || rawArgs.includes('-h')) {
+    printHelp(TEMPLATES, colors, DEFAULT_TEMPLATE);
+    return;
+  }
+
+  const options = parseCliOptions(rawArgs, {
+    resolveTemplate: (value) => resolveTemplate(TEMPLATE_ALIASES, value),
+    supportedTemplateIds: SUPPORTED_TEMPLATE_IDS
+  });
+
+  if (options.ui) {
+    await startUiServer({
+      colors,
+      defaultTemplateId: DEFAULT_TEMPLATE,
+      packageName: 'create-testkit',
+      port: options.port,
+      runScaffold: (selection) =>
+        runScaffoldWorkflow([], {
+          nonInteractive: true,
+          noInstall: !selection.runInstall,
+          noSetup: !selection.runSetup,
+          noTest: !selection.runTest,
+          positionalArgs: [selection.targetDirectory],
+          runInstall: selection.runInstall,
+          runSetup: selection.runSetup,
+          runTest: selection.runTest,
+          templateName: selection.templateName,
+          withApi: selection.withApi
+        }),
+      templates: TEMPLATES.map((template) => ({
+        description: template.description,
+        id: template.id,
+        label: template.label
+      }))
+    });
+    return;
+  }
+
+  await runScaffoldWorkflow(rawArgs);
 }
 
 main().catch((error) => {

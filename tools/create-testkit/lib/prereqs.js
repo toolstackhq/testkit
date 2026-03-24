@@ -43,10 +43,20 @@ function initializeGitRepository(targetDirectory) {
 
 function runCommand(command, args, cwd) {
   return new Promise((resolve, reject) => {
+    const shouldMirrorOutput = process.env.TESTKIT_UI_MIRROR === '1';
     const child = spawn(getCommandName(command), args, {
       cwd,
-      stdio: 'inherit'
+      stdio: shouldMirrorOutput ? ['ignore', 'pipe', 'pipe'] : 'inherit'
     });
+
+    if (shouldMirrorOutput) {
+      child.stdout.on('data', (chunk) => {
+        process.stdout.write(chunk);
+      });
+      child.stderr.on('data', (chunk) => {
+        process.stderr.write(chunk);
+      });
+    }
 
     child.on('close', (code) => {
       if (code === 0) {

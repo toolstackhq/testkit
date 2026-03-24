@@ -18,6 +18,16 @@ test('parseCliOptions resolves --template aliases', () => {
   assert.deepEqual(options.positionalArgs, ['demo']);
 });
 
+test('parseCliOptions supports local UI mode and explicit port', () => {
+  const options = parseCliOptions(['--ui', '--port', '4510'], {
+    resolveTemplate: (value) => resolveTemplate(templateAliases, value),
+    supportedTemplateIds
+  });
+
+  assert.equal(options.ui, true);
+  assert.equal(options.port, 4510);
+});
+
 test('resolveNonInteractiveArgs defaults to the default template for a directory name', () => {
   const result = resolveNonInteractiveArgs(['demo-project'], {
     defaultTemplate: DEFAULT_TEMPLATE,
