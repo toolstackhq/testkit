@@ -56,20 +56,19 @@ function createHtml({ packageName, templates, defaultTemplateId }) {
     <style>
       :root {
         color-scheme: light;
-        --bg: #f6f8fb;
+        --bg: #f3f4f6;
         --panel: #ffffff;
         --panel-soft: #f8fafc;
-        --border: rgba(15, 23, 42, 0.08);
-        --border-strong: rgba(15, 23, 42, 0.16);
+        --border: #dbe2ea;
+        --border-strong: #c2cbd6;
         --text: #0f172a;
-        --muted: #475569;
+        --muted: #526070;
         --subtle: #64748b;
         --accent: #2563eb;
-        --accent-soft: rgba(37, 99, 235, 0.06);
         --success: #0f766e;
         --danger: #b91c1c;
-        --shadow: 0 18px 42px rgba(15, 23, 42, 0.08);
-        --radius: 18px;
+        --shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
+        --radius: 16px;
       }
 
       * {
@@ -79,43 +78,19 @@ function createHtml({ packageName, templates, defaultTemplateId }) {
       body {
         margin: 0;
         font-family: "Segoe UI", Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-        background: linear-gradient(180deg, #fbfdff 0%, var(--bg) 100%);
+        background: var(--bg);
         color: var(--text);
       }
 
-      .shell {
-        min-height: 100vh;
-        padding: 18px 14px 24px;
-      }
-
       .frame {
-        max-width: 1180px;
+        max-width: 1120px;
         margin: 0 auto;
-      }
-
-      .topbar {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
-        margin-bottom: 10px;
-      }
-
-      .brand {
-        font-size: 1.12rem;
-        font-weight: 700;
-        letter-spacing: -0.03em;
-      }
-
-      .topbar span {
-        color: var(--muted);
-        font-size: 0.88rem;
-      }
-
-      .layout {
+        min-height: 100vh;
+        padding: 16px;
         display: grid;
-        grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
-        gap: 14px;
+        grid-template-columns: minmax(340px, 420px) minmax(0, 1fr);
+        gap: 16px;
+        align-items: start;
       }
 
       .panel {
@@ -123,7 +98,7 @@ function createHtml({ packageName, templates, defaultTemplateId }) {
         border: 1px solid var(--border);
         border-radius: var(--radius);
         box-shadow: var(--shadow);
-        padding: 16px;
+        padding: 18px;
       }
 
       h1,
@@ -132,58 +107,49 @@ function createHtml({ packageName, templates, defaultTemplateId }) {
         margin: 0;
       }
 
-      h1,
-      h2 {
-        letter-spacing: -0.03em;
-      }
-
       h1 {
-        font-size: 1.24rem;
+        font-size: 1.08rem;
+        letter-spacing: -0.02em;
       }
 
       h2 {
-        font-size: 0.98rem;
+        font-size: 0.94rem;
+        letter-spacing: -0.02em;
       }
 
-      .note,
-      .hint,
-      .summary-copy {
+      .subtle {
+        margin-top: 4px;
         color: var(--muted);
+        font-size: 0.84rem;
         line-height: 1.45;
       }
 
-      .note {
-        font-size: 0.9rem;
-        margin-top: 6px;
-      }
-
-      .question-stack,
-      .stack,
-      .choice-list {
+      .form-stack,
+      .meta-stack {
         display: grid;
         gap: 12px;
       }
 
-      .question-stack,
-      .stack {
+      .form-stack {
         margin-top: 14px;
       }
 
-      .question {
+      .field {
         display: grid;
-        gap: 8px;
+        gap: 6px;
       }
 
-      .question-label {
-        font-size: 0.9rem;
+      .field label,
+      .section-label {
+        font-size: 0.84rem;
         font-weight: 700;
       }
 
       .select-input,
       .text-input {
         width: 100%;
-        padding: 11px 12px;
-        border-radius: 12px;
+        padding: 10px 12px;
+        border-radius: 10px;
         border: 1px solid var(--border-strong);
         background: #fff;
         color: var(--text);
@@ -192,177 +158,115 @@ function createHtml({ packageName, templates, defaultTemplateId }) {
 
       .select-input:focus,
       .text-input:focus {
-        outline: 2px solid rgba(37, 99, 235, 0.16);
+        outline: 2px solid rgba(37, 99, 235, 0.15);
         border-color: rgba(37, 99, 235, 0.4);
       }
 
-      .choice {
+      .inline-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      .toggle {
         display: grid;
         grid-template-columns: auto 1fr;
-        gap: 12px;
-        align-items: start;
-        padding: 11px 12px;
-        border-radius: 14px;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 12px;
+        border-radius: 12px;
         border: 1px solid var(--border);
         background: var(--panel-soft);
       }
 
-      .choice input {
-        margin-top: 2px;
+      .toggle.is-disabled {
+        opacity: 0.58;
       }
 
-      .choice strong {
+      .toggle strong {
         display: block;
-        margin-bottom: 4px;
-        font-size: 0.9rem;
-      }
-
-      .choice span {
-        color: var(--muted);
         font-size: 0.84rem;
-        line-height: 1.4;
       }
 
-      .choice.is-disabled {
-        opacity: 0.6;
+      .toggle span {
+        color: var(--muted);
+        font-size: 0.76rem;
+        line-height: 1.35;
       }
 
-      .actions {
+      .button-row {
         display: flex;
-        align-items: center;
         gap: 10px;
+        margin-top: 2px;
       }
 
       .button {
         appearance: none;
         border: 0;
-        border-radius: 12px;
+        border-radius: 10px;
         padding: 10px 14px;
         font: inherit;
         font-weight: 700;
         cursor: pointer;
-        transition: transform 0.2s ease, opacity 0.2s ease;
-      }
-
-      .button:hover {
-        transform: translateY(-1px);
       }
 
       .button:disabled {
         cursor: not-allowed;
-        transform: none;
         opacity: 0.68;
       }
 
       .button-primary {
-        background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
-        color: #ffffff;
+        background: #111827;
+        color: #fff;
       }
 
       .button-secondary {
-        background: rgba(15, 23, 42, 0.06);
-        color: var(--text);
-      }
-
-      .hint {
-        font-size: 0.84rem;
+        background: #e5e7eb;
+        color: #111827;
       }
 
       .feature-grid {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 10px;
+        gap: 8px;
       }
 
       .feature-card {
-        padding: 11px 12px;
-        border-radius: 14px;
+        padding: 10px 11px;
+        border-radius: 12px;
         border: 1px solid var(--border);
         background: var(--panel-soft);
       }
 
       .feature-card strong {
         display: block;
-        font-size: 0.88rem;
-        margin-bottom: 3px;
+        font-size: 0.82rem;
       }
 
       .feature-card span {
         display: block;
+        margin-top: 4px;
         color: var(--muted);
-        font-size: 0.8rem;
+        font-size: 0.75rem;
         line-height: 1.35;
       }
 
-      .inline-note {
-        padding: 11px 12px;
-        border-radius: 14px;
-        border: 1px solid var(--border);
-        background: rgba(37, 99, 235, 0.04);
-        color: var(--muted);
-        line-height: 1.45;
-        font-size: 0.84rem;
-      }
-
-      .preview-card {
-        border-radius: 16px;
-        border: 1px solid var(--border);
-        background: rgba(15, 23, 42, 0.96);
-        overflow: hidden;
-      }
-
-      .preview-header {
+      .status-row {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 10px;
-        padding: 11px 12px;
-        border-bottom: 1px solid rgba(226, 232, 240, 0.08);
-      }
-
-      .preview-header strong {
-        color: #f8fafc;
-        font-size: 0.88rem;
-      }
-
-      .preview-header span {
-        color: #94a3b8;
-        font-size: 0.76rem;
-      }
-
-      .code-block {
-        margin: 0;
-        padding: 12px 14px 14px;
-        color: #cbd5e1;
-        font-family: "SFMono-Regular", ui-monospace, Menlo, Consolas, monospace;
-        font-size: 0.84rem;
-        line-height: 1.55;
-        overflow-x: auto;
-        white-space: pre-wrap;
-      }
-
-      .log-block {
-        min-height: 220px;
-        max-height: 300px;
-      }
-
-      .log-empty {
-        color: #64748b;
-      }
-
-      .log-stream {
-        color: #e2e8f0;
+        gap: 12px;
       }
 
       .run-state {
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        padding: 7px 11px;
+        padding: 6px 10px;
         border-radius: 999px;
-        background: rgba(15, 23, 42, 0.06);
+        background: #eef2f7;
         color: var(--text);
-        font-size: 0.82rem;
+        font-size: 0.78rem;
         font-weight: 700;
       }
 
@@ -386,170 +290,180 @@ function createHtml({ packageName, templates, defaultTemplateId }) {
         background: var(--danger);
       }
 
+      .terminal {
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        background: #111827;
+        overflow: hidden;
+      }
+
+      .terminal-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 10px 12px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .terminal-header strong {
+        color: #f8fafc;
+        font-size: 0.82rem;
+      }
+
+      .terminal-header span {
+        color: #94a3b8;
+        font-size: 0.74rem;
+      }
+
+      .code-block,
+      .log-block {
+        margin: 0;
+        padding: 12px;
+        color: #cbd5e1;
+        font-family: "SFMono-Regular", ui-monospace, Menlo, Consolas, monospace;
+        font-size: 0.8rem;
+        line-height: 1.5;
+        overflow-x: auto;
+        white-space: pre-wrap;
+      }
+
+      .log-block {
+        min-height: 240px;
+        max-height: 360px;
+      }
+
+      .log-empty {
+        color: #64748b;
+      }
+
+      .log-stream {
+        color: #e2e8f0;
+      }
+
       [hidden] {
         display: none !important;
       }
 
       @media (max-width: 980px) {
-        .layout,
+        .frame,
+        .inline-grid,
         .feature-grid {
           grid-template-columns: 1fr;
-        }
-
-        .shell {
-          padding: 14px 10px 20px;
-        }
-
-        .panel {
-          padding: 14px;
-        }
-
-        .topbar {
-          flex-direction: column;
-          align-items: flex-start;
         }
       }
     </style>
   </head>
   <body>
-    <div class="shell">
-      <div class="frame">
-        <div class="topbar">
-          <div class="brand">testkit setup</div>
-          <span>Local UI wrapper for <code>${escapedPackageName}</code></span>
+    <main class="frame">
+      <section class="panel">
+        <h1>testkit setup</h1>
+        <p class="subtle">Answer the questions below, start the scaffold, then go back to the terminal.</p>
+
+        <form id="scaffold-form" class="form-stack">
+          <div class="field">
+            <label for="templateSelect">Framework</label>
+            <select id="templateSelect" class="select-input" name="templateSelect"></select>
+          </div>
+
+          <div class="inline-grid">
+            <label class="toggle">
+              <input id="withApi" name="withApi" type="checkbox" checked />
+              <span>
+                <strong>Include API tests</strong>
+                Adds starter API coverage.
+              </span>
+            </label>
+
+            <label class="toggle">
+              <input id="useCurrentDirectory" name="useCurrentDirectory" type="checkbox" />
+              <span>
+                <strong>Use current folder</strong>
+                Skip creating a new directory.
+              </span>
+            </label>
+          </div>
+
+          <div id="targetDirectoryWrap" class="field">
+            <label for="targetDirectory">Directory name</label>
+            <input
+              id="targetDirectory"
+              class="text-input"
+              name="targetDirectory"
+              value="my-testkit-project"
+              spellcheck="false"
+            />
+          </div>
+
+          <div class="section-label">After scaffold</div>
+
+          <div class="inline-grid">
+            <label class="toggle">
+              <input id="runInstall" name="runInstall" type="checkbox" checked />
+              <span>
+                <strong>Run install</strong>
+                Executes <code>npm install</code>.
+              </span>
+            </label>
+
+            <label class="toggle" id="setupToggle">
+              <input id="runSetup" name="runSetup" type="checkbox" checked />
+              <span>
+                <strong id="setupTitle">Run setup</strong>
+                <span id="setupDescription">Installs Playwright browsers.</span>
+              </span>
+            </label>
+
+            <label class="toggle">
+              <input id="runTests" name="runTests" type="checkbox" />
+              <span>
+                <strong>Run tests</strong>
+                Executes the starter validation path.
+              </span>
+            </label>
+          </div>
+
+          <div class="button-row">
+            <button id="startButton" class="button button-primary" type="submit">
+              Generate template
+            </button>
+            <button id="resetButton" class="button button-secondary" type="button">
+              Reset
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <section class="panel meta-stack">
+        <div>
+          <h2>Your template will include</h2>
+          <p class="subtle" id="templateSummary">The selected template summary appears here.</p>
         </div>
 
-        <section class="layout">
-          <section class="panel">
-            <h1>Setup</h1>
-            <p class="note">
-              Answer the questions, start scaffolding, then go back to the terminal for the full output.
-            </p>
+        <div id="featureGrid" class="feature-grid"></div>
 
-            <form id="scaffold-form" class="question-stack">
-              <fieldset class="question">
-                <legend class="question-label">1. Select the framework</legend>
-                <select id="templateSelect" class="select-input" name="templateSelect"></select>
-              </fieldset>
+        <div class="status-row">
+          <div id="runState" class="run-state" data-state="idle">Idle</div>
+          <div class="subtle">Watch the log here, then go back to the terminal for next steps.</div>
+        </div>
 
-              <fieldset class="question">
-                <legend class="question-label">2. Include API tests too?</legend>
-                <div class="choice-list">
-                  <label class="choice">
-                    <input id="withApi" name="withApi" type="checkbox" checked />
-                    <span>
-                      <strong>Yes, include the API layer</strong>
-                      Keep the demo API server, API client, and starter API tests.
-                    </span>
-                  </label>
-                </div>
-              </fieldset>
+        <div class="terminal">
+          <div class="terminal-header">
+            <strong>Command preview</strong>
+            <span>same CLI engine</span>
+          </div>
+          <pre id="commandPreview" class="code-block"></pre>
+        </div>
 
-              <fieldset class="question">
-                <legend class="question-label">3. Create in the current folder?</legend>
-                <div class="choice-list">
-                  <label class="choice">
-                    <input id="useCurrentDirectory" name="useCurrentDirectory" type="checkbox" />
-                    <span>
-                      <strong>Use the current folder</strong>
-                      Scaffold directly where this command was started instead of creating a new directory.
-                    </span>
-                  </label>
-                </div>
-                <div id="targetDirectoryWrap" class="question">
-                  <label class="question-label" for="targetDirectory">New directory name</label>
-                  <input
-                    id="targetDirectory"
-                    class="text-input"
-                    name="targetDirectory"
-                    value="my-testkit-project"
-                    spellcheck="false"
-                  />
-                </div>
-              </fieldset>
-
-              <fieldset class="question">
-                <legend class="question-label">4. Post-generate actions</legend>
-                <div class="choice-list">
-                  <label class="choice">
-                    <input id="runInstall" name="runInstall" type="checkbox" checked />
-                    <span>
-                      <strong>Run npm install</strong>
-                      Install dependencies immediately after the scaffold completes.
-                    </span>
-                  </label>
-                  <label class="choice" id="setupToggle">
-                    <input id="runSetup" name="runSetup" type="checkbox" checked />
-                    <span>
-                      <strong id="setupTitle">Run Playwright setup</strong>
-                      <span id="setupDescription">Install Playwright browsers after npm install.</span>
-                    </span>
-                  </label>
-                  <label class="choice">
-                    <input id="runTests" name="runTests" type="checkbox" />
-                    <span>
-                      <strong>Run npm test</strong>
-                      Execute the starter validation path once the project is ready.
-                    </span>
-                  </label>
-                </div>
-              </fieldset>
-
-              <div class="actions">
-                <button id="startButton" class="button button-primary" type="submit">
-                  Start scaffolding
-                </button>
-                <button id="resetButton" class="button button-secondary" type="button">
-                  Reset defaults
-                </button>
-              </div>
-
-              <div class="hint">
-                Execution always happens in the same terminal session that launched this local UI.
-              </div>
-            </form>
-          </section>
-
-          <section class="panel">
-            <div class="stack">
-              <div>
-                <h2>Your template will include</h2>
-                <p class="summary-copy" id="templateSummary">
-                  The selected template summary appears here.
-                </p>
-              </div>
-
-              <div id="featureGrid" class="feature-grid"></div>
-
-              <div class="inline-note">
-                When the run begins, go back to the terminal you launched
-                <code>${escapedPackageName} --ui</code> from. This page mirrors progress, but the terminal stays in charge.
-              </div>
-
-              <div class="actions">
-                <div id="runState" class="run-state" data-state="idle">Idle</div>
-              </div>
-
-              <div class="preview-card">
-                <div class="preview-header">
-                  <strong>Command preview</strong>
-                  <span>same scaffold engine</span>
-                </div>
-                <pre id="commandPreview" class="code-block"></pre>
-              </div>
-
-              <div class="preview-card">
-                <div class="preview-header">
-                  <strong>Live log</strong>
-                  <span>mirrored from the terminal run</span>
-                </div>
-                <pre id="activityLog" class="code-block log-block"><span class="log-empty">No scaffold activity yet. Start a run to stream output here.</span></pre>
-              </div>
-            </div>
-          </section>
-        </section>
-      </div>
-    </div>
+        <div class="terminal">
+          <div class="terminal-header">
+            <strong>Live log</strong>
+            <span>mirrored from the terminal run</span>
+          </div>
+          <pre id="activityLog" class="log-block"><span class="log-empty">No scaffold activity yet. Start a run to stream output here.</span></pre>
+        </div>
+      </section>
+    </main>
 
     <script>
       const templates = ${serializedTemplates};
